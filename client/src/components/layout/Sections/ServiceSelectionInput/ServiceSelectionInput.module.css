@@ -1,0 +1,165 @@
+.serviceSelectionInputWrapper {
+  width: 100%;
+  position: relative;
+}
+
+.label {
+  display: block;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.required {
+  color: #ef4444;
+  margin-left: 0.25rem;
+}
+
+.inputContainer {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background-color: #fafafa;
+  transition: all 0.2s ease;
+  min-height: 48px;
+  box-sizing: border-box;
+}
+
+.inputContainer:focus-within {
+  border-color: #0056b3;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1);
+}
+
+.inputContainer:hover {
+  border-color: #9ca3af;
+  background-color: #ffffff;
+}
+
+.selectedServicesTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  flex: 1;
+  padding: 0.125rem 0;
+}
+
+.serviceTag {
+  display: flex;
+  align-items: center;
+  background-color: #e6f0ff;
+  border: 1px solid #cce0ff;
+  color: #0056b3;
+  font-size: 0.875rem;
+  padding: 0.375rem 0.75rem; /* Padding mai generos pentru tag-uri */
+  border-radius: 0.375rem;
+  white-space: nowrap;
+}
+
+.removeTag {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 0.5rem;
+  color: #0056b3;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.removeTag:hover {
+  color: #004494;
+}
+
+.input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 0.25rem;
+  min-width: 100px;
+  background: transparent;
+  font-size: 1rem;
+  color: #374151;
+}
+
+.dropdownToggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 0.25rem;
+  transition: color 0.2s;
+  flex-shrink: 0;
+}
+
+.dropdownToggle:hover {
+  color: #0056b3;
+}
+
+.dropdownToggle:focus {
+  outline: none;
+}
+
+/* Stiluri pentru dropdown-ul portalat */
+.dropdownPortal {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e5e7eb;
+  max-height: 300px;
+  overflow-y: auto;
+  animation: fadeIn 0.2s ease-out;
+  z-index: 9999;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdownHeader {
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  color: #4b5563;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.servicesList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.serviceItem {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  color: #374151;
+}
+
+.serviceItem:hover {
+  background-color: #f3f4f6;
+  color: #0056b3;
+}
+
+.noResults {
+  padding: 1rem;
+  text-align: center;
+  color: #6b7280;
+  font-style: italic;
+}

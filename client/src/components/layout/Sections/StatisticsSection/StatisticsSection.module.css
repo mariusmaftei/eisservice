@@ -1,0 +1,215 @@
+/* Statistics Section */
+.statisticsSection {
+  padding: 6rem 0;
+  background: linear-gradient(135deg, #174bdd 0%, #00134b 50%, #2c5ce6 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.statisticsSection::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(23, 75, 221, 0.9) 0%,
+    rgba(0, 19, 75, 0.9) 50%,
+    rgba(44, 92, 230, 0.9) 100%
+  );
+  z-index: 1;
+}
+
+.statisticsContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  position: relative;
+  z-index: 2;
+}
+
+.statisticsIntro {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.introText {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.95);
+  line-height: 1.6;
+  max-width: 800px;
+  margin: 0 auto;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.8s ease-out 0.2s forwards;
+}
+
+.statisticsContent {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  text-align: center;
+}
+
+.statisticItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.statisticItem:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+}
+
+.statisticItem:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.statisticItem:nth-child(2) {
+  animation-delay: 0.3s;
+}
+
+.statisticItem:nth-child(3) {
+  animation-delay: 0.5s;
+}
+
+.statisticIcon {
+  margin-bottom: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+  transition: all 0.3s ease;
+}
+
+.statisticItem:hover .statisticIcon {
+  color: #ffffff;
+  transform: scale(1.1);
+}
+
+.statisticNumber {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  line-height: 1;
+}
+
+.statisticLabel {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  line-height: 1.3;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .statisticsSection {
+    padding: 4.5rem 0;
+  }
+
+  .statisticsContainer {
+    padding: 0 1rem;
+  }
+
+  .statisticsIntro {
+    margin-bottom: 2rem;
+  }
+
+  .introText {
+    font-size: 1.125rem;
+  }
+
+  .statisticsContent {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .statisticItem {
+    padding: 1.5rem 1rem;
+  }
+
+  .statisticNumber {
+    font-size: 2.5rem;
+  }
+
+  .statisticLabel {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .statisticsSection {
+    padding: 3.75rem 0;
+  }
+
+  .statisticsContainer {
+    padding: 0 0.75rem;
+  }
+
+  .statisticsIntro {
+    margin-bottom: 1.5rem;
+  }
+
+  .introText {
+    font-size: 1rem;
+  }
+
+  .statisticsContent {
+    gap: 1rem;
+  }
+
+  .statisticItem {
+    padding: 1.25rem 0.75rem;
+  }
+
+  .statisticNumber {
+    font-size: 2rem;
+  }
+
+  .statisticLabel {
+    font-size: 0.875rem;
+  }
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes countUp {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.statisticNumber {
+  animation: countUp 0.5s ease-out;
+}

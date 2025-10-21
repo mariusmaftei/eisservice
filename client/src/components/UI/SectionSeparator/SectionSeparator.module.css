@@ -1,0 +1,39 @@
+/* Section Separator - Custom Wave Design */
+.separator {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.bord {
+  position: relative;
+  width: 100%;
+  height: 76px;
+  display: block;
+}
+
+/* Override gradient colors to white as specified */
+#header-stop1 {
+  stop-color: white !important;
+}
+
+#header-stop2 {
+  stop-color: white !important;
+}
+
+#header-stop3 {
+  stop-color: white !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .bord {
+    height: 60px;
+  }
+}
+
+@media (max-width: 480px) {
+  .bord {
+    height: 50px;
+  }
+}

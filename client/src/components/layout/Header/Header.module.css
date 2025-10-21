@@ -1,0 +1,408 @@
+/* Navbar specific styles */
+.navbar {
+  background-color: #ffffff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.navbarContent {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto; /* logo | nav (centered) | mobile menu | phone */
+  align-items: center;
+  column-gap: 1rem;
+  height: 5rem; /* Mărit de la 4rem la 5rem */
+}
+
+/* Logo styles */
+.logoWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.logoLink {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.logoContainer {
+  width: 56px; /* Mărit pentru a se potrivi cu înălțimea crescută a navbar-ului */
+  height: 56px; /* Mărit pentru a se potrivi cu înălțimea crescută a navbar-ului */
+  position: relative;
+  overflow: hidden;
+}
+
+.logo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.logoText {
+  margin-left: 0.75rem; /* Ușor mărit spațiul */
+  font-size: 1.5rem; /* Mărit de la 1.25rem */
+  font-weight: 700;
+  color: #1f2937;
+}
+
+/* Desktop navigation */
+.desktopNav {
+  display: none;
+}
+
+@media (min-width: 1050px) {
+  .desktopNav {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* center nav within middle grid column */
+    gap: 2rem; /* Reduced from 2.5rem to accommodate phone link */
+  }
+}
+
+.navLink {
+  position: relative;
+  font-weight: 600; /* Mărit de la 500 la 600 */
+  font-size: 1.1rem; /* Reduced from 1.3rem to 1.1rem */
+  transition: all 0.2s ease;
+  color: #333; /* Schimbat la o culoare mai închisă pentru vizibilitate */
+  text-decoration: none;
+}
+
+.navLink:hover {
+  color: #174bdd;
+}
+
+.navLink:after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -4px;
+  left: 0;
+  background-color: #174bdd;
+  transition: width 0.3s ease;
+}
+
+.navLink:hover:after {
+  width: 100%;
+}
+
+/* Mobile menu button */
+.mobileMenuButton {
+  display: flex;
+  align-items: center;
+  justify-self: end; /* Position the button to the right side of its grid cell */
+}
+
+@media (min-width: 1050px) {
+  .mobileMenuButton {
+    display: none;
+  }
+}
+
+.menuToggle {
+  color: #4b5563;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+}
+
+.menuToggle:hover {
+  color: #0056b3;
+}
+
+.menuToggle:focus {
+  outline: none;
+}
+
+.menuIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+/* Mobile menu */
+.mobileMenu {
+  position: absolute; /* Position out of document flow */
+  top: 5rem; /* Position below the navbar (navbar height is 5rem) */
+  left: 0;
+  width: 100%;
+  background-color: white; /* Ensure it covers content below */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+  z-index: 40; /* Ensure it's above content but below sticky navbar */
+  animation: slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: top;
+}
+
+.mobileMenuContent {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 0;
+  animation: fadeInContent 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s both;
+}
+
+.mobileNavLink {
+  display: block;
+  padding: 0.75rem 1rem;
+  color: #4b5563;
+  border-radius: 0.375rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  animation: slideInFromLeft 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.mobileNavLink:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.mobileNavLink:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.mobileNavLink:nth-child(3) {
+  animation-delay: 0.2s;
+}
+.mobileNavLink:nth-child(4) {
+  animation-delay: 0.25s;
+}
+.mobileNavLink:nth-child(5) {
+  animation-delay: 0.3s;
+}
+
+.mobileNavLink:hover {
+  color: #0056b3;
+  background-color: #f9fafb;
+}
+
+/* New overlay style */
+.mobileMenuOverlay {
+  position: fixed;
+  inset: 0; /* Covers the entire viewport */
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+  z-index: 39; /* Below the mobile menu (z-index: 40) but above other content */
+  animation: fadeInOverlay 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth fade-in */
+}
+
+@keyframes fadeInOverlay {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scaleY(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
+  }
+}
+
+@keyframes fadeInContent {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Simple phone button hover animation */
+@keyframes phoneButtonPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Specific adjustments for screens up to 390px */
+@media (max-width: 390px) {
+  .navbarContent {
+    height: 4rem; /* Reduced height for very small screens */
+  }
+
+  .logoContainer {
+    width: 48px; /* Slightly smaller logo image container */
+    height: 48px;
+  }
+
+  .logoText {
+    font-size: 1.3rem; /* Slightly smaller logo text */
+    margin-left: 0.5rem; /* Reduced margin */
+  }
+
+  .mobileMenu {
+    top: 4rem; /* Adjust mobile menu position to match new navbar height */
+  }
+}
+
+/* Phone link styles for desktop */
+.phoneLink {
+  display: none;
+  align-items: center;
+  justify-self: end; /* Position the phone link to the right side of its grid cell */
+  gap: 0.5rem;
+  padding: 0.8rem 2.925rem; /* Increased horizontal padding by 50% for wider button */
+  background: linear-gradient(
+    64deg,
+    #174bdd 8%,
+    #00134b 72%
+  ); /* Gradient background matching Fusion theme */
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 1.2rem;
+  border-radius: 50px; /* Changed from fully rounded to match Fusion button */
+  transition: all 0.8s ease; /* Slower transition for smooth left movement */
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(23, 75, 221, 0.3),
+    inset 0 1px 0 rgba(170, 170, 170, 0.18); /* Added bevel effect */
+  position: relative;
+  overflow: hidden; /* Hide overflow for sliding effect */
+  border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border */
+}
+
+@media (min-width: 1050px) {
+  .phoneLink {
+    display: flex;
+  }
+}
+
+@media (max-width: 1049px) {
+  .phoneLink {
+    display: none;
+  }
+}
+
+.phoneLink:hover {
+  background: linear-gradient(
+    64deg,
+    #2c5ce6 8%,
+    #1a2a7a 72%
+  ); /* Lighter gradient on hover */
+  color: #ffffff;
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 20px rgba(23, 75, 221, 0.4),
+    inset 0 1px 0 rgba(170, 170, 170, 0.25); /* Enhanced bevel on hover */
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.phoneLink:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(23, 75, 221, 0.3),
+    inset 0 1px 0 rgba(170, 170, 170, 0.15);
+}
+
+/* Mobile phone link styles */
+.mobilePhoneLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 2.925rem; /* Increased horizontal padding by 50% for wider button */
+  background: linear-gradient(
+    64deg,
+    #174bdd 8%,
+    #00134b 72%
+  ); /* Gradient background matching Fusion theme */
+  color: #ffffff;
+  border-radius: 6px; /* Changed from fully rounded to match Fusion button */
+  text-decoration: none;
+  font-weight: 600;
+  text-align: center;
+  margin: 0.5rem 1rem;
+  transition: all 0.8s ease; /* Slower transition for smooth left movement */
+  position: relative;
+  overflow: hidden; /* Hide overflow for sliding effect */
+  animation: slideInFromLeft 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.35s both;
+  box-shadow: 0 2px 8px rgba(23, 75, 221, 0.3),
+    inset 0 1px 0 rgba(170, 170, 170, 0.18); /* Added bevel effect */
+  border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border */
+}
+
+.mobilePhoneLink:hover {
+  background: linear-gradient(
+    64deg,
+    #2c5ce6 8%,
+    #1a2a7a 72%
+  ); /* Lighter gradient on hover */
+  color: #ffffff;
+  transform: translateY(-1px) scale(1.05);
+  box-shadow: 0 4px 16px rgba(23, 75, 221, 0.4),
+    inset 0 1px 0 rgba(170, 170, 170, 0.25); /* Enhanced bevel on hover */
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.mobilePhoneLink:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(23, 75, 221, 0.3),
+    inset 0 1px 0 rgba(170, 170, 170, 0.15);
+}
+
+/* Phone icon + text */
+.phoneIcon {
+  width: 1.1rem;
+  height: 1.1rem;
+  color: #ffffff;
+  transition: all 0.3s ease; /* Simple transition for hover effects */
+}
+
+.phoneText {
+  color: #ffffff;
+  transition: all 0.3s ease;
+}
+
+/* Responsive adjustment for smaller desktop screens */
+@media (min-width: 1050px) and (max-width: 1200px) {
+  .desktopNav {
+    gap: 1.5rem; /* Even smaller gap for medium screens */
+  }
+
+  .phoneLink {
+    font-size: 0.875rem; /* Slightly smaller font on medium screens */
+    padding: 0.6rem 2.34rem; /* Maintain wider button but slightly smaller padding (50% increase) */
+    box-shadow: 0 2px 6px rgba(23, 75, 221, 0.3),
+      inset 0 1px 0 rgba(170, 170, 170, 0.18); /* Adjusted shadow for smaller button */
+  }
+
+  .phoneLink:hover {
+    box-shadow: 0 4px 16px rgba(23, 75, 221, 0.4),
+      inset 0 1px 0 rgba(170, 170, 170, 0.25); /* Adjusted hover shadow */
+  }
+}

@@ -1,0 +1,186 @@
+.section {
+  padding: 4rem 1rem;
+  background-color: white;
+  scroll-margin-top: 80px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 3rem;
+}
+
+@media (min-width: 768px) {
+  .header {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+}
+
+.badge {
+  color: #00a0e9;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.filterInfo {
+  display: flex;
+  align-items: center;
+  background-color: #e6f0ff;
+  color: #0056b3;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  margin-right: 1rem;
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.clearFilter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 0.5rem;
+  color: #0056b3;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 9999px;
+  transition: background-color 0.2s;
+}
+
+.clearFilter:hover {
+  background-color: rgba(0, 86, 179, 0);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr; /* Default: 1 column */
+  gap: 2rem;
+}
+
+/* New media query for screens up to 390px */
+@media (max-width: 390px) {
+  .grid {
+    grid-template-columns: repeat(
+      2,
+      1fr
+    ); /* 2 columns for very small screens */
+    gap: 1rem; /* Adjust gap for tighter layout */
+  }
+}
+
+@media (min-width: 640px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns for screens >= 640px */
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr); /* 3 columns for screens >= 1024px */
+  }
+}
+
+/* Load More Button Styles */
+.loadMoreContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
+}
+
+.loadMoreButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  background-color: #0056b3;
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 86, 179, 0.3);
+}
+
+.loadMoreButton:hover {
+  background-color: #004494;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 86, 179, 0.4);
+}
+
+.loadMoreButton:active {
+  transform: translateY(0);
+}
+
+.loadMoreIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  transition: transform 0.3s ease;
+}
+
+.loadMoreButton:hover .loadMoreIcon {
+  transform: translateY(2px);
+}
+
+.noResults {
+  text-align: center;
+  padding: 3rem 1rem;
+  background-color: #f9fafb;
+  border-radius: 0.5rem;
+  color: #6b7280;
+}
+
+.resetButton {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #0056b3;
+  color: white;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.resetButton:hover {
+  background-color: #004494;
+}
+
+/* Responsive adjustments for .section padding */
+@media (max-width: 768px) {
+  .section {
+    padding: 2rem 0.5rem; /* Reduced padding for smaller screens */
+  }
+
+  .loadMoreButton {
+    padding: 0.875rem 1.5rem;
+    font-size: 0.9375rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    padding: 1.5rem 0.25rem; /* Further reduced padding for very small screens */
+  }
+
+  .loadMoreContainer {
+    margin-top: 2rem;
+  }
+
+  .loadMoreButton {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.875rem;
+  }
+}

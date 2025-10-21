@@ -1,0 +1,57 @@
+# Node modules
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+client/.env
+server/.env
+
+# Build output
+dist/
+build/
+client/build/
+server/dist/
+
+# IDEs and editors
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Testing coverage
+coverage/
+client/coverage/
+server/coverage/
+
+# Misc
+*.log
+*.tgz
+*.gz
+
+# Binaries
+*.exe
+*.out
+*.app
+
+# Firebase
+.firebase/
+firebase-debug.log
+firestore.indexes.json
+firestore.rules
+firebase.json
