@@ -23,7 +23,6 @@ export const allCategories = [
   {
     id: 1,
     name: "Electrician",
-    icon: "⚡",
     description: "Reparații și instalații electrice",
     count: 48,
     backgroundImage: ElectricianImage,
@@ -31,7 +30,6 @@ export const allCategories = [
   {
     id: 2,
     name: "Mecanic Auto",
-    icon: "🔧",
     description: "Reparații și întreținere auto",
     count: 36,
     backgroundImage: MechanicAutoImage,
@@ -39,16 +37,13 @@ export const allCategories = [
   {
     id: 3,
     name: "Instalator",
-    icon: "🚿",
     description: "Servicii și reparații de instalații",
     count: 52,
     backgroundImage: PlumberImage,
   },
   {
     id: 4,
-
     name: "Personal Necalificat",
-    icon: "🧰",
     description: "Ajutor general, șantier, cărat, etc.",
     count: 26,
     backgroundImage: WorkersImage,
@@ -56,7 +51,6 @@ export const allCategories = [
   {
     id: 5,
     name: "Curățenie",
-    icon: "🧹",
     description: "Curățenie pentru case și birouri",
     count: 64,
     backgroundImage: HouseCleanerImage,
@@ -64,7 +58,6 @@ export const allCategories = [
   {
     id: 6,
     name: "Zugrav",
-    icon: <Paintbrush size={24} />,
     description: "Zugrăveli interioare și exterioare",
     count: 31,
     backgroundImage: PainterImage,
@@ -72,7 +65,6 @@ export const allCategories = [
   {
     id: 7,
     name: "Grădinar",
-    icon: "🌿",
     description: "Îngrijire și amenajare spații verzi",
     count: 18,
     backgroundImage: GardenerImage,
@@ -80,7 +72,6 @@ export const allCategories = [
   {
     id: 8,
     name: "Montaj Mobilă",
-    icon: "🪑",
     description: "Asamblare și montaj mobilier",
     count: 23,
     backgroundImage: FurnitureImage,
@@ -88,7 +79,6 @@ export const allCategories = [
   {
     id: 9,
     name: "Reparații Electrocasnice",
-    icon: "📺",
     description: "Reparații pentru electrocasnice",
     count: 19,
     backgroundImage: ApplianceRepairs,
@@ -96,7 +86,6 @@ export const allCategories = [
   {
     id: 10,
     name: "Transport",
-    icon: "🚚",
     description: "Servicii de transport",
     count: 40,
     backgroundImage: TransportImage,
@@ -104,7 +93,6 @@ export const allCategories = [
   {
     id: 11,
     name: "Reparații hardware",
-    icon: "💻",
     description: "Diagnoză și reparații hardware",
     count: 12,
     backgroundImage: HardwareRepair,
@@ -112,16 +100,13 @@ export const allCategories = [
   {
     id: 12,
     name: "Frizer",
-    icon: "💈",
     description: "Tunsori și îngrijire păr",
-
     count: 28,
     backgroundImage: beautySalonImage,
   },
   {
     id: 13,
     name: "Manichiură",
-    icon: "💅",
     description: "Servicii de manichiură și pedichiură",
     count: 22,
     backgroundImage: ManicureImage,
@@ -129,23 +114,13 @@ export const allCategories = [
   {
     id: 14,
     name: "Aer Conditionat",
-    icon: "❄️",
     description: "Montaj și întreținere AC",
     count: 17,
     backgroundImage: ConditioningAirImage,
   },
-  // {
-  //   id: 15,
-  //   name: "Servicii Electricasnice",
-  //   icon: "🔌",
-  //   description: "Instalări și reparații diverse aparate",
-  //   count: 15,
-  //   backgroundImage: "./sd.jpg",
-  // },
   {
     id: 16,
     name: "Montaj gresie si faianta",
-    icon: "🧱",
     description: "Montaj gresie, faianță, plăci ceramice",
     count: 20,
     backgroundImage: FaienceImage,
@@ -153,23 +128,13 @@ export const allCategories = [
   {
     id: 17,
     name: "Montaj panouri solare",
-    icon: "☀️",
     description: "Instalare sisteme solare",
     count: 10,
     backgroundImage: SolarPanelImage,
   },
-  // {
-  //   id: 18,
-  //   name: "Transport / Mutări",
-  //   icon: "📦",
-  //   description: "Mutări locuințe și transport marfă",
-  //   count: 34,
-  //   backgroundImage: DefaultImage,
-  // },
   {
     id: 19,
     name: "Zidar",
-    icon: "🧱",
     description: "Lucrări de zidărie și construcții",
     count: 27,
     backgroundImage: BrickLayerImage,
@@ -177,7 +142,6 @@ export const allCategories = [
   {
     id: 20,
     name: "Alte Servicii",
-    icon: "🛠️",
     description: "Servicii diverse",
     count: 11,
     backgroundImage: OtherJobs,

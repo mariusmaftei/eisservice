@@ -105,7 +105,7 @@
   align-items: center;
   gap: 0.5rem;
   padding: 1rem 2rem;
-  background-color: #0056b3;
+  background: linear-gradient(64deg, #174bdd 8%, #00134b 72%);
   color: white;
   font-weight: 600;
   font-size: 1rem;
@@ -117,7 +117,7 @@
 }
 
 .loadMoreButton:hover {
-  background-color: #004494;
+  background: linear-gradient(64deg, #0d3bb8 8%, #000d2e 72%);
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(0, 86, 179, 0.4);
 }
