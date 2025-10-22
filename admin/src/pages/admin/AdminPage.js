@@ -1,0 +1,270 @@
+import React, { useState, useEffect } from "react";
+import styles from "./AdminPage.module.css";
+import { categoryAPI } from "../../service/api";
+import CategoryForm from "../../components/CategoryForm/CategoryForm";
+
+const AdminPage = () => {
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [showForm, setShowForm] = useState(false);
+  const [editingCategory, setEditingCategory] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterActive, setFilterActive] = useState("all");
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      setLoading(true);
+      const response = await categoryAPI.getAll();
+      setCategories(response.data);
+      setError("");
+    } catch (err) {
+      setError("Eroare la încărcarea categoriilor");
+      console.error("Error fetching categories:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCreateCategory = () => {
+    setEditingCategory(null);
+    setShowForm(true);
+  };
+
+  const handleEditCategory = (category) => {
+    setEditingCategory(category);
+    setShowForm(true);
+  };
+
+  const handleDeleteCategory = async (categoryId) => {
+    if (window.confirm("Ești sigur că vrei să ștergi această categorie?")) {
+      try {
+        await categoryAPI.delete(categoryId);
+        await fetchCategories();
+      } catch (err) {
+        setError("Eroare la ștergerea categoriei");
+        console.error("Error deleting category:", err);
+      }
+    }
+  };
+
+  const handleToggleStatus = async (categoryId) => {
+    try {
+      await categoryAPI.toggleStatus(categoryId);
+      await fetchCategories();
+    } catch (err) {
+      setError("Eroare la schimbarea statusului categoriei");
+      console.error("Error toggling category status:", err);
+    }
+  };
+
+  const handleFormSave = () => {
+    setShowForm(false);
+    setEditingCategory(null);
+    fetchCategories();
+  };
+
+  const handleFormCancel = () => {
+    setShowForm(false);
+    setEditingCategory(null);
+  };
+
+  const filteredCategories = categories.filter((category) => {
+    const matchesSearch =
+      category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      category.displayName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      category.slug.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesFilter =
+      filterActive === "all" ||
+      (filterActive === "active" && category.isActive) ||
+      (filterActive === "inactive" && !category.isActive);
+
+    return matchesSearch && matchesFilter;
+  });
+
+  if (showForm) {
+    return (
+      <div className={styles.adminPage}>
+        <CategoryForm
+          category={editingCategory}
+          onSave={handleFormSave}
+          onCancel={handleFormCancel}
+          isEditing={!!editingCategory}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.adminPage}>
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <h1 className={styles.title}>Gestionare Categorii</h1>
+          <p className={styles.subtitle}>
+            Gestionează categoriile de servicii pentru platforma E.I.S.
+          </p>
+        </div>
+
+        {error && (
+          <div className={styles.errorMessage}>
+            {error}
+            <button onClick={() => setError("")} className={styles.closeError}>
+              ×
+            </button>
+          </div>
+        )}
+
+        <div className={styles.controls}>
+          <div className={styles.searchContainer}>
+            <input
+              type="text"
+              placeholder="Caută categorii..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className={styles.searchInput}
+            />
+          </div>
+
+          <div className={styles.filterContainer}>
+            <select
+              value={filterActive}
+              onChange={(e) => setFilterActive(e.target.value)}
+              className={styles.filterSelect}
+            >
+              <option value="all">Toate Categoriile</option>
+              <option value="active">Doar Active</option>
+              <option value="inactive">Doar Inactive</option>
+            </select>
+          </div>
+
+          <button
+            onClick={handleCreateCategory}
+            className={styles.createButton}
+          >
+            + Creează Categorie Nouă
+          </button>
+        </div>
+
+        {loading ? (
+          <div className={styles.loadingContainer}>
+            <div className={styles.loadingSpinner}></div>
+            <p>Se încarcă categoriile...</p>
+          </div>
+        ) : (
+          <div className={styles.categoriesGrid}>
+            {filteredCategories.length === 0 ? (
+              <div className={styles.emptyState}>
+                <h3>Nu s-au găsit categorii</h3>
+                <p>
+                  {searchTerm || filterActive !== "all"
+                    ? "Încearcă să ajustezi criteriile de căutare sau filtrare"
+                    : "Creează prima categorie pentru a începe"}
+                </p>
+                {!searchTerm && filterActive === "all" && (
+                  <button
+                    onClick={handleCreateCategory}
+                    className={styles.createButton}
+                  >
+                    Creează Prima Categorie
+                  </button>
+                )}
+              </div>
+            ) : (
+              filteredCategories.map((category) => (
+                <div key={category._id} className={styles.categoryCard}>
+                  <div className={styles.cardHeader}>
+                    <div className={styles.categoryInfo}>
+                      <h3 className={styles.categoryName}>
+                        {category.displayName}
+                      </h3>
+                      <p className={styles.categorySlug}>/{category.slug}</p>
+                    </div>
+                    <div className={styles.statusBadge}>
+                      <span
+                        className={`${styles.status} ${
+                          category.isActive ? styles.active : styles.inactive
+                        }`}
+                      >
+                        {category.isActive ? "Activă" : "Inactivă"}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className={styles.cardContent}>
+                    <p className={styles.categoryDescription}>
+                      {category.shortDescription}
+                    </p>
+
+                    <div className={styles.categoryStats}>
+                      <div className={styles.stat}>
+                        <span className={styles.statLabel}>Servicii:</span>
+                        <span className={styles.statValue}>
+                          {category.services?.length || 0}
+                        </span>
+                      </div>
+                      <div className={styles.stat}>
+                        <span className={styles.statLabel}>Creată:</span>
+                        <span className={styles.statValue}>
+                          {new Date(category.createdAt).toLocaleDateString()}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className={styles.cardActions}>
+                    <button
+                      onClick={() => handleEditCategory(category)}
+                      className={styles.editButton}
+                    >
+                      Editează
+                    </button>
+                    <button
+                      onClick={() => handleToggleStatus(category._id)}
+                      className={`${styles.toggleButton} ${
+                        category.isActive ? styles.deactivate : styles.activate
+                      }`}
+                    >
+                      {category.isActive ? "Dezactivează" : "Activează"}
+                    </button>
+                    <button
+                      onClick={() => handleDeleteCategory(category._id)}
+                      className={styles.deleteButton}
+                    >
+                      Șterge
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        )}
+
+        <div className={styles.stats}>
+          <div className={styles.statCard}>
+            <h4>Categorii Totale</h4>
+            <p className={styles.statNumber}>{categories.length}</p>
+          </div>
+          <div className={styles.statCard}>
+            <h4>Categorii Active</h4>
+            <p className={styles.statNumber}>
+              {categories.filter((c) => c.isActive).length}
+            </p>
+          </div>
+          <div className={styles.statCard}>
+            <h4>Categorii Inactive</h4>
+            <p className={styles.statNumber}>
+              {categories.filter((c) => !c.isActive).length}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AdminPage;

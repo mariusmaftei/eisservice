@@ -1,6 +1,5 @@
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-import { motion, useInView } from "framer-motion";
-import { useRef, useEffect } from "react";
+import { useEffect } from "react";
 import styles from "./ContactOptionsPage.module.css";
 import {
   Mail,
@@ -78,77 +77,6 @@ const ContactOptionsPage = () => {
       typeof window !== "undefined" ? window.__INITIAL_DATA__ : "N/A"
     );
   }, [categoryData, loading, error, categorySlug]);
-
-  // Refs for scroll-triggered animations
-  const professionalRef = useRef(null);
-  const whyChooseRef = useRef(null);
-  const servicesRef = useRef(null);
-  const contactOptionsRef = useRef(null);
-
-  const professionalInView = useInView(professionalRef, {
-    once: true,
-    margin: "-100px",
-  });
-  const whyChooseInView = useInView(whyChooseRef, {
-    once: true,
-    margin: "-100px",
-  });
-  const servicesInView = useInView(servicesRef, {
-    once: true,
-    margin: "-100px",
-  });
-  const contactOptionsInView = useInView(contactOptionsRef, {
-    once: true,
-    margin: "-100px",
-  });
-
-  // Animation variants
-  const fadeInUp = {
-    initial: { opacity: 0, y: 60 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.6, ease: "easeOut" },
-  };
-
-  const staggerContainer = {
-    animate: {
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  const staggerItem = {
-    initial: { opacity: 0, y: 30 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.5, ease: "easeOut" },
-  };
-
-  const slideInLeft = {
-    initial: { opacity: 0, x: -60 },
-    animate: { opacity: 1, x: 0 },
-    transition: { duration: 0.6, ease: "easeOut" },
-  };
-
-  const slideInRight = {
-    initial: { opacity: 0, x: 60 },
-    animate: { opacity: 1, x: 0 },
-    transition: { duration: 0.6, ease: "easeOut" },
-  };
-
-  const scaleIn = {
-    initial: { opacity: 0, scale: 0.8 },
-    animate: { opacity: 1, scale: 1 },
-    transition: { duration: 0.5, ease: "easeOut" },
-  };
-
-  const cardHover = {
-    hover: {
-      scale: 1.05,
-      y: -5,
-      transition: { duration: 0.2, ease: "easeInOut" },
-    },
-    tap: { scale: 0.95 },
-  };
 
   const currentSlug =
     categorySlug || (typeof window !== "undefined" && window.__CATEGORY_SLUG__);
@@ -248,181 +176,73 @@ const ContactOptionsPage = () => {
   return (
     <div className={styles.contactOptionsPage}>
       {/* Hero Section with Gradient Title */}
-      <motion.div
-        className={styles.heroSection}
-        initial="initial"
-        animate="animate"
-        variants={fadeInUp}
-      >
-        <motion.h1
-          className={styles.mainTitle}
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-        >
-          {pageData.title}
-        </motion.h1>
-        <motion.p
-          className={styles.mainDescription}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-        >
-          {pageData.description}
-        </motion.p>
-      </motion.div>
+      <div className={styles.heroSection}>
+        <h1 className={styles.mainTitle}>{pageData.title}</h1>
+        <p className={styles.mainDescription}>{pageData.description}</p>
+      </div>
 
       {/* Professional Services Section */}
-      <motion.div className={styles.professionalSection} ref={professionalRef}>
+      <div className={styles.professionalSection}>
         <div className={styles.professionalContainer}>
           <div className={styles.professionalContent}>
-            <motion.div
-              className={styles.professionalText}
-              initial="initial"
-              animate={professionalInView ? "animate" : "initial"}
-              variants={slideInLeft}
-            >
-              <motion.h2
-                className={styles.professionalTitle}
-                initial={{ opacity: 0, y: 30 }}
-                animate={
-                  professionalInView
-                    ? { opacity: 1, y: 0 }
-                    : { opacity: 0, y: 30 }
-                }
-                transition={{ duration: 0.6, delay: 0.2 }}
-              >
+            <div className={styles.professionalText}>
+              <h2 className={styles.professionalTitle}>
                 {categoryData?.professionalContent?.title ||
                   `${defaultCategoryName} Brașov – Servicii Profesionale`}
-              </motion.h2>
+              </h2>
               {categoryData?.professionalContent?.paragraphs?.map(
                 (paragraph, index) => (
-                  <motion.p
-                    key={index}
-                    className={styles.professionalParagraph}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={
-                      professionalInView
-                        ? { opacity: 1, y: 0 }
-                        : { opacity: 0, y: 20 }
-                    }
-                    transition={{ duration: 0.5, delay: 0.4 + index * 0.2 }}
-                  >
+                  <p key={index} className={styles.professionalParagraph}>
                     {paragraph}
-                  </motion.p>
+                  </p>
                 )
               ) || (
-                <motion.p
-                  className={styles.professionalParagraph}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={
-                    professionalInView
-                      ? { opacity: 1, y: 0 }
-                      : { opacity: 0, y: 20 }
-                  }
-                  transition={{ duration: 0.5, delay: 0.4 }}
-                >
+                <p className={styles.professionalParagraph}>
                   Servicii profesionale de calitate superioară în Brașov. Echipa
                   noastră de specialiști oferă soluții complete pentru nevoile
                   tale.
-                </motion.p>
+                </p>
               )}
-              <motion.button
-                className={styles.searchButton}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={
-                  professionalInView
-                    ? { opacity: 1, scale: 1 }
-                    : { opacity: 0, scale: 0.8 }
-                }
-                transition={{ duration: 0.5, delay: 1 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
+              <button className={styles.searchButton}>
                 CAUTA {defaultCategoryName.toUpperCase()} BRASOV
-              </motion.button>
-            </motion.div>
-            <motion.div
-              className={styles.professionalImage}
-              initial="initial"
-              animate={professionalInView ? "animate" : "initial"}
-              variants={slideInRight}
-            >
-              <motion.img
+              </button>
+            </div>
+            <div className={styles.professionalImage}>
+              <img
                 src={
                   categoryData?.image ||
                   "/assets/images/category-images/worker-image.webp"
                 }
                 alt={categoryData?.displayName || defaultCategoryName}
                 className={styles.painterImage}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={
-                  professionalInView
-                    ? { opacity: 1, scale: 1 }
-                    : { opacity: 0, scale: 0.8 }
-                }
-                transition={{ duration: 0.6, delay: 0.3 }}
-                whileHover={{ scale: 1.05 }}
               />
-            </motion.div>
+            </div>
           </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* Why Choose Section */}
-      <motion.div className={styles.whyChooseSection} ref={whyChooseRef}>
+      <div className={styles.whyChooseSection}>
         <div className={styles.whyChooseContainer}>
-          <motion.div
-            className={styles.whyChooseText}
-            initial="initial"
-            animate={whyChooseInView ? "animate" : "initial"}
-            variants={slideInRight}
-          >
-            <motion.h3
-              className={styles.whyChooseTitle}
-              initial={{ opacity: 0, y: 30 }}
-              animate={
-                whyChooseInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }
-              }
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
+          <div className={styles.whyChooseText}>
+            <h3 className={styles.whyChooseTitle}>
               {categoryData?.whyChooseUs?.title ||
                 `De ce să alegi un ${defaultCategoryName.toLowerCase()} Brașov din platforma noastră`}
-            </motion.h3>
+            </h3>
             {categoryData?.whyChooseUs?.paragraphs?.map((paragraph, index) => (
-              <motion.p
-                key={index}
-                className={styles.whyChooseParagraph}
-                initial={{ opacity: 0, y: 20 }}
-                animate={
-                  whyChooseInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
-                }
-                transition={{ duration: 0.5, delay: 0.4 + index * 0.2 }}
-              >
+              <p key={index} className={styles.whyChooseParagraph}>
                 {paragraph}
-              </motion.p>
+              </p>
             )) || (
-              <motion.p
-                className={styles.whyChooseParagraph}
-                initial={{ opacity: 0, y: 20 }}
-                animate={
-                  whyChooseInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
-                }
-                transition={{ duration: 0.5, delay: 0.4 }}
-              >
+              <p className={styles.whyChooseParagraph}>
                 Colaborând cu un {defaultCategoryName.toLowerCase()} Brașov din
                 platforma noastră, beneficiezi de siguranța unei lucrări
                 executate corect, la timp și la preț corect.
-              </motion.p>
+              </p>
             )}
-          </motion.div>
-          <motion.div
-            className={styles.whyChooseImage}
-            initial="initial"
-            animate={whyChooseInView ? "animate" : "initial"}
-            variants={slideInLeft}
-          >
-            <motion.img
+          </div>
+          <div className={styles.whyChooseImage}>
+            <img
               src={
                 categoryData?.workingImage ||
                 "/assets/images/category-images/worker-image.webp"
@@ -431,82 +251,41 @@ const ContactOptionsPage = () => {
                 categoryData?.displayName || defaultCategoryName
               } la lucru`}
               className={styles.painterWorkingImage}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={
-                whyChooseInView
-                  ? { opacity: 1, scale: 1 }
-                  : { opacity: 0, scale: 0.8 }
-              }
-              transition={{ duration: 0.6, delay: 0.3 }}
-              whileHover={{ scale: 1.05 }}
             />
-          </motion.div>
+          </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* Services Offered Section */}
-      <motion.div className={styles.servicesOfferedSection} ref={servicesRef}>
+      <div className={styles.servicesOfferedSection}>
         <div className={styles.servicesOfferedContainer}>
-          <motion.h4
-            className={styles.servicesOfferedTitle}
-            initial={{ opacity: 0, y: 30 }}
-            animate={
-              servicesInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }
-            }
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
+          <h4 className={styles.servicesOfferedTitle}>
             Servicii oferite de{" "}
             {categoryData?.displayName?.toLowerCase() ||
               defaultCategoryName.toLowerCase()}{" "}
             Brașov
-          </motion.h4>
-          <motion.p
-            className={styles.servicesOfferedParagraph}
-            initial={{ opacity: 0, y: 20 }}
-            animate={
-              servicesInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
-            }
-            transition={{ duration: 0.5, delay: 0.4 }}
-          >
+          </h4>
+          <p className={styles.servicesOfferedParagraph}>
             {categoryData?.description ||
               `Oferim o gamă completă de servicii profesionale, potrivite pentru locuințe, birouri și spații comerciale. Fiecare lucrare este realizată cu atenție, folosind echipamente profesionale și materiale de calitate.`}
-          </motion.p>
+          </p>
         </div>
-      </motion.div>
+      </div>
 
       {/* Services Cards Section */}
-      <motion.div
-        className={styles.servicesCardsSection}
-        initial="initial"
-        animate={servicesInView ? "animate" : "initial"}
-        variants={staggerContainer}
-      >
+      <div className={styles.servicesCardsSection}>
         <div className={styles.servicesCardsContainer}>
-          <motion.div
-            className={styles.servicesCardsGrid}
-            variants={staggerContainer}
-          >
+          <div className={styles.servicesCardsGrid}>
             {categoryData?.services?.map((service, index) => (
-              <motion.div
-                key={index}
-                className={styles.serviceCard}
-                variants={staggerItem}
-                whileHover={{ scale: 1.02, y: -5 }}
-                transition={{ duration: 0.2 }}
-              >
+              <div key={index} className={styles.serviceCard}>
                 <h5 className={styles.serviceCardTitle}>{service.title}</h5>
                 <p className={styles.serviceCardParagraph}>
                   {service.description}
                 </p>
-              </motion.div>
+              </div>
             )) || (
               <>
-                <motion.div
-                  className={styles.serviceCard}
-                  variants={staggerItem}
-                  whileHover={{ scale: 1.02, y: -5 }}
-                  transition={{ duration: 0.2 }}
-                >
+                <div className={styles.serviceCard}>
                   <h5 className={styles.serviceCardTitle}>
                     Servicii profesionale
                   </h5>
@@ -514,13 +293,8 @@ const ContactOptionsPage = () => {
                     Oferim servicii de calitate superioară cu echipamente
                     moderne și materiale de calitate.
                   </p>
-                </motion.div>
-                <motion.div
-                  className={styles.serviceCard}
-                  variants={staggerItem}
-                  whileHover={{ scale: 1.02, y: -5 }}
-                  transition={{ duration: 0.2 }}
-                >
+                </div>
+                <div className={styles.serviceCard}>
                   <h5 className={styles.serviceCardTitle}>
                     Consultanță gratuită
                   </h5>
@@ -528,13 +302,8 @@ const ContactOptionsPage = () => {
                     Oferim consultanță gratuită pentru alegerea soluțiilor
                     potrivite pentru proiectul tău.
                   </p>
-                </motion.div>
-                <motion.div
-                  className={styles.serviceCard}
-                  variants={staggerItem}
-                  whileHover={{ scale: 1.02, y: -5 }}
-                  transition={{ duration: 0.2 }}
-                >
+                </div>
+                <div className={styles.serviceCard}>
                   <h5 className={styles.serviceCardTitle}>
                     Garanție și suport
                   </h5>
@@ -542,120 +311,72 @@ const ContactOptionsPage = () => {
                     Toate lucrările beneficiază de garanție și suport tehnic
                     după finalizare.
                   </p>
-                </motion.div>
+                </div>
               </>
             )}
-          </motion.div>
+          </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* Statistics Section */}
       <StatisticsSection />
 
       {/* Call to Action Section */}
-      <motion.div
-        className={styles.callToActionSection}
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-      >
-        <motion.h6
-          className={styles.callToActionTitle}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-        >
+      <div className={styles.callToActionSection}>
+        <h6 className={styles.callToActionTitle}>
           Solicită acum un{" "}
           {categoryData?.displayName?.toLowerCase() ||
             defaultCategoryName.toLowerCase()}{" "}
           Brașov <br />
           Echipa noastră răspunde rapid solicitărilor, iar specialiștii
           disponibili te pot contacta în cel mai scurt timp.
-        </motion.h6>
-      </motion.div>
+        </h6>
+      </div>
 
       {/* Contact Options */}
-      <motion.div className={styles.optionsContainer} ref={contactOptionsRef}>
-        <motion.div
-          className={styles.optionsGrid}
-          initial="initial"
-          animate={contactOptionsInView ? "animate" : "initial"}
-          variants={staggerContainer}
-        >
+      <div className={styles.optionsContainer}>
+        <div className={styles.optionsGrid}>
           {pageData.contactOptions.map((option, index) => {
             const IconComponent = option.icon;
             return (
-              <motion.div
+              <div
                 key={option.id}
                 className={styles.optionCard}
                 onClick={option.action}
-                variants={staggerItem}
-                whileHover="hover"
-                whileTap="tap"
-                custom={index}
               >
-                <motion.div className={styles.cardHeader} variants={cardHover}>
-                  <motion.div
-                    className={styles.iconWrapper}
-                    initial={{ scale: 0 }}
-                    animate={contactOptionsInView ? { scale: 1 } : { scale: 0 }}
-                    transition={{ duration: 0.3, delay: 0.2 + index * 0.1 }}
-                  >
+                <div className={styles.cardHeader}>
+                  <div className={styles.iconWrapper}>
                     <IconComponent size={32} className={styles.cardIcon} />
-                  </motion.div>
+                  </div>
                   <h2 className={styles.cardTitle}>{option.title}</h2>
                   <p className={styles.cardSubtitle}>{option.subtitle}</p>
-                </motion.div>
+                </div>
 
                 <div className={styles.cardContent}>
                   <ul className={styles.featureList}>
                     {option.features.map((feature, featureIndex) => {
                       const FeatureIcon = feature.icon;
                       return (
-                        <motion.li
-                          key={featureIndex}
-                          className={styles.featureItem}
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={
-                            contactOptionsInView
-                              ? { opacity: 1, x: 0 }
-                              : { opacity: 0, x: -20 }
-                          }
-                          transition={{
-                            duration: 0.3,
-                            delay: 0.4 + index * 0.1 + featureIndex * 0.1,
-                          }}
-                        >
+                        <li key={featureIndex} className={styles.featureItem}>
                           <FeatureIcon size={16} />
                           <span>{feature.text}</span>
-                        </motion.li>
+                        </li>
                       );
                     })}
                   </ul>
                 </div>
 
                 <div className={styles.cardFooter}>
-                  <motion.button
-                    className={styles.actionButton}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={
-                      contactOptionsInView
-                        ? { opacity: 1, scale: 1 }
-                        : { opacity: 0, scale: 0.8 }
-                    }
-                    transition={{ duration: 0.3, delay: 0.6 + index * 0.1 }}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
+                  <button className={styles.actionButton}>
                     {option.buttonText}
                     <IconComponent size={16} className={styles.buttonIcon} />
-                  </motion.button>
+                  </button>
                 </div>
-              </motion.div>
+              </div>
             );
           })}
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     </div>
   );
 };

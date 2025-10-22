@@ -7,6 +7,7 @@ import clientRoute from "./routes/clientRoutes.js";
 import providerRoute from "./routes/providerRouts.js";
 import policyRoute from "./routes/policyRoute.js";
 import categoryRoute from "./routes/categoryRoutes.js";
+import adminRoute from "./routes/adminRoutes.js";
 import databaseConnect from "./config/database.js";
 
 dotenv.config();
@@ -40,6 +41,7 @@ app.use("/api/client", clientRoute);
 app.use("/api/provider", providerRoute);
 app.use("/api/policy", policyRoute);
 app.use("/api/categories", categoryRoute);
+app.use("/api/admin", adminRoute);
 
 // SSR Route for dynamic contact options
 // This route should only match /contact-option/:categorySlug, not API routes

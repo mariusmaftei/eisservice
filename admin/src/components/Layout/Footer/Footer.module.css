@@ -1,0 +1,251 @@
+.footer {
+  background-color: #111827;
+  color: white;
+  margin-top: auto; /* Adăugat pentru a împinge footer-ul în jos */
+}
+
+.container {
+  padding: 4rem 1rem 2rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr; /* Default: 1 column */
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.logoContainer {
+  width: 40px;
+  height: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.logoImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.logoText {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-left: 0.75rem;
+}
+
+.description {
+  color: #9ca3af;
+  margin-bottom: 1.5rem;
+}
+
+.socialLinks {
+  display: flex;
+  gap: 1rem;
+}
+
+.socialLink {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #0056b3;
+  border-radius: 9999px;
+  transition: background-color 0.2s;
+  color: #fff;
+}
+
+.socialLink:hover {
+  background-color: #00a0e9;
+}
+
+.socialIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.sectionTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #00a0e9;
+  margin-bottom: 1.5rem;
+}
+
+.linkList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  color: #9ca3af;
+  transition: color 0.2s;
+}
+
+.link:hover {
+  color: white;
+}
+
+.linkIcon {
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.5rem;
+}
+
+.contactItem {
+  display: flex;
+  align-items: center;
+  color: #9ca3af;
+  margin-bottom: 0.75rem;
+}
+
+.contactIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #00a0e9;
+  margin-right: 0.75rem;
+}
+
+.copyright {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #374151;
+  text-align: center;
+  color: #9ca3af;
+  position: relative;
+}
+
+.consumerRights {
+  position: absolute;
+  right: 0;
+  top: 80%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+@media (max-width: 767px) {
+  .consumerRights {
+    position: static;
+    transform: none;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+}
+
+.consumerRightsLink {
+  display: inline-block;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.consumerRightsLink:hover {
+  transform: translateY(-2px);
+  opacity: 0.8;
+}
+
+.consumerRightsImage {
+  height: 40px;
+  width: auto;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Mobile adjustments for consumer rights */
+@media (max-width: 390px) {
+  .consumerRights {
+    gap: 0.5rem;
+  }
+
+  .consumerRightsImage {
+    height: 32px;
+  }
+}
+
+/* Responsive adjustments for screens up to 390px */
+@media (max-width: 390px) {
+  .container {
+    padding: 2rem 0.75rem 1rem; /* Reduced vertical and horizontal padding */
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, 1fr); /* Two columns for 390px width */
+    gap: 1.5rem; /* Slightly reduced gap between sections */
+  }
+
+  /* Make the first section (logo, description, social) span both columns */
+  .grid > div:nth-child(1) {
+    grid-column: span 2;
+  }
+
+  /* The 2nd and 3rd sections (Link-uri rapide, Servicii) will naturally be 1 column each */
+
+  /* Make the 4th section (Contactează-ne) span both columns */
+  .grid > div:nth-child(4) {
+    grid-column: span 2;
+  }
+
+  .logoText {
+    font-size: 1.25rem; /* Smaller logo text */
+  }
+
+  .description {
+    font-size: 0.875rem; /* Smaller description text */
+  }
+
+  .socialLink {
+    width: 2rem; /* Smaller social icons container */
+    height: 2rem;
+  }
+
+  .socialIcon {
+    width: 1rem; /* Smaller social icon SVG */
+    height: 1rem;
+  }
+
+  .sectionTitle {
+    font-size: 1rem; /* Smaller section titles */
+    margin-bottom: 1rem; /* Adjusted margin */
+  }
+
+  .linkList {
+    gap: 0.5rem; /* Tighter link list */
+  }
+
+  .link,
+  .contactItem {
+    font-size: 0.875rem; /* Smaller link and contact text */
+  }
+
+  .linkIcon,
+  .contactIcon {
+    width: 1rem; /* Smaller icons in links/contact */
+    height: 1rem;
+  }
+
+  .copyright {
+    font-size: 0.75rem; /* Smaller copyright text */
+    padding-top: 1rem; /* Reduced padding */
+    margin-top: 1rem; /* Reduced margin */
+  }
+}
