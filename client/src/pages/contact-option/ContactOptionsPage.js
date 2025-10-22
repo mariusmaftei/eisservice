@@ -1,6 +1,6 @@
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import styles from "./ContactOptionsPage.module.css";
 import {
   Mail,
@@ -13,16 +13,71 @@ import {
   Headphones,
 } from "lucide-react";
 import { contactInfo } from "../../config/contactInfo";
-import painterImage from "../../assets/images/category-images/Zugrav Brașov – Servicii Profesionale.png";
-import painterWorkingImage from "../../assets/images/category-images/Zugrav Brașov vopsind un perete alb într-un apartament modern.png";
+import { useCategory } from "../../context/CategoryContext";
 import StatisticsSection from "../../components/layout/Sections/StatisticsSection/StatisticsSection";
 
 const ContactOptionsPage = () => {
   const { categorySlug } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
+  const { categoryData, loading, error, fetchCategory, clearSSRData } =
+    useCategory();
 
-  const { categoryName, categoryImage } = location.state || {};
+  // Fetch category data if not available or if category changed
+  useEffect(() => {
+    // Get categorySlug from URL params or from SSR
+    const currentSlug =
+      categorySlug ||
+      (typeof window !== "undefined" && window.__CATEGORY_SLUG__);
+
+    if (!currentSlug) return;
+
+    // Check if we have initial data from SSR first
+    if (
+      typeof window !== "undefined" &&
+      window.__INITIAL_DATA__ &&
+      window.__INITIAL_DATA__.slug === currentSlug
+    ) {
+      // Data is already available from SSR, no need to fetch
+      console.log("Using SSR data for category:", currentSlug);
+      return;
+    }
+
+    // Check if we need to fetch data
+    const needsFetch =
+      !categoryData || // No data at all
+      categoryData.slug !== currentSlug || // Data is for different category
+      (!loading && !categoryData.slug); // Loading finished but no data
+
+    if (needsFetch && !loading) {
+      console.log("Fetching category data for:", currentSlug);
+      fetchCategory(currentSlug);
+    }
+  }, [categorySlug, categoryData, fetchCategory, loading]);
+
+  // Cleanup effect to clear SSR data when component unmounts
+  useEffect(() => {
+    return () => {
+      // Clear SSR data when leaving the page to prevent stale data
+      clearSSRData();
+    };
+  }, [clearSSRData]);
+
+  // Debug logging
+  useEffect(() => {
+    const currentSlug =
+      categorySlug ||
+      (typeof window !== "undefined" && window.__CATEGORY_SLUG__);
+    console.log("ContactOptionsPage - categoryData:", categoryData);
+    console.log("ContactOptionsPage - loading:", loading);
+    console.log("ContactOptionsPage - error:", error);
+    console.log("ContactOptionsPage - categorySlug:", categorySlug);
+    console.log("ContactOptionsPage - currentSlug:", currentSlug);
+    console.log(
+      "ContactOptionsPage - SSR data:",
+      typeof window !== "undefined" ? window.__INITIAL_DATA__ : "N/A"
+    );
+  }, [categoryData, loading, error, categorySlug]);
 
   // Refs for scroll-triggered animations
   const professionalRef = useRef(null);
@@ -95,25 +150,27 @@ const ContactOptionsPage = () => {
     tap: { scale: 0.95 },
   };
 
-  const defaultCategoryName = categorySlug
-    ? categorySlug
+  const currentSlug =
+    categorySlug || (typeof window !== "undefined" && window.__CATEGORY_SLUG__);
+  const defaultCategoryName = currentSlug
+    ? currentSlug
         .split("-")
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(" ")
     : "Serviciu";
 
   const handleEmailOption = () => {
-    navigate(`/solicita-serviciu/${categorySlug}/formular`, {
+    navigate(`/solicita-serviciu/${currentSlug}/formular`, {
       state: {
-        categoryName: categoryName || defaultCategoryName,
-        categoryImage,
+        categoryName: categoryData?.displayName || defaultCategoryName,
+        categoryImage: categoryData?.image,
       },
     });
   };
 
   const handleWhatsAppOption = () => {
     const message = `Salut! Sunt interesat de servicii de ${
-      categoryName || defaultCategoryName
+      categoryData?.displayName || defaultCategoryName
     }. Poți să mă ajuți cu mai multe informații?`;
     const whatsappUrl = `https://wa.me/${
       contactInfo.phoneFormatted
@@ -121,15 +178,19 @@ const ContactOptionsPage = () => {
     window.open(whatsappUrl, "_blank");
   };
 
-  // Dummy data for dynamic content
+  // Dynamic page data based on category
   const pageData = {
-    title: "Zugrav Brasov – Servicii Profesionale de Vopsitorie",
-    description: "Acasa / Zugrav Brasov - Servicii Profesionale de Vopsitorie",
-    services: [
-      "Vopsitorie interioară și exterioară",
-      "Renovare completă",
-      "Consultanță în alegerea culorilor",
-      "Materiale de calitate superioară",
+    title:
+      categoryData?.seo?.title ||
+      `${defaultCategoryName} Brașov – Servicii Profesionale`,
+    description:
+      categoryData?.seo?.description ||
+      `Acasa / ${defaultCategoryName} Brașov - Servicii Profesionale`,
+    services: categoryData?.services || [
+      "Servicii profesionale",
+      "Calitate garantată",
+      "Prețuri competitive",
+      "Echipa specializată",
     ],
     contactOptions: [
       {
@@ -160,6 +221,29 @@ const ContactOptionsPage = () => {
       },
     ],
   };
+
+  // Show loading state only if we don't have any data and we're loading
+  if (loading && !categoryData) {
+    return (
+      <div className={styles.contactOptionsPage}>
+        <div className={styles.loadingContainer}>
+          <h2>Se încarcă...</h2>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state only if we have an error and no data
+  if (error && !categoryData) {
+    return (
+      <div className={styles.contactOptionsPage}>
+        <div className={styles.errorContainer}>
+          <h2>Eroare la încărcarea datelor</h2>
+          <p>{error}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.contactOptionsPage}>
@@ -208,59 +292,41 @@ const ContactOptionsPage = () => {
                 }
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
-                Zugrav Brașov – Servicii Profesionale de Vopsitorie, Finisaje
-                Interioare și Renovări Complete
+                {categoryData?.professionalContent?.title ||
+                  `${defaultCategoryName} Brașov – Servicii Profesionale`}
               </motion.h2>
-              <motion.p
-                className={styles.professionalParagraph}
-                initial={{ opacity: 0, y: 20 }}
-                animate={
-                  professionalInView
-                    ? { opacity: 1, y: 0 }
-                    : { opacity: 0, y: 20 }
-                }
-                transition={{ duration: 0.5, delay: 0.4 }}
-              >
-                Cauți un zugrav Brasov profesionist care să îți transforme casa,
-                biroul sau apartamentul? Echipa noastră de zugravi autorizați
-                oferă servicii complete de vopsitorie și finisaje interioare, cu
-                atenție la detalii, respectarea termenelor și rezultate
-                impecabile.
-              </motion.p>
-              <motion.p
-                className={styles.professionalParagraph}
-                initial={{ opacity: 0, y: 20 }}
-                animate={
-                  professionalInView
-                    ? { opacity: 1, y: 0 }
-                    : { opacity: 0, y: 20 }
-                }
-                transition={{ duration: 0.5, delay: 0.6 }}
-              >
-                Indiferent dacă dorești o simplă reîmprospătare a culorilor sau
-                o renovare completă, zugravii noștri folosesc materiale de
-                calitate superioară și tehnici moderne pentru o aplicare
-                uniformă, curată și durabilă. Ne ocupăm de tot procesul – de la
-                pregătirea pereților până la aplicarea finală a vopselei –
-                astfel încât spațiul tău să arate perfect, fără stres sau
-                mizerie.
-              </motion.p>
-              <motion.p
-                className={styles.professionalParagraph}
-                initial={{ opacity: 0, y: 20 }}
-                animate={
-                  professionalInView
-                    ? { opacity: 1, y: 0 }
-                    : { opacity: 0, y: 20 }
-                }
-                transition={{ duration: 0.5, delay: 0.8 }}
-              >
-                Înainte de începerea lucrării, oferim consultanță gratuită
-                pentru alegerea culorilor, tipului de vopsea și finisajului
-                potrivit fiecărei camere. Lucrăm curat, protejăm mobilierul și
-                pardoseala, iar la final curățăm totul, lăsând locuința
-                impecabilă.
-              </motion.p>
+              {categoryData?.professionalContent?.paragraphs?.map(
+                (paragraph, index) => (
+                  <motion.p
+                    key={index}
+                    className={styles.professionalParagraph}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={
+                      professionalInView
+                        ? { opacity: 1, y: 0 }
+                        : { opacity: 0, y: 20 }
+                    }
+                    transition={{ duration: 0.5, delay: 0.4 + index * 0.2 }}
+                  >
+                    {paragraph}
+                  </motion.p>
+                )
+              ) || (
+                <motion.p
+                  className={styles.professionalParagraph}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={
+                    professionalInView
+                      ? { opacity: 1, y: 0 }
+                      : { opacity: 0, y: 20 }
+                  }
+                  transition={{ duration: 0.5, delay: 0.4 }}
+                >
+                  Servicii profesionale de calitate superioară în Brașov. Echipa
+                  noastră de specialiști oferă soluții complete pentru nevoile
+                  tale.
+                </motion.p>
+              )}
               <motion.button
                 className={styles.searchButton}
                 initial={{ opacity: 0, scale: 0.8 }}
@@ -273,7 +339,7 @@ const ContactOptionsPage = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                CAUTA ZUGRAV BRASOV
+                CAUTA {defaultCategoryName.toUpperCase()} BRASOV
               </motion.button>
             </motion.div>
             <motion.div
@@ -283,8 +349,11 @@ const ContactOptionsPage = () => {
               variants={slideInRight}
             >
               <motion.img
-                src={painterImage}
-                alt="Zugrav Brașov – Servicii Profesionale"
+                src={
+                  categoryData?.image ||
+                  "/assets/images/category-images/worker-image.webp"
+                }
+                alt={categoryData?.displayName || defaultCategoryName}
                 className={styles.painterImage}
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={
@@ -317,48 +386,35 @@ const ContactOptionsPage = () => {
               }
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              De ce să alegi un instalator Brașov din platforma noastră
+              {categoryData?.whyChooseUs?.title ||
+                `De ce să alegi un ${defaultCategoryName.toLowerCase()} Brașov din platforma noastră`}
             </motion.h3>
-            <motion.p
-              className={styles.whyChooseParagraph}
-              initial={{ opacity: 0, y: 20 }}
-              animate={
-                whyChooseInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
-              }
-              transition={{ duration: 0.5, delay: 0.4 }}
-            >
-              Colaborând cu un zugrav Brașov din platforma noastră, beneficiezi
-              de siguranța unei lucrări executate corect, la timp și la preț
-              corect. Toți zugravii înscriși sunt profesioniști verificați, cu
-              experiență reală și recomandări de la clienți anteriori.
-            </motion.p>
-            <motion.p
-              className={styles.whyChooseParagraph}
-              initial={{ opacity: 0, y: 20 }}
-              animate={
-                whyChooseInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
-              }
-              transition={{ duration: 0.5, delay: 0.6 }}
-            >
-              Platforma noastră îți oferă transparență și confort pe tot
-              parcursul proiectului. Poți solicita oferte rapid, comunica direct
-              cu zugravul și urmări progresul lucrării, astfel încât renovarea
-              sau vopsirea locuinței tale să fie fără stres și cu rezultate
-              impecabile.
-            </motion.p>
-            <motion.p
-              className={styles.whyChooseParagraph}
-              initial={{ opacity: 0, y: 20 }}
-              animate={
-                whyChooseInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
-              }
-              transition={{ duration: 0.5, delay: 0.8 }}
-            >
-              Alegând platforma noastră, economisești timp și eviți riscul de a
-              colabora cu persoane necalificate. Fiecare zugrav are un profil
-              complet, cu poze din lucrări, prețuri orientative și recenzii de
-              la clienți reali din Brașov.
-            </motion.p>
+            {categoryData?.whyChooseUs?.paragraphs?.map((paragraph, index) => (
+              <motion.p
+                key={index}
+                className={styles.whyChooseParagraph}
+                initial={{ opacity: 0, y: 20 }}
+                animate={
+                  whyChooseInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
+                }
+                transition={{ duration: 0.5, delay: 0.4 + index * 0.2 }}
+              >
+                {paragraph}
+              </motion.p>
+            )) || (
+              <motion.p
+                className={styles.whyChooseParagraph}
+                initial={{ opacity: 0, y: 20 }}
+                animate={
+                  whyChooseInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
+                }
+                transition={{ duration: 0.5, delay: 0.4 }}
+              >
+                Colaborând cu un {defaultCategoryName.toLowerCase()} Brașov din
+                platforma noastră, beneficiezi de siguranța unei lucrări
+                executate corect, la timp și la preț corect.
+              </motion.p>
+            )}
           </motion.div>
           <motion.div
             className={styles.whyChooseImage}
@@ -367,8 +423,13 @@ const ContactOptionsPage = () => {
             variants={slideInLeft}
           >
             <motion.img
-              src={painterWorkingImage}
-              alt="Zugrav Brașov vopsind un perete alb într-un apartament modern"
+              src={
+                categoryData?.workingImage ||
+                "/assets/images/category-images/worker-image.webp"
+              }
+              alt={`${
+                categoryData?.displayName || defaultCategoryName
+              } la lucru`}
               className={styles.painterWorkingImage}
               initial={{ opacity: 0, scale: 0.8 }}
               animate={
@@ -394,7 +455,10 @@ const ContactOptionsPage = () => {
             }
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            Servicii oferite de zugravi Brasov
+            Servicii oferite de{" "}
+            {categoryData?.displayName?.toLowerCase() ||
+              defaultCategoryName.toLowerCase()}{" "}
+            Brașov
           </motion.h4>
           <motion.p
             className={styles.servicesOfferedParagraph}
@@ -404,10 +468,8 @@ const ContactOptionsPage = () => {
             }
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            Oferim o gamă completă de servicii de zugrăvit și finisaje
-            interioare, potrivite pentru locuințe, birouri și spații comerciale.
-            Fiecare lucrare este realizată cu atenție, folosind scule
-            profesionale și materiale potrivite fiecărui tip de suprafață.
+            {categoryData?.description ||
+              `Oferim o gamă completă de servicii profesionale, potrivite pentru locuințe, birouri și spații comerciale. Fiecare lucrare este realizată cu atenție, folosind echipamente profesionale și materiale de calitate.`}
           </motion.p>
         </div>
       </motion.div>
@@ -424,94 +486,65 @@ const ContactOptionsPage = () => {
             className={styles.servicesCardsGrid}
             variants={staggerContainer}
           >
-            <motion.div
-              className={styles.serviceCard}
-              variants={staggerItem}
-              whileHover={{ scale: 1.02, y: -5 }}
-              transition={{ duration: 0.2 }}
-            >
-              <h5 className={styles.serviceCardTitle}>
-                Zugrăvit pereți și tavane
-              </h5>
-              <p className={styles.serviceCardParagraph}>
-                Aplicații de vopsea lavabilă mată sau satinată, culori uniforme,
-                fără urme sau diferențe de nuanță. Lucrăm cu vopsele premium
-                pentru rezultate durabile și un aspect modern.
-              </p>
-            </motion.div>
-            <motion.div
-              className={styles.serviceCard}
-              variants={staggerItem}
-              whileHover={{ scale: 1.02, y: -5 }}
-              transition={{ duration: 0.2 }}
-            >
-              <h5 className={styles.serviceCardTitle}>
-                Reparații și pregătire pereți
-              </h5>
-              <p className={styles.serviceCardParagraph}>
-                Decapare, gletuire, șlefuire și amorsare profesională înainte de
-                zugrăvit, pentru o aderență perfectă. Verificăm planeitatea și
-                integritatea suprafeței pentru a preveni fisurile.
-              </p>
-            </motion.div>
-            <motion.div
-              className={styles.serviceCard}
-              variants={staggerItem}
-              whileHover={{ scale: 1.02, y: -5 }}
-              transition={{ duration: 0.2 }}
-            >
-              <h5 className={styles.serviceCardTitle}>Zugrăveli decorative</h5>
-              <p className={styles.serviceCardParagraph}>
-                Realizăm efecte decorative moderne (stucco, sablat, beton
-                aparent, vopsea texturată, tapet decorativ) pentru un design
-                unic și elegant. Recomandăm finisaje personalizate pentru camere
-                de zi, dormitoare sau birouri.
-              </p>
-            </motion.div>
-            <motion.div
-              className={styles.serviceCard}
-              variants={staggerItem}
-              whileHover={{ scale: 1.02, y: -5 }}
-              transition={{ duration: 0.2 }}
-            >
-              <h5 className={styles.serviceCardTitle}>
-                Vopsitorie uși, tâmplărie și elemente din lemn
-              </h5>
-              <p className={styles.serviceCardParagraph}>
-                Folosim lacuri și vopsele ecologice, rezistente la zgârieturi și
-                umezeală, pentru uși, tocuri, scări și mobilier din lemn masiv.
-              </p>
-            </motion.div>
-            <motion.div
-              className={styles.serviceCard}
-              variants={staggerItem}
-              whileHover={{ scale: 1.02, y: -5 }}
-              transition={{ duration: 0.2 }}
-            >
-              <h5 className={styles.serviceCardTitle}>
-                Zugrăvit fațade și spații exterioare
-              </h5>
-              <p className={styles.serviceCardParagraph}>
-                Aplicații rezistente la intemperii, protejând clădirea de
-                umezeală, raze UV și variații de temperatură. Folosim vopsele
-                lavabile exterioare și pigmenți de lungă durată.
-              </p>
-            </motion.div>
-            <motion.div
-              className={styles.serviceCard}
-              variants={staggerItem}
-              whileHover={{ scale: 1.02, y: -5 }}
-              transition={{ duration: 0.2 }}
-            >
-              <h5 className={styles.serviceCardTitle}>
-                Finisaje premium pentru spații comerciale
-              </h5>
-              <p className={styles.serviceCardParagraph}>
-                Zugrăvim birouri, restaurante, hoteluri și magazine, respectând
-                cerințele de design și termenele stricte. Folosim vopsele
-                lavabile rezistente la trafic intens și murdărie.
-              </p>
-            </motion.div>
+            {categoryData?.services?.map((service, index) => (
+              <motion.div
+                key={index}
+                className={styles.serviceCard}
+                variants={staggerItem}
+                whileHover={{ scale: 1.02, y: -5 }}
+                transition={{ duration: 0.2 }}
+              >
+                <h5 className={styles.serviceCardTitle}>{service.title}</h5>
+                <p className={styles.serviceCardParagraph}>
+                  {service.description}
+                </p>
+              </motion.div>
+            )) || (
+              <>
+                <motion.div
+                  className={styles.serviceCard}
+                  variants={staggerItem}
+                  whileHover={{ scale: 1.02, y: -5 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <h5 className={styles.serviceCardTitle}>
+                    Servicii profesionale
+                  </h5>
+                  <p className={styles.serviceCardParagraph}>
+                    Oferim servicii de calitate superioară cu echipamente
+                    moderne și materiale de calitate.
+                  </p>
+                </motion.div>
+                <motion.div
+                  className={styles.serviceCard}
+                  variants={staggerItem}
+                  whileHover={{ scale: 1.02, y: -5 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <h5 className={styles.serviceCardTitle}>
+                    Consultanță gratuită
+                  </h5>
+                  <p className={styles.serviceCardParagraph}>
+                    Oferim consultanță gratuită pentru alegerea soluțiilor
+                    potrivite pentru proiectul tău.
+                  </p>
+                </motion.div>
+                <motion.div
+                  className={styles.serviceCard}
+                  variants={staggerItem}
+                  whileHover={{ scale: 1.02, y: -5 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <h5 className={styles.serviceCardTitle}>
+                    Garanție și suport
+                  </h5>
+                  <p className={styles.serviceCardParagraph}>
+                    Toate lucrările beneficiază de garanție și suport tehnic
+                    după finalizare.
+                  </p>
+                </motion.div>
+              </>
+            )}
           </motion.div>
         </div>
       </motion.div>
@@ -532,7 +565,10 @@ const ContactOptionsPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
-          Solicită acum un zugrav brasov <br />
+          Solicită acum un{" "}
+          {categoryData?.displayName?.toLowerCase() ||
+            defaultCategoryName.toLowerCase()}{" "}
+          Brașov <br />
           Echipa noastră răspunde rapid solicitărilor, iar specialiștii
           disponibili te pot contacta în cel mai scurt timp.
         </motion.h6>

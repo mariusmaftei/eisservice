@@ -158,6 +158,20 @@
   background-color: #004494;
 }
 
+.loadingContainer {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #6b7280;
+}
+
+.errorContainer {
+  text-align: center;
+  padding: 3rem 1rem;
+  background-color: #fef2f2;
+  border-radius: 0.5rem;
+  color: #dc2626;
+}
+
 /* Responsive adjustments for .section padding */
 @media (max-width: 768px) {
   .section {

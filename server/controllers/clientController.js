@@ -152,6 +152,16 @@ export const sendClientEmail = async (req, res) => {
       </div>
     `;
 
+    // Check if email transporter is available
+    if (!clientTransporter) {
+      console.log("Email transporter not available. Skipping email sending.");
+      return res.status(200).json({
+        success: true,
+        message:
+          "Formularul a fost trimis cu succes, dar email-urile nu pot fi trimise în acest moment.",
+      });
+    }
+
     // Send email to admin
     await clientTransporter.sendMail({
       from: process.env.CLIENT_EMAIL,

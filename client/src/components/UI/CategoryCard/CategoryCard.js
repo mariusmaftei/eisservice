@@ -2,29 +2,33 @@ import styles from "./CategoryCard.module.css";
 import { Link } from "react-router-dom";
 
 const CategoryCard = ({ category }) => {
-  // Convertim numele categoriei pentru URL
-  const categorySlug = category.name.toLowerCase().replace(/\s+/g, "-");
+  // Handle both database categories (with slug) and static categories (with id)
+  const categorySlug =
+    category.slug || category.name?.toLowerCase().replace(/\s+/g, "-");
+  const categoryName = category.displayName || category.name;
+  const categoryImage = category.image || category.backgroundImage;
+  const categoryDescription = category.description || category.shortDescription;
 
   return (
     <Link
-      to={`/solicita-serviciu/${categorySlug}/`}
+      to={`/contact-option/${categorySlug}`}
       state={{
-        categoryName: category.name,
-        categoryImage: category.backgroundImage,
+        categoryName: categoryName,
+        categoryImage: categoryImage,
         categorySlug: categorySlug,
       }}
       className="block group"
     >
       <div className={styles.card}>
         <img
-          src={category.backgroundImage || "/placeholder.svg"}
-          alt={`${category.name} background`}
+          src={categoryImage || "/placeholder.svg"}
+          alt={`${categoryName} background`}
           className={styles.backgroundImage}
         />
 
         {/* Professional badge */}
         <div className={styles.badge}>
-          <span className={styles.badgeText}>{category.name}</span>
+          <span className={styles.badgeText}>{categoryName}</span>
         </div>
 
         {/* Hover overlay */}
@@ -33,13 +37,15 @@ const CategoryCard = ({ category }) => {
         <div className={styles.content}>
           <div className={styles.topSection}>
             <div className={styles.providerCount}>
-              <span className={styles.countNumber}>{category.count}</span>
+              <span className={styles.countNumber}>
+                {category.count || "N/A"}
+              </span>
               <span className={styles.countLabel}>furnizori</span>
             </div>
           </div>
 
           <div className={styles.middleSection}>
-            <p className={styles.description}>{category.description}</p>
+            <p className={styles.description}>{categoryDescription}</p>
           </div>
 
           <div className={styles.bottomSection}>

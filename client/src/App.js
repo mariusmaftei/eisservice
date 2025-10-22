@@ -10,6 +10,7 @@ import AboutPage from "./pages/about/AboutPage";
 import ContactPage from "./pages/contact/ContactPage";
 import ContactOptionsPage from "./pages/contact-option/ContactOptionsPage";
 import PrivacyPolicyPage from "./pages/privacy-policy/PrivacyPolicyPage";
+import { CategoryProvider } from "./context/CategoryContext";
 
 const route = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const route = createBrowserRouter([
         element: <ServicePage />,
       },
 
+      {
+        path: "/contact-option/:categorySlug",
+        element: <ContactOptionsPage />,
+      },
       {
         path: "/solicita-serviciu/:categorySlug",
         element: <ContactOptionsPage />,
@@ -53,8 +58,18 @@ const route = createBrowserRouter([
   },
 ]);
 
-function App() {
-  return <RouterProvider router={route} />;
+function App({ categoryData }) {
+  // Get initial data from SSR if available
+  const initialData =
+    categoryData ||
+    (typeof window !== "undefined" && window.__INITIAL_DATA__) ||
+    null;
+
+  return (
+    <CategoryProvider initialData={initialData}>
+      <RouterProvider router={route} />
+    </CategoryProvider>
+  );
 }
 
 export default App;

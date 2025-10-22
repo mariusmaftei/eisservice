@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Test Page</title>
+  </head>
+  <body>
+    <h1>Testing Dynamic Routing</h1>
+    <p>Click the link below to test the electrician page:</p>
+    <a
+      href="http://localhost:8080/contact-option/electrician-brasov"
+      target="_blank"
+      >Test Electrician Page</a
+    >
+
+    <h2>Debug Information</h2>
+    <div id="debug"></div>
+
+    <script>
+      // Test the API endpoint
+      fetch("http://localhost:8080/api/categories/electrician-brasov")
+        .then((response) => response.json())
+        .then((data) => {
+          document.getElementById("debug").innerHTML =
+            "<h3>API Response:</h3><pre>" +
+            JSON.stringify(data, null, 2) +
+            "</pre>";
+        })
+        .catch((error) => {
+          document.getElementById("debug").innerHTML =
+            "<h3>API Error:</h3><pre>" + error.message + "</pre>";
+        });
+    </script>
+  </body>
+</html>
+
