@@ -28,22 +28,17 @@ const Header = () => {
               <div className={styles.logoContainer}>
                 <img src={EISLogo} alt="E.I.S. Logo" className={styles.logo} />
               </div>
-              <span className={styles.logoText}>E.I.S. Admin</span>
+              <span className={styles.logoText}>E.I.S. Administrare</span>
             </Link>
           </div>
 
           <div className={styles.desktopNav}>
             <Link to="/" className={styles.navLink}>
-              Dashboard
+              Panou Principal
             </Link>
             <Link to="/categories" className={styles.navLink}>
-              Categories
+              Categorii
             </Link>
-            {isAdmin() && (
-              <Link to="/admin" className={styles.navLink}>
-                Admin
-              </Link>
-            )}
           </div>
 
           <div className={styles.mobileMenuButton}>
@@ -140,7 +135,7 @@ const Header = () => {
                         d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
                       />
                     </svg>
-                    <span>Logout</span>
+                    <span>Deconectare</span>
                   </button>
                 </div>
               )}
@@ -162,24 +157,15 @@ const Header = () => {
                   className={styles.mobileNavLink}
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Dashboard
+                  Panou Principal
                 </Link>
                 <Link
                   to="/categories"
                   className={styles.mobileNavLink}
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Categories
+                  Categorii
                 </Link>
-                {isAdmin() && (
-                  <Link
-                    to="/admin"
-                    className={styles.mobileNavLink}
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Admin
-                  </Link>
-                )}
               </div>
             </div>
           </>

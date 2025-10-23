@@ -66,54 +66,61 @@ const DashboardPage = () => {
 
   return (
     <div className={styles.dashboardPage}>
-      <div className={styles.container}>
-        <div className={styles.header}>
-          <h1 className={styles.title}>Panou de Administrare</h1>
-          <p className={styles.subtitle}>
-            Bine ai venit în panoul de administrare E.I.S. Service
-          </p>
+      {/* Hero Section */}
+      <div className={styles.heroSection}>
+        <h1 className={styles.mainTitle}>Panou de Administrare</h1>
+        <p className={styles.mainDescription}>
+          Bine ai venit în panoul de administrare E.I.S. Service
+        </p>
+      </div>
+
+      {loading ? (
+        <div className={styles.loadingContainer}>
+          <div className={styles.loadingSpinner}></div>
+          <h2>Se încarcă panoul...</h2>
         </div>
-
-        {loading ? (
-          <div className={styles.loadingContainer}>
-            <div className={styles.loadingSpinner}></div>
-            <p>Se încarcă panoul...</p>
-          </div>
-        ) : (
-          <>
-            {/* Stats Overview */}
-            <div className={styles.statsGrid}>
-              <div className={styles.statCard}>
-                <div className={styles.statIcon}>📊</div>
-                <div className={styles.statContent}>
-                  <h3 className={styles.statNumber}>{stats.totalCategories}</h3>
-                  <p className={styles.statLabel}>Categorii Totale</p>
+      ) : (
+        <>
+          {/* Stats Overview */}
+          <div className={styles.statsSection}>
+            <div className={styles.statsContainer}>
+              <div className={styles.statsGrid}>
+                <div className={styles.statCard}>
+                  <div className={styles.statIcon}>📊</div>
+                  <div className={styles.statContent}>
+                    <h3 className={styles.statNumber}>
+                      {stats.totalCategories}
+                    </h3>
+                    <p className={styles.statLabel}>Categorii Totale</p>
+                  </div>
                 </div>
-              </div>
 
-              <div className={styles.statCard}>
-                <div className={styles.statIcon}>✅</div>
-                <div className={styles.statContent}>
-                  <h3 className={styles.statNumber}>
-                    {stats.activeCategories}
-                  </h3>
-                  <p className={styles.statLabel}>Categorii Active</p>
+                <div className={styles.statCard}>
+                  <div className={styles.statIcon}>✅</div>
+                  <div className={styles.statContent}>
+                    <h3 className={styles.statNumber}>
+                      {stats.activeCategories}
+                    </h3>
+                    <p className={styles.statLabel}>Categorii Active</p>
+                  </div>
                 </div>
-              </div>
 
-              <div className={styles.statCard}>
-                <div className={styles.statIcon}>⏸️</div>
-                <div className={styles.statContent}>
-                  <h3 className={styles.statNumber}>
-                    {stats.inactiveCategories}
-                  </h3>
-                  <p className={styles.statLabel}>Categorii Inactive</p>
+                <div className={styles.statCard}>
+                  <div className={styles.statIcon}>⏸️</div>
+                  <div className={styles.statContent}>
+                    <h3 className={styles.statNumber}>
+                      {stats.inactiveCategories}
+                    </h3>
+                    <p className={styles.statLabel}>Categorii Inactive</p>
+                  </div>
                 </div>
               </div>
             </div>
+          </div>
 
-            {/* Quick Actions */}
-            <div className={styles.quickActions}>
+          {/* Quick Actions */}
+          <div className={styles.quickActions}>
+            <div className={styles.quickActionsContainer}>
               <h2 className={styles.sectionTitle}>Acțiuni Rapide</h2>
               <div className={styles.actionsGrid}>
                 {quickActions.map((action, index) => (
@@ -135,9 +142,11 @@ const DashboardPage = () => {
                 ))}
               </div>
             </div>
+          </div>
 
-            {/* Recent Activity */}
-            <div className={styles.recentActivity}>
+          {/* Recent Activity */}
+          <div className={styles.recentActivity}>
+            <div className={styles.recentActivityContainer}>
               <h2 className={styles.sectionTitle}>Activitate Recentă</h2>
               <div className={styles.activityCard}>
                 <div className={styles.activityItem}>
@@ -161,9 +170,9 @@ const DashboardPage = () => {
                 </div>
               </div>
             </div>
-          </>
-        )}
-      </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

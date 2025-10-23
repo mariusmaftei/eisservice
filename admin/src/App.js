@@ -9,7 +9,6 @@ import AuthPage from "./pages/auth/AuthPage.js";
 import AccessDeniedPage from "./pages/access-denied/AccessDeniedPage.js";
 import NotFoundPage from "./pages/404/NotFoundPage.js";
 import DashboardPage from "./pages/dashboard/DashboardPage";
-import AdminPage from "./pages/admin/AdminPage";
 import CategoriesPage from "./pages/categories/CategoriesPage";
 
 const router = createBrowserRouter([
@@ -38,14 +37,6 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <CategoriesPage />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "admin",
-        element: (
-          <ProtectedRoute requireAdmin={true}>
-            <AdminPage />
           </ProtectedRoute>
         ),
       },

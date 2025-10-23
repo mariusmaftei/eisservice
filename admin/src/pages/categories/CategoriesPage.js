@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styles from "./CategoriesPage.module.css";
 import { categoryAPI } from "../../service/api";
 import CategoryForm from "../../components/CategoryForm/CategoryForm";
+import ConfirmationModal from "../../components/ConfirmationModal/ConfirmationModal";
 import {
   Plus,
   Search,
@@ -23,6 +24,9 @@ const CategoriesPage = () => {
   const [editingCategory, setEditingCategory] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterActive, setFilterActive] = useState("all");
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [categoryToDelete, setCategoryToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     fetchCategories();
@@ -52,16 +56,32 @@ const CategoriesPage = () => {
     setShowForm(true);
   };
 
-  const handleDeleteCategory = async (categoryId) => {
-    if (window.confirm("Ești sigur că vrei să ștergi această categorie?")) {
-      try {
-        await categoryAPI.delete(categoryId);
-        await fetchCategories();
-      } catch (err) {
-        setError("Eroare la ștergerea categoriei");
-        console.error("Error deleting category:", err);
-      }
+  const handleDeleteCategory = (category) => {
+    setCategoryToDelete(category);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDeleteCategory = async () => {
+    if (!categoryToDelete) return;
+
+    try {
+      setIsDeleting(true);
+      await categoryAPI.delete(categoryToDelete._id);
+      await fetchCategories();
+      setShowDeleteModal(false);
+      setCategoryToDelete(null);
+    } catch (err) {
+      setError("Eroare la ștergerea categoriei");
+      console.error("Error deleting category:", err);
+    } finally {
+      setIsDeleting(false);
     }
+  };
+
+  const cancelDeleteCategory = () => {
+    setShowDeleteModal(false);
+    setCategoryToDelete(null);
+    setIsDeleting(false);
   };
 
   const handleToggleStatus = async (categoryId) => {
@@ -277,7 +297,7 @@ const CategoriesPage = () => {
                           {category.isActive ? "Dezactivează" : "Activează"}
                         </button>
                         <button
-                          onClick={() => handleDeleteCategory(category._id)}
+                          onClick={() => handleDeleteCategory(category)}
                           className={styles.deleteButton}
                         >
                           <Trash2 size={16} />
@@ -331,6 +351,19 @@ const CategoriesPage = () => {
           </div>
         </>
       )}
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showDeleteModal}
+        onClose={cancelDeleteCategory}
+        onConfirm={confirmDeleteCategory}
+        title="Ștergere Categorie"
+        message={`Ești sigur că vrei să ștergi categoria "${categoryToDelete?.displayName}"? Această acțiune nu poate fi anulată.`}
+        confirmText="Șterge"
+        cancelText="Anulează"
+        type="danger"
+        isLoading={isDeleting}
+      />
     </div>
   );
 };
