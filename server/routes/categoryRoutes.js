@@ -1,5 +1,6 @@
 import express from "express";
 import Category from "../models/Category.js";
+import { processCategoryImages } from "../utils/imageUrlCleaner.js";
 
 const categoryRoute = express.Router();
 
@@ -10,9 +11,14 @@ categoryRoute.get("/", async (req, res) => {
       .select("slug name displayName description image")
       .sort({ createdAt: -1 });
 
+    // Process images for each category
+    const processedCategories = categories.map((category) =>
+      processCategoryImages(category.toObject())
+    );
+
     res.json({
       success: true,
-      data: categories,
+      data: processedCategories,
     });
   } catch (error) {
     console.error("Error fetching categories:", error);
@@ -41,9 +47,12 @@ categoryRoute.get("/:slug", async (req, res) => {
       });
     }
 
+    // Process images for the category
+    const processedCategory = processCategoryImages(category.toObject());
+
     res.json({
       success: true,
-      data: category,
+      data: processedCategory,
     });
   } catch (error) {
     console.error("Error fetching category:", error);

@@ -72,6 +72,12 @@ app.use("/api/upload", uploadRoute);
 // Serve static files from React build (after API routes)
 app.use(express.static(path.join(__dirname, "../client/build")));
 
+// Serve source assets for images that weren't processed during build
+app.use(
+  "/assets",
+  express.static(path.join(__dirname, "../client/src/assets"))
+);
+
 // SSR Route for dynamic contact options
 // This route should only match /contact-option/:categorySlug, not API routes
 app.get("/contact-option/:categorySlug", async (req, res) => {
@@ -81,6 +87,9 @@ app.get("/contact-option/:categorySlug", async (req, res) => {
 
     // Import Category model dynamically to avoid circular imports
     const { default: Category } = await import("./models/Category.js");
+    const { processCategoryImages } = await import(
+      "./utils/imageUrlCleaner.js"
+    );
     const renderApp = (await import("./utils/ssr.js")).default;
 
     console.log("Looking for category with slug:", categorySlug);
@@ -96,9 +105,13 @@ app.get("/contact-option/:categorySlug", async (req, res) => {
       return res.status(404).send("Category not found");
     }
 
+    console.log("Processing category images");
+    // Process images for the category
+    const processedCategory = processCategoryImages(category.toObject());
+
     console.log("Rendering app with category data");
     // Render the React app with category data
-    const html = renderApp(req.url, category);
+    const html = renderApp(req.url, processedCategory);
     console.log("HTML rendered successfully");
     res.send(html);
   } catch (error) {

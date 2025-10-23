@@ -50,6 +50,18 @@ const categorySchema = new mongoose.Schema({
     type: String,
     required: false,
   },
+  workingImage: {
+    type: String,
+    required: false,
+  },
+  workingImageUrl: {
+    type: String,
+    required: false,
+  },
+  workingImageFileName: {
+    type: String,
+    required: false,
+  },
   services: [
     {
       title: {
