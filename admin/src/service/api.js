@@ -10,15 +10,12 @@ const api = axios.create({
     "Content-Type": "application/json",
   },
   timeout: 10000, // 10 seconds timeout
+  withCredentials: true, // Enable cookies for session-based auth
 });
 
-// Request interceptor to add auth token if available
+// Request interceptor - no need to add tokens since we're using session-based auth
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("authToken");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
     return config;
   },
   (error) => {
@@ -33,34 +30,32 @@ api.interceptors.response.use(
   },
   (error) => {
     if (error.response?.status === 401) {
-      // Handle unauthorized access
-      localStorage.removeItem("authToken");
-      window.location.href = "/login";
+      // Handle unauthorized access (not logged in) - redirect to auth page
+      window.location.href = "/auth";
+    } else if (error.response?.status === 403) {
+      // Handle forbidden access (logged in but no permission) - redirect to access denied page
+      window.location.href = "/access-denied";
     }
     return Promise.reject(error);
   }
 );
 
-// User utilities
+// User utilities - Note: These are kept for compatibility but session-based auth is handled by auth-services.js
 export const userAPI = {
-  // Login user
-  login: async (credentials) => {
-    try {
-      const response = await api.post("/auth/login", credentials);
-      if (response.data.token) {
-        localStorage.setItem("authToken", response.data.token);
-      }
-      return response.data;
-    } catch (error) {
-      console.error("Error logging in:", error);
-      throw error;
-    }
+  // Login user (redirects to OAuth)
+  login: async () => {
+    // This should redirect to OAuth, handled by auth-services.js
+    window.location.href = "/api/auth/google";
   },
 
   // Logout user
-  logout: () => {
-    localStorage.removeItem("authToken");
-    window.location.href = "/login";
+  logout: async () => {
+    try {
+      await api.post("/auth/logout");
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+    window.location.href = "/auth";
   },
 
   // Get current user
@@ -74,14 +69,14 @@ export const userAPI = {
     }
   },
 
-  // Check if user is authenticated
-  isAuthenticated: () => {
-    return !!localStorage.getItem("authToken");
-  },
-
-  // Get auth token
-  getToken: () => {
-    return localStorage.getItem("authToken");
+  // Check if user is authenticated (use auth-services.js instead)
+  isAuthenticated: async () => {
+    try {
+      const response = await api.get("/auth/check");
+      return response.data.isAuthenticated;
+    } catch (error) {
+      return false;
+    }
   },
 };
 

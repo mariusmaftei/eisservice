@@ -2,11 +2,22 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "./Header.module.css";
 import EISLogo from "../../../assets/images/logo/eis-service-logo.webp";
-import { contactInfo } from "../../../config/contactInfo";
-import { FaPhoneAlt } from "react-icons/fa";
+import { useAuth } from "../../../context/AuthContext.js";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const { user, logout, getUserDisplayName, getUserInitials, isAdmin } =
+    useAuth();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      setIsUserMenuOpen(false);
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
 
   return (
     <nav className={styles.navbar}>
@@ -28,15 +39,11 @@ const Header = () => {
             <Link to="/categories" className={styles.navLink}>
               Categories
             </Link>
-            <Link to="/providers" className={styles.navLink}>
-              Providers
-            </Link>
-            <Link to="/clients" className={styles.navLink}>
-              Clients
-            </Link>
-            <Link to="/settings" className={styles.navLink}>
-              Settings
-            </Link>
+            {isAdmin() && (
+              <Link to="/admin" className={styles.navLink}>
+                Admin
+              </Link>
+            )}
           </div>
 
           <div className={styles.mobileMenuButton}>
@@ -70,13 +77,75 @@ const Header = () => {
             </button>
           </div>
 
-          <a
-            href={`tel:${contactInfo.phoneFormatted}`}
-            className={styles.phoneLink}
-          >
-            <FaPhoneAlt className={styles.phoneIcon} aria-hidden="true" />
-            <span className={styles.phoneText}>{contactInfo.phone}</span>
-          </a>
+          <div className={styles.userSection}>
+            <div className={styles.userMenu}>
+              <button
+                className={styles.userButton}
+                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                aria-label="User menu"
+              >
+                {user?.profilePicture ? (
+                  <img
+                    src={user.profilePicture}
+                    alt="Profile"
+                    className={styles.userAvatar}
+                  />
+                ) : (
+                  <div className={styles.userInitials}>{getUserInitials()}</div>
+                )}
+                <span className={styles.userName}>{getUserDisplayName()}</span>
+                <svg
+                  className={`${styles.dropdownIcon} ${
+                    isUserMenuOpen ? styles.dropdownIconOpen : ""
+                  }`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+
+              {isUserMenuOpen && (
+                <div className={styles.userDropdown}>
+                  <div className={styles.userInfo}>
+                    <div className={styles.userInfoName}>
+                      {getUserDisplayName()}
+                    </div>
+                    <div className={styles.userInfoEmail}>{user?.email}</div>
+                    {isAdmin() && (
+                      <div className={styles.userInfoRole}>Administrator</div>
+                    )}
+                  </div>
+                  <div className={styles.userDropdownDivider}></div>
+                  <button
+                    className={styles.logoutButton}
+                    onClick={handleLogout}
+                  >
+                    <svg
+                      className={styles.logoutIcon}
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                      />
+                    </svg>
+                    <span>Logout</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
 
         {/* Mobile Menu and Overlay */}
@@ -102,35 +171,15 @@ const Header = () => {
                 >
                   Categories
                 </Link>
-                <Link
-                  to="/providers"
-                  className={styles.mobileNavLink}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Providers
-                </Link>
-                <Link
-                  to="/clients"
-                  className={styles.mobileNavLink}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Clients
-                </Link>
-                <Link
-                  to="/settings"
-                  className={styles.mobileNavLink}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Settings
-                </Link>
-                <a
-                  href={`tel:${contactInfo.phoneFormatted}`}
-                  className={styles.mobilePhoneLink}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <FaPhoneAlt className={styles.phoneIcon} aria-hidden="true" />
-                  <span className={styles.phoneText}>{contactInfo.phone}</span>
-                </a>
+                {isAdmin() && (
+                  <Link
+                    to="/admin"
+                    className={styles.mobileNavLink}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Admin
+                  </Link>
+                )}
               </div>
             </div>
           </>

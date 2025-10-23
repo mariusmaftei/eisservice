@@ -1,0 +1,296 @@
+.authContainer {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+  padding: 20px;
+  gap: 40px;
+}
+
+.headerSection {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.authCard {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15), 0 10px 20px rgba(0, 0, 0, 0.1);
+  padding: 50px;
+  width: 100%;
+  max-width: 480px;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.logoContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.logo {
+  width: 160px;
+  height: 160px;
+  object-fit: contain;
+}
+
+.titleContainer {
+  text-align: center;
+}
+
+.welcomeMessage {
+  font-size: 18px;
+  color: #718096;
+  margin: 0;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.authTitle {
+  font-size: 32px;
+  font-weight: 700;
+  color: #2d3748;
+  margin: 0;
+}
+
+.authSubtitle {
+  font-size: 16px;
+  color: #718096;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.permissionNotice {
+  background: #f0f9ff;
+  border: 1px solid #0ea5e9;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.permissionText {
+  font-size: 14px;
+  color: #0369a1;
+  margin: 0;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.authContent {
+  margin-bottom: 30px;
+}
+
+.loginSection {
+  margin-bottom: 20px;
+}
+
+.googleLoginContainer {
+  margin-bottom: 20px;
+}
+
+.googleLoginButton {
+  width: 100%;
+  padding: 12px 20px;
+  background: white !important;
+  color: #2d3748;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.googleLoginButton:hover:not(:disabled) {
+  background: #f7fafc !important;
+  border-color: #cbd5e0;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.googleLoginButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.googleIcon {
+  flex-shrink: 0;
+}
+
+.loadingSpinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(45, 55, 72, 0.3);
+  border-top: 2px solid #2d3748;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.authInfo {
+  margin-top: 20px;
+}
+
+.infoText {
+  font-size: 14px;
+  color: #718096;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.errorContainer {
+  background: #fed7d7;
+  border: 1px solid #feb2b2;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.errorIcon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.errorContent {
+  flex: 1;
+  text-align: left;
+}
+
+.errorTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #c53030;
+  margin: 0 0 8px 0;
+}
+
+.errorMessage {
+  font-size: 14px;
+  color: #742a2a;
+  margin: 0 0 12px 0;
+  line-height: 1.4;
+}
+
+.retryButton {
+  background: #c53030;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.retryButton:hover:not(:disabled) {
+  background: #9c2626;
+}
+
+.retryButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.authFooter {
+  border-top: 1px solid #e2e8f0;
+  padding-top: 20px;
+}
+
+.footerText {
+  font-size: 14px;
+  color: #a0aec0;
+  margin: 0;
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .authContainer {
+    padding: 15px;
+  }
+
+  .authCard {
+    padding: 40px 30px;
+    max-width: 100%;
+  }
+
+  .authTitle {
+    font-size: 28px;
+  }
+
+  .logoContainer {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+    margin-bottom: 15px;
+  }
+
+  .titleContainer {
+    text-align: center;
+  }
+
+  .logo {
+    width: 140px;
+    height: 140px;
+  }
+
+  .googleLoginButton {
+    padding: 14px 20px;
+    font-size: 15px;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .authContainer {
+    background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+  }
+
+  .authCard {
+    background: white; /* Keep auth box white even in dark mode */
+    color: #2d3748;
+  }
+
+  .authTitle {
+    color: #2d3748;
+  }
+
+  .authSubtitle {
+    color: #718096;
+  }
+
+  .infoText {
+    color: #718096;
+  }
+
+  .footerText {
+    color: #a0aec0;
+  }
+
+  .authFooter {
+    border-top-color: #e2e8f0;
+  }
+}

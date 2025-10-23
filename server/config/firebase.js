@@ -3,46 +3,68 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-// Firebase Admin SDK configuration
-const firebaseConfig = {
-  type: "service_account",
-  project_id: process.env.FIREBASE_PROJECT_ID,
-  private_key_id: process.env.FIREBASE_PRIVATE_KEY_ID,
-  private_key: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
-  client_email: process.env.FIREBASE_CLIENT_EMAIL,
-  client_id: process.env.FIREBASE_CLIENT_ID,
-  auth_uri: "https://accounts.google.com/o/oauth2/auth",
-  token_uri: "https://oauth2.googleapis.com/token",
-  auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
-  client_x509_cert_url: `https://www.googleapis.com/robot/v1/metadata/x509/${process.env.FIREBASE_CLIENT_EMAIL}`,
-};
-
-// Initialize Firebase Admin SDK
+// Initialize Firebase Admin SDK only if credentials are provided
 let app;
 let storage;
+let bucket;
 
-try {
-  // Check if Firebase app is already initialized
-  if (!admin.apps.length) {
-    app = admin.initializeApp({
-      credential: admin.credential.cert(firebaseConfig),
-      storageBucket:
-        process.env.FIREBASE_STORAGE_BUCKET ||
-        `${process.env.FIREBASE_PROJECT_ID}.firebasestorage.app`,
-    });
-  } else {
-    app = admin.app();
+// Check if Firebase credentials are provided and valid
+const hasValidFirebaseCredentials = () => {
+  return (
+    process.env.FIREBASE_PROJECT_ID &&
+    process.env.FIREBASE_PRIVATE_KEY_ID &&
+    process.env.FIREBASE_PRIVATE_KEY &&
+    process.env.FIREBASE_CLIENT_EMAIL &&
+    process.env.FIREBASE_CLIENT_ID &&
+    process.env.FIREBASE_PROJECT_ID !== "your-firebase-project-id" &&
+    process.env.FIREBASE_PRIVATE_KEY !== "your-firebase-private-key"
+  );
+};
+
+if (hasValidFirebaseCredentials()) {
+  try {
+    // Firebase Admin SDK configuration
+    const firebaseConfig = {
+      type: "service_account",
+      project_id: process.env.FIREBASE_PROJECT_ID,
+      private_key_id: process.env.FIREBASE_PRIVATE_KEY_ID,
+      private_key: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
+      client_email: process.env.FIREBASE_CLIENT_EMAIL,
+      client_id: process.env.FIREBASE_CLIENT_ID,
+      auth_uri: "https://accounts.google.com/o/oauth2/auth",
+      token_uri: "https://oauth2.googleapis.com/token",
+      auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
+      client_x509_cert_url: `https://www.googleapis.com/robot/v1/metadata/x509/${process.env.FIREBASE_CLIENT_EMAIL}`,
+    };
+
+    // Check if Firebase app is already initialized
+    if (!admin.apps.length) {
+      app = admin.initializeApp({
+        credential: admin.credential.cert(firebaseConfig),
+        storageBucket:
+          process.env.FIREBASE_STORAGE_BUCKET ||
+          `${process.env.FIREBASE_PROJECT_ID}.firebasestorage.app`,
+      });
+    } else {
+      app = admin.app();
+    }
+
+    storage = admin.storage();
+    bucket = storage.bucket();
+    console.log("Firebase Admin SDK initialized successfully");
+  } catch (error) {
+    console.error("Error initializing Firebase Admin SDK:", error);
+    console.log("Firebase features will be disabled");
+    app = null;
+    storage = null;
+    bucket = null;
   }
-
-  storage = admin.storage();
-  console.log("Firebase Admin SDK initialized successfully");
-} catch (error) {
-  console.error("Error initializing Firebase Admin SDK:", error);
-  throw error;
+} else {
+  console.log("Firebase credentials not provided - Firebase features disabled");
+  app = null;
+  storage = null;
+  bucket = null;
 }
-
-// Get Firebase Storage bucket
-const bucket = storage.bucket();
 
 /**
  * Upload image to Firebase Storage
@@ -58,6 +80,12 @@ export const uploadImage = async (
   folder = "uploads",
   metadata = {}
 ) => {
+  if (!bucket) {
+    throw new Error(
+      "Firebase Storage is not configured. Please set up Firebase credentials."
+    );
+  }
+
   try {
     // Generate unique filename with timestamp
     const timestamp = Date.now();
@@ -112,6 +140,12 @@ export const uploadImage = async (
  * @returns {Promise<Object>} Delete result
  */
 export const deleteImage = async (fileName) => {
+  if (!bucket) {
+    throw new Error(
+      "Firebase Storage is not configured. Please set up Firebase credentials."
+    );
+  }
+
   try {
     const file = bucket.file(fileName);
 
@@ -143,6 +177,12 @@ export const deleteImage = async (fileName) => {
  * @returns {Promise<string>} Download URL
  */
 export const getImageURL = async (fileName) => {
+  if (!bucket) {
+    throw new Error(
+      "Firebase Storage is not configured. Please set up Firebase credentials."
+    );
+  }
+
   try {
     const file = bucket.file(fileName);
 
@@ -172,6 +212,12 @@ export const getImageURL = async (fileName) => {
  * @returns {Promise<Array>} List of files
  */
 export const listImages = async (folder = "uploads", maxResults = 100) => {
+  if (!bucket) {
+    throw new Error(
+      "Firebase Storage is not configured. Please set up Firebase credentials."
+    );
+  }
+
   try {
     const [files] = await bucket.getFiles({
       prefix: folder,
@@ -201,6 +247,12 @@ export const listImages = async (folder = "uploads", maxResults = 100) => {
  * @returns {Promise<Object>} Update result
  */
 export const updateImageMetadata = async (fileName, metadata) => {
+  if (!bucket) {
+    throw new Error(
+      "Firebase Storage is not configured. Please set up Firebase credentials."
+    );
+  }
+
   try {
     const file = bucket.file(fileName);
 

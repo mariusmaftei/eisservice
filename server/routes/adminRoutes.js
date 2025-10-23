@@ -9,8 +9,16 @@ import {
   uploadCategoryImage,
 } from "../controllers/adminController.js";
 import { uploadSingle, uploadFields } from "../middleware/upload.js";
+import {
+  isAuthenticated,
+  isOwnerEmail,
+  isAdmin,
+} from "../controllers/authController.js";
 
 const router = express.Router();
+
+// Apply authentication and authorization middleware to all admin routes
+router.use(isAuthenticated, isOwnerEmail, isAdmin);
 
 // GET /api/admin/categories - Get all categories
 router.get("/categories", getAllCategories);

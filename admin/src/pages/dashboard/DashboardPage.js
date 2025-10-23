@@ -35,29 +35,29 @@ const DashboardPage = () => {
 
   const quickActions = [
     {
-      title: "Manage Categories",
-      description: "Create, edit, and manage service categories",
+      title: "Gestionează Categoriile",
+      description: "Creează, editează și gestionează categoriile de servicii",
       link: "/categories",
       icon: "📂",
       color: "#174bdd",
     },
     {
-      title: "View Providers",
-      description: "Manage service providers and their profiles",
+      title: "Vezi Furnizorii",
+      description: "Gestionează furnizorii de servicii și profilurile lor",
       link: "/providers",
       icon: "👥",
       color: "#059669",
     },
     {
-      title: "Client Management",
-      description: "View and manage client requests and data",
+      title: "Gestionarea Clienților",
+      description: "Vezi și gestionează cererile și datele clienților",
       link: "/clients",
       icon: "👤",
       color: "#dc2626",
     },
     {
-      title: "Settings",
-      description: "Configure platform settings and preferences",
+      title: "Setări",
+      description: "Configurează setările platformei și preferințele",
       link: "/settings",
       icon: "⚙️",
       color: "#7c3aed",
@@ -68,16 +68,16 @@ const DashboardPage = () => {
     <div className={styles.dashboardPage}>
       <div className={styles.container}>
         <div className={styles.header}>
-          <h1 className={styles.title}>Admin Dashboard</h1>
+          <h1 className={styles.title}>Panou de Administrare</h1>
           <p className={styles.subtitle}>
-            Welcome to the E.I.S. Service admin panel
+            Bine ai venit în panoul de administrare E.I.S. Service
           </p>
         </div>
 
         {loading ? (
           <div className={styles.loadingContainer}>
             <div className={styles.loadingSpinner}></div>
-            <p>Loading dashboard...</p>
+            <p>Se încarcă panoul...</p>
           </div>
         ) : (
           <>
@@ -87,7 +87,7 @@ const DashboardPage = () => {
                 <div className={styles.statIcon}>📊</div>
                 <div className={styles.statContent}>
                   <h3 className={styles.statNumber}>{stats.totalCategories}</h3>
-                  <p className={styles.statLabel}>Total Categories</p>
+                  <p className={styles.statLabel}>Categorii Totale</p>
                 </div>
               </div>
 
@@ -97,7 +97,7 @@ const DashboardPage = () => {
                   <h3 className={styles.statNumber}>
                     {stats.activeCategories}
                   </h3>
-                  <p className={styles.statLabel}>Active Categories</p>
+                  <p className={styles.statLabel}>Categorii Active</p>
                 </div>
               </div>
 
@@ -107,14 +107,14 @@ const DashboardPage = () => {
                   <h3 className={styles.statNumber}>
                     {stats.inactiveCategories}
                   </h3>
-                  <p className={styles.statLabel}>Inactive Categories</p>
+                  <p className={styles.statLabel}>Categorii Inactive</p>
                 </div>
               </div>
             </div>
 
             {/* Quick Actions */}
             <div className={styles.quickActions}>
-              <h2 className={styles.sectionTitle}>Quick Actions</h2>
+              <h2 className={styles.sectionTitle}>Acțiuni Rapide</h2>
               <div className={styles.actionsGrid}>
                 {quickActions.map((action, index) => (
                   <Link
@@ -138,15 +138,15 @@ const DashboardPage = () => {
 
             {/* Recent Activity */}
             <div className={styles.recentActivity}>
-              <h2 className={styles.sectionTitle}>Recent Activity</h2>
+              <h2 className={styles.sectionTitle}>Activitate Recentă</h2>
               <div className={styles.activityCard}>
                 <div className={styles.activityItem}>
                   <div className={styles.activityIcon}>📝</div>
                   <div className={styles.activityContent}>
                     <p className={styles.activityText}>
-                      Category management system is ready
+                      Sistemul de gestionare a categoriilor este gata
                     </p>
-                    <span className={styles.activityTime}>Just now</span>
+                    <span className={styles.activityTime}>Chiar acum</span>
                   </div>
                 </div>
 
@@ -154,9 +154,9 @@ const DashboardPage = () => {
                   <div className={styles.activityIcon}>🚀</div>
                   <div className={styles.activityContent}>
                     <p className={styles.activityText}>
-                      Admin panel initialized successfully
+                      Panoul de administrare a fost inițializat cu succes
                     </p>
-                    <span className={styles.activityTime}>Just now</span>
+                    <span className={styles.activityTime}>Chiar acum</span>
                   </div>
                 </div>
               </div>
