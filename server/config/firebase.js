@@ -87,21 +87,21 @@ export const uploadImage = async (
   }
 
   try {
-    // Generate unique filename with timestamp
-    const timestamp = Date.now();
+    // Use the processed filename from Sharp (already includes unique ID and .webp extension)
     const fileExtension = fileName.split(".").pop();
-    const uniqueFileName = `${folder}/${timestamp}-${fileName.replace(
-      /[^a-zA-Z0-9.-]/g,
-      "_"
-    )}`;
+    const uniqueFileName = `${folder}/${fileName}`;
 
     // Create file reference
     const file = bucket.file(uniqueFileName);
 
+    // Determine content type - if it's a processed image, it should be WebP
+    const contentType =
+      fileExtension === "webp" ? "image/webp" : `image/${fileExtension}`;
+
     // Upload options
     const uploadOptions = {
       metadata: {
-        contentType: `image/${fileExtension}`,
+        contentType: contentType,
         metadata: {
           originalName: fileName,
           uploadedAt: new Date().toISOString(),
@@ -126,7 +126,7 @@ export const uploadImage = async (
       downloadURL,
       bucket: bucket.name,
       size: fileBuffer.length,
-      contentType: `image/${fileExtension}`,
+      contentType: contentType,
     };
   } catch (error) {
     console.error("Error uploading image to Firebase Storage:", error);

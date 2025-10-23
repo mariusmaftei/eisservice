@@ -2,6 +2,8 @@ import express from "express";
 import {
   uploadSingleImage,
   uploadMultipleImages,
+  uploadSingleImageLegacy,
+  uploadMultipleImagesLegacy,
   deleteImageFile,
   getImageUrl,
   listImagesInFolder,
@@ -12,19 +14,29 @@ import {
   uploadMultiple,
   uploadFields,
 } from "../middleware/upload.js";
+import { uploadImage } from "../config/firebase.js";
+import { processImage } from "../utils/imageProcessor.js";
 
 const router = express.Router();
 
-// Upload single image
+// Upload single image (with Sharp processing)
 router.post("/image", uploadSingle("image"), uploadSingleImage);
 
-// Upload multiple images
+// Upload multiple images (with Sharp processing)
 router.post("/images", uploadMultiple("images", 5), uploadMultipleImages);
 
-// Upload category image
+// Upload category image (with Sharp processing)
 router.post("/category-image", uploadSingle("image"), uploadCategoryImage);
 
-// Upload mixed files (e.g., main image + thumbnail)
+// Legacy routes (without Sharp processing)
+router.post("/image-legacy", uploadSingle("image"), uploadSingleImageLegacy);
+router.post(
+  "/images-legacy",
+  uploadMultiple("images", 5),
+  uploadMultipleImagesLegacy
+);
+
+// Upload mixed files (e.g., main image + thumbnail) with Sharp processing
 router.post(
   "/mixed",
   uploadFields([
@@ -36,29 +48,69 @@ router.post(
       const results = {};
 
       if (req.files.mainImage) {
-        const mainResult = await uploadImage(
+        // Process main image with Sharp
+        const processedMainImage = await processImage(
           req.files.mainImage[0].buffer,
           req.files.mainImage[0].originalname,
-          "main-images",
-          { type: "main-image" }
+          {
+            maxSizeKB: 150,
+            quality: 80,
+            maxWidth: 1920,
+            maxHeight: 1080,
+          }
         );
-        results.mainImage = mainResult;
+
+        const mainResult = await uploadImage(
+          processedMainImage.buffer,
+          processedMainImage.fileName,
+          "main-images",
+          {
+            type: "main-image",
+            processedWithSharp: true,
+            processedMetadata: processedMainImage.metadata,
+          }
+        );
+        results.mainImage = {
+          ...mainResult,
+          processedWithSharp: true,
+          processedMetadata: processedMainImage.metadata,
+        };
       }
 
       if (req.files.thumbnail) {
-        const thumbResult = await uploadImage(
+        // Process thumbnail with Sharp
+        const processedThumbnail = await processImage(
           req.files.thumbnail[0].buffer,
           req.files.thumbnail[0].originalname,
-          "thumbnails",
-          { type: "thumbnail" }
+          {
+            maxSizeKB: 50,
+            quality: 70,
+            maxWidth: 400,
+            maxHeight: 300,
+          }
         );
-        results.thumbnail = thumbResult;
+
+        const thumbResult = await uploadImage(
+          processedThumbnail.buffer,
+          processedThumbnail.fileName,
+          "thumbnails",
+          {
+            type: "thumbnail",
+            processedWithSharp: true,
+            processedMetadata: processedThumbnail.metadata,
+          }
+        );
+        results.thumbnail = {
+          ...thumbResult,
+          processedWithSharp: true,
+          processedMetadata: processedThumbnail.metadata,
+        };
       }
 
       res.status(200).json({
         success: true,
         data: results,
-        message: "Mixed files uploaded successfully",
+        message: "Mixed files uploaded and processed successfully",
       });
     } catch (error) {
       console.error("Error uploading mixed files:", error);

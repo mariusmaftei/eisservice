@@ -1,5 +1,6 @@
 import Category from "../models/Category.js";
 import { uploadImage, deleteImage } from "../config/firebase.js";
+import { processImage } from "../utils/imageProcessor.js";
 
 // Get all categories
 export const getAllCategories = async (req, res) => {
@@ -83,14 +84,29 @@ export const createCategory = async (req, res) => {
       // Handle main image
       if (req.files.image && req.files.image[0]) {
         try {
-          const uploadResult = await uploadImage(
+          // Process image with Sharp (convert to WebP, optimize size, add unique ID)
+          const processedImage = await processImage(
             req.files.image[0].buffer,
             req.files.image[0].originalname,
+            {
+              maxSizeKB: 150,
+              quality: 80,
+              maxWidth: 1920,
+              maxHeight: 1080,
+            }
+          );
+
+          // Upload processed image to Firebase
+          const uploadResult = await uploadImage(
+            processedImage.buffer,
+            processedImage.fileName,
             "categories",
             {
               categoryName: categoryData.name || categoryData.displayName,
               uploadedBy: "admin",
               type: "category-image",
+              processedWithSharp: true,
+              processedMetadata: processedImage.metadata,
             }
           );
 
@@ -109,14 +125,29 @@ export const createCategory = async (req, res) => {
       // Handle whyChooseUs image
       if (req.files.whyChooseUsImage && req.files.whyChooseUsImage[0]) {
         try {
-          const uploadResult = await uploadImage(
+          // Process image with Sharp (convert to WebP, optimize size, add unique ID)
+          const processedImage = await processImage(
             req.files.whyChooseUsImage[0].buffer,
             req.files.whyChooseUsImage[0].originalname,
+            {
+              maxSizeKB: 150,
+              quality: 80,
+              maxWidth: 1920,
+              maxHeight: 1080,
+            }
+          );
+
+          // Upload processed image to Firebase
+          const uploadResult = await uploadImage(
+            processedImage.buffer,
+            processedImage.fileName,
             "categories",
             {
               categoryName: categoryData.name || categoryData.displayName,
               uploadedBy: "admin",
               type: "why-choose-us-image",
+              processedWithSharp: true,
+              processedMetadata: processedImage.metadata,
             }
           );
 
@@ -211,10 +242,22 @@ export const updateCategory = async (req, res) => {
             }
           }
 
-          // Upload new image
-          const uploadResult = await uploadImage(
+          // Process image with Sharp (convert to WebP, optimize size, add unique ID)
+          const processedImage = await processImage(
             req.files.image[0].buffer,
             req.files.image[0].originalname,
+            {
+              maxSizeKB: 150,
+              quality: 80,
+              maxWidth: 1920,
+              maxHeight: 1080,
+            }
+          );
+
+          // Upload processed image to Firebase
+          const uploadResult = await uploadImage(
+            processedImage.buffer,
+            processedImage.fileName,
             "categories",
             {
               categoryName:
@@ -223,6 +266,8 @@ export const updateCategory = async (req, res) => {
                 currentCategory.name,
               uploadedBy: "admin",
               type: "category-image",
+              processedWithSharp: true,
+              processedMetadata: processedImage.metadata,
             }
           );
 
@@ -254,10 +299,22 @@ export const updateCategory = async (req, res) => {
             }
           }
 
-          // Upload new image
-          const uploadResult = await uploadImage(
+          // Process image with Sharp (convert to WebP, optimize size, add unique ID)
+          const processedImage = await processImage(
             req.files.whyChooseUsImage[0].buffer,
             req.files.whyChooseUsImage[0].originalname,
+            {
+              maxSizeKB: 150,
+              quality: 80,
+              maxWidth: 1920,
+              maxHeight: 1080,
+            }
+          );
+
+          // Upload processed image to Firebase
+          const uploadResult = await uploadImage(
+            processedImage.buffer,
+            processedImage.fileName,
             "categories",
             {
               categoryName:
@@ -266,6 +323,8 @@ export const updateCategory = async (req, res) => {
                 currentCategory.name,
               uploadedBy: "admin",
               type: "why-choose-us-image",
+              processedWithSharp: true,
+              processedMetadata: processedImage.metadata,
             }
           );
 
@@ -413,15 +472,29 @@ export const uploadCategoryImage = async (req, res) => {
       }
     }
 
-    // Upload new image
-    const uploadResult = await uploadImage(
+    // Process image with Sharp (convert to WebP, optimize size, add unique ID)
+    const processedImage = await processImage(
       req.file.buffer,
       req.file.originalname,
+      {
+        maxSizeKB: 150,
+        quality: 80,
+        maxWidth: 1920,
+        maxHeight: 1080,
+      }
+    );
+
+    // Upload processed image to Firebase
+    const uploadResult = await uploadImage(
+      processedImage.buffer,
+      processedImage.fileName,
       "categories",
       {
         categoryName: category.name || category.displayName,
         uploadedBy: "admin",
         type: "category-image",
+        processedWithSharp: true,
+        processedMetadata: processedImage.metadata,
       }
     );
 
