@@ -6,7 +6,9 @@ import {
   updateCategory,
   deleteCategory,
   toggleCategoryStatus,
+  uploadCategoryImage,
 } from "../controllers/adminController.js";
+import { uploadSingle, uploadFields } from "../middleware/upload.js";
 
 const router = express.Router();
 
@@ -16,11 +18,32 @@ router.get("/categories", getAllCategories);
 // GET /api/admin/categories/:id - Get single category
 router.get("/categories/:id", getCategoryById);
 
-// POST /api/admin/categories - Create new category
-router.post("/categories", createCategory);
+// POST /api/admin/categories - Create new category (with optional images)
+router.post(
+  "/categories",
+  uploadFields([
+    { name: "image", maxCount: 1 },
+    { name: "whyChooseUsImage", maxCount: 1 },
+  ]),
+  createCategory
+);
 
-// PUT /api/admin/categories/:id - Update category
-router.put("/categories/:id", updateCategory);
+// PUT /api/admin/categories/:id - Update category (with optional images)
+router.put(
+  "/categories/:id",
+  uploadFields([
+    { name: "image", maxCount: 1 },
+    { name: "whyChooseUsImage", maxCount: 1 },
+  ]),
+  updateCategory
+);
+
+// POST /api/admin/categories/:id/image - Upload category image only
+router.post(
+  "/categories/:id/image",
+  uploadSingle("image"),
+  uploadCategoryImage
+);
 
 // DELETE /api/admin/categories/:id - Delete category
 router.delete("/categories/:id", deleteCategory);

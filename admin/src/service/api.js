@@ -112,7 +112,20 @@ export const categoryAPI = {
   // Create new category
   create: async (categoryData) => {
     try {
-      const response = await api.post("/admin/categories", categoryData);
+      // Check if it's FormData (file upload)
+      const isFormData = categoryData instanceof FormData;
+
+      const config = {
+        headers: isFormData
+          ? { "Content-Type": "multipart/form-data" }
+          : { "Content-Type": "application/json" },
+      };
+
+      const response = await api.post(
+        "/admin/categories",
+        categoryData,
+        config
+      );
       return response.data;
     } catch (error) {
       console.error("Error creating category:", error);
@@ -123,7 +136,20 @@ export const categoryAPI = {
   // Update category
   update: async (id, categoryData) => {
     try {
-      const response = await api.put(`/admin/categories/${id}`, categoryData);
+      // Check if it's FormData (file upload)
+      const isFormData = categoryData instanceof FormData;
+
+      const config = {
+        headers: isFormData
+          ? { "Content-Type": "multipart/form-data" }
+          : { "Content-Type": "application/json" },
+      };
+
+      const response = await api.put(
+        `/admin/categories/${id}`,
+        categoryData,
+        config
+      );
       return response.data;
     } catch (error) {
       console.error("Error updating category:", error);

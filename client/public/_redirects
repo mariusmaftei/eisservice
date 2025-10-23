@@ -1,0 +1,16 @@
+_redirects (in the public folder):
+
+/*    /index.html   200
+
+________________________________
+netlify.toml (in the root folder):
+
+[build]
+command = "npm run build"
+publish="/build'
+base = "/"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

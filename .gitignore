@@ -55,3 +55,6 @@ firebase-debug.log
 firestore.indexes.json
 firestore.rules
 firebase.json
+
+# Local Netlify folder
+.netlify

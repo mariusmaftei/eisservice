@@ -28,11 +28,27 @@ const categorySchema = new mongoose.Schema({
   },
   image: {
     type: String,
-    required: true,
+    required: false,
   },
-  workingImage: {
+  imageUrl: {
     type: String,
-    required: true,
+    required: false,
+  },
+  imageFileName: {
+    type: String,
+    required: false,
+  },
+  whyChooseUsImage: {
+    type: String,
+    required: false,
+  },
+  whyChooseUsImageUrl: {
+    type: String,
+    required: false,
+  },
+  whyChooseUsImageFileName: {
+    type: String,
+    required: false,
   },
   services: [
     {
@@ -49,35 +65,39 @@ const categorySchema = new mongoose.Schema({
   whyChooseUs: {
     title: {
       type: String,
-      required: true,
+      required: false,
+      default: "",
     },
     paragraphs: [
       {
         type: String,
-        required: true,
+        required: false,
       },
     ],
   },
   professionalContent: {
     title: {
       type: String,
-      required: true,
+      required: false,
+      default: "",
     },
     paragraphs: [
       {
         type: String,
-        required: true,
+        required: false,
       },
     ],
   },
   seo: {
     title: {
       type: String,
-      required: true,
+      required: false,
+      default: "",
     },
     description: {
       type: String,
-      required: true,
+      required: false,
+      default: "",
     },
     keywords: [
       {
