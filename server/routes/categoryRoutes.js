@@ -8,7 +8,7 @@ const categoryRoute = express.Router();
 categoryRoute.get("/", async (req, res) => {
   try {
     const categories = await Category.find({ isActive: true })
-      .select("slug name displayName description image")
+      .select("slug name displayName description image imageUrl")
       .sort({ createdAt: -1 });
 
     // Process images for each category
