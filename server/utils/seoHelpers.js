@@ -2,6 +2,25 @@
  * SEO Helper Functions for generating structured data and meta tags
  */
 
+// Contact information - imported from client config
+const contactInfo = {
+  contactAddress: "Brasov,Romania",
+  phone: "0735 520 999",
+  registeredOffice:
+    "Jud. Brașov, Municipiul Brașov, Str. Baciului nr. 4, Biroul",
+  CUI: "51955681",
+  tradeSerialNumber: "J2025041841001",
+  phoneFormatted: "+40735520999",
+  contactEmail: "contact@eisservice.ro",
+  clientEmail: "client@eisservice.ro",
+  prestatorEmail: "contact@eisservice.ro",
+  facebookPage: "https://www.facebook.com/eisservicecomplete",
+  instagramPage: "https://www.instagram.com/eisservicecomplete/",
+  tikTokPage: "https://www.tiktok.com/@eisservicecomplete",
+  youtubePage: "https://www.youtube.com/channel/UCIj-bbdDuaUi9HFQd6J5BoQ",
+  whatsUpNumber: "https://wa.me/40735520999",
+};
+
 /**
  * Generate structured data for a service category
  * @param {Object} category - Category data from database
@@ -23,13 +42,21 @@ export const generateCategoryStructuredData = (category) => {
       name: "E.I.S. SERVICE COMPLETE S.R.L.",
       url: baseUrl,
       logo: `${baseUrl}/og-image.jpg`,
+      telephone: contactInfo.phoneFormatted,
+      email: contactInfo.contactEmail,
       address: {
         "@type": "PostalAddress",
-        streetAddress: "Str. Baciului nr. 4, Biroul",
+        streetAddress: contactInfo.registeredOffice,
         addressLocality: "Brașov",
         addressRegion: "Brașov",
         addressCountry: "RO",
       },
+      sameAs: [
+        contactInfo.facebookPage,
+        contactInfo.instagramPage,
+        contactInfo.tikTokPage,
+        contactInfo.youtubePage,
+      ],
     },
     areaServed: {
       "@type": "Country",
@@ -132,6 +159,15 @@ export const generateServiceRequestStructuredData = (category) => {
       "@type": "Organization",
       name: "E.I.S. SERVICE COMPLETE S.R.L.",
       url: baseUrl,
+      telephone: contactInfo.phoneFormatted,
+      email: contactInfo.contactEmail,
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: contactInfo.registeredOffice,
+        addressLocality: "Brașov",
+        addressRegion: "Brașov",
+        addressCountry: "RO",
+      },
     },
     areaServed: {
       "@type": "Country",

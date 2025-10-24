@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import styles from "./ContactPage.module.css";
 import Meta from "../../components/SEO/Meta";
+import { contactInfo } from "../../config/contactInfo";
 import {
   Mail,
   Phone,
@@ -15,9 +16,9 @@ import {
 } from "lucide-react";
 
 const ContactPage = () => {
-  const email = "contact@eisservice.ro";
-  const phone = "0735 520 990";
-  const whatsappLink = `https://wa.me/+40735520990`;
+  const email = contactInfo.contactEmail;
+  const phone = contactInfo.phone;
+  const whatsappLink = contactInfo.whatsUpNumber;
 
   // Animation variants
   const fadeInUp = {
@@ -84,7 +85,7 @@ const ContactPage = () => {
     {
       icon: MapPin,
       title: "Sediul Principal",
-      description: "Strada Baciului nr. 4, Brașov 500000",
+      description: contactInfo.registeredOffice,
       details:
         "Locație centrală, ușor accesibilă cu transportul public și parcare disponibilă în apropiere.",
       highlight: "Accesibil 24/7",
@@ -146,11 +147,11 @@ const ContactPage = () => {
             name: "E.I.S. SERVICE COMPLETE S.R.L.",
             alternateName: "eisservice.ro",
             url: "https://eisservice.ro",
-            telephone: "+40735520990",
-            email: "contact@eisservice.ro",
+            telephone: contactInfo.phoneFormatted,
+            email: contactInfo.contactEmail,
             address: {
               "@type": "PostalAddress",
-              streetAddress: "Str. Baciului nr. 4, Biroul",
+              streetAddress: contactInfo.registeredOffice,
               addressLocality: "Brașov",
               addressRegion: "Brașov",
               addressCountry: "RO",
@@ -160,19 +161,25 @@ const ContactPage = () => {
               {
                 "@type": "ContactPoint",
                 contactType: "customer service",
-                telephone: "+40735520990",
+                telephone: contactInfo.phoneFormatted,
                 availableLanguage: "Romanian",
                 areaServed: "RO",
               },
               {
                 "@type": "ContactPoint",
                 contactType: "sales",
-                email: "contact@eisservice.ro",
+                email: contactInfo.contactEmail,
                 availableLanguage: "Romanian",
               },
             ],
             openingHours: "Mo-Fr 09:00-18:00,Sa 09:00-14:00",
-            sameAs: ["https://eisservice.ro"],
+            sameAs: [
+              "https://eisservice.ro",
+              contactInfo.facebookPage,
+              contactInfo.instagramPage,
+              contactInfo.tikTokPage,
+              contactInfo.youtubePage,
+            ],
           },
         }}
       />

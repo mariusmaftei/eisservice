@@ -14,6 +14,7 @@ import {
 import { contactInfo } from "../../config/contactInfo";
 import { useCategory } from "../../context/CategoryContext";
 import StatisticsSection from "../../components/layout/Sections/StatisticsSection/StatisticsSection";
+import ContactOptionsGrid from "../../components/UI/ContactOptionsGrid/ContactOptionsGrid";
 import Meta from "../../components/SEO/Meta";
 
 const ContactOptionsPage = () => {
@@ -114,7 +115,7 @@ const ContactOptionsPage = () => {
       `${defaultCategoryName} Brașov – Servicii Profesionale`,
     description:
       categoryData?.seo?.description ||
-      `Acasa / ${defaultCategoryName} Brașov - Servicii Profesionale`,
+      `Acasa / Solicita-Serviciu / ${defaultCategoryName} Brașov - Servicii Profesionale`,
     services: categoryData?.services || [
       "Servicii profesionale",
       "Calitate garantată",
@@ -218,8 +219,28 @@ const ContactOptionsPage = () => {
       <div className={styles.contactOptionsPage}>
         {/* Hero Section with Gradient Title */}
         <div className={styles.heroSection}>
-          <h1 className={styles.mainTitle}>{pageData.title}</h1>
-          <p className={styles.mainDescription}>{pageData.description}</p>
+          <div className={styles.heroContainer}>
+            <h1 className={styles.mainTitle}>{pageData.title}</h1>
+            <div className={styles.mainDescription}>
+              <span
+                className={styles.breadcrumbLink}
+                onClick={() => navigate("/")}
+              >
+                Acasa
+              </span>
+              <span className={styles.breadcrumbSeparator}> / </span>
+              <span
+                className={styles.breadcrumbLink}
+                onClick={() => navigate("/solicita-serviciu")}
+              >
+                Solicita-Serviciu
+              </span>
+              <span className={styles.breadcrumbSeparator}> / </span>
+              <span className={styles.breadcrumbCurrent}>
+                {defaultCategoryName} Brașov - Servicii Profesionale
+              </span>
+            </div>
+          </div>
         </div>
 
         {/* Professional Services Section */}
@@ -244,7 +265,10 @@ const ContactOptionsPage = () => {
                     nevoile tale.
                   </p>
                 )}
-                <button className={styles.searchButton}>
+                <button
+                  className={styles.searchButton}
+                  onClick={handleEmailOption}
+                >
                   CAUTA {defaultCategoryName.toUpperCase()} BRASOV
                 </button>
               </div>
@@ -377,49 +401,11 @@ const ContactOptionsPage = () => {
         </div>
 
         {/* Contact Options */}
-        <div className={styles.optionsContainer}>
-          <div className={styles.optionsGrid}>
-            {pageData.contactOptions.map((option, index) => {
-              const IconComponent = option.icon;
-              return (
-                <div
-                  key={option.id}
-                  className={styles.optionCard}
-                  onClick={option.action}
-                >
-                  <div className={styles.cardHeader}>
-                    <div className={styles.iconWrapper}>
-                      <IconComponent size={32} className={styles.cardIcon} />
-                    </div>
-                    <h2 className={styles.cardTitle}>{option.title}</h2>
-                    <p className={styles.cardSubtitle}>{option.subtitle}</p>
-                  </div>
-
-                  <div className={styles.cardContent}>
-                    <ul className={styles.featureList}>
-                      {option.features.map((feature, featureIndex) => {
-                        const FeatureIcon = feature.icon;
-                        return (
-                          <li key={featureIndex} className={styles.featureItem}>
-                            <FeatureIcon size={16} />
-                            <span>{feature.text}</span>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </div>
-
-                  <div className={styles.cardFooter}>
-                    <button className={styles.actionButton}>
-                      {option.buttonText}
-                      <IconComponent size={16} className={styles.buttonIcon} />
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+        <ContactOptionsGrid
+          options={pageData.contactOptions}
+          title="Alege modalitatea de contact"
+          description="Începe procesul prin modalitatea care ți se potrivește cel mai bine"
+        />
       </div>
     </>
   );

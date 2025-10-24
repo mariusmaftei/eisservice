@@ -1,0 +1,46 @@
+/* ContactOptionsGrid.module.css */
+.optionsSection {
+  padding: 4rem 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 10;
+}
+
+.optionsContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.optionsTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  text-align: center;
+  margin: 0 0 1rem 0;
+  line-height: 1.2;
+}
+
+.optionsDescription {
+  font-size: 1.125rem;
+  color: #6b7280;
+  text-align: center;
+  margin: 0 0 3rem 0;
+  line-height: 1.6;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.optionsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .optionsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3rem;
+  }
+}

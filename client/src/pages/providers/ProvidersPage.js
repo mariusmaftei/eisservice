@@ -1,6 +1,7 @@
 import ProviderServiceOfferForm from "../../components/UI/ProviderServiceOfferForm/ProviderServiceOfferForm";
 import styles from "./ProvidersPage.module.css";
 import HeroSection from "../../components/layout/Sections/HeroSection/HeroSection";
+import ContactOptionsGrid from "../../components/UI/ContactOptionsGrid/ContactOptionsGrid";
 import Meta from "../../components/SEO/Meta";
 
 import ServiceProviderOfficeImage from "../../assets/images/eis-team-images/service-provider-office-image.webp";
@@ -71,6 +72,36 @@ const ProvidersPage = () => {
     window.open(whatsappUrl, "_blank");
   };
 
+  // Contact options data
+  const contactOptions = [
+    {
+      id: "form",
+      title: "Completează Formularul",
+      subtitle: "Înregistrează-te prin formularul nostru detaliat",
+      icon: Mail,
+      features: [
+        { icon: UserPlus, text: "Proces de înregistrare structurat" },
+        { icon: Shield, text: "Verificare completă a calificărilor" },
+        { icon: Briefcase, text: "Profil profesional personalizat" },
+      ],
+      buttonText: "Completează Formularul",
+      action: handleEmailOption,
+    },
+    {
+      id: "whatsapp",
+      title: "Contactează pe WhatsApp",
+      subtitle: "Vorbește direct cu echipa noastră",
+      icon: MessageCircle,
+      features: [
+        { icon: Zap, text: "Răspuns imediat în timpul programului" },
+        { icon: Users, text: "Consultanță personalizată" },
+        { icon: Headphones, text: "Suport în procesul de înregistrare" },
+      ],
+      buttonText: "Deschide WhatsApp",
+      action: handleWhatsAppOption,
+    },
+  ];
+
   return (
     <>
       <Meta
@@ -122,106 +153,11 @@ const ProvidersPage = () => {
         {!showForm ? (
           <>
             {/* Contact Options Section */}
-            <div className={styles.optionsSection}>
-              <div className={styles.optionsContainer}>
-                <h2 className={styles.optionsTitle}>
-                  Alege modalitatea de contact
-                </h2>
-                <p className={styles.optionsDescription}>
-                  Începe procesul de înregistrare prin modalitatea care ți se
-                  potrivește cel mai bine
-                </p>
-
-                <div className={styles.optionsGrid}>
-                  {/* Email Form Option */}
-                  <div
-                    className={styles.optionCard}
-                    onClick={handleEmailOption}
-                  >
-                    <div className={styles.cardHeader}>
-                      <div className={styles.iconWrapper}>
-                        <Mail size={32} className={styles.cardIcon} />
-                      </div>
-                      <h3 className={styles.cardTitle}>
-                        Completează Formularul
-                      </h3>
-                      <p className={styles.cardSubtitle}>
-                        Înregistrează-te prin formularul nostru detaliat
-                      </p>
-                    </div>
-
-                    <div className={styles.cardContent}>
-                      <ul className={styles.featureList}>
-                        <li className={styles.featureItem}>
-                          <UserPlus size={16} />
-                          <span>Proces de înregistrare structurat</span>
-                        </li>
-                        <li className={styles.featureItem}>
-                          <Shield size={16} />
-                          <span>Verificare completă a calificărilor</span>
-                        </li>
-                        <li className={styles.featureItem}>
-                          <Briefcase size={16} />
-                          <span>Profil profesional personalizat</span>
-                        </li>
-                      </ul>
-                    </div>
-
-                    <div className={styles.cardFooter}>
-                      <button className={styles.actionButton}>
-                        Completează Formularul
-                        <Mail size={16} className={styles.buttonIcon} />
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* WhatsApp Option */}
-                  <div
-                    className={styles.optionCard}
-                    onClick={handleWhatsAppOption}
-                  >
-                    <div className={styles.cardHeader}>
-                      <div className={styles.iconWrapper}>
-                        <MessageCircle size={32} className={styles.cardIcon} />
-                      </div>
-                      <h3 className={styles.cardTitle}>
-                        Contactează pe WhatsApp
-                      </h3>
-                      <p className={styles.cardSubtitle}>
-                        Vorbește direct cu echipa noastră
-                      </p>
-                    </div>
-
-                    <div className={styles.cardContent}>
-                      <ul className={styles.featureList}>
-                        <li className={styles.featureItem}>
-                          <Zap size={16} />
-                          <span>Răspuns imediat în timpul programului</span>
-                        </li>
-                        <li className={styles.featureItem}>
-                          <Users size={16} />
-                          <span>Consultanță personalizată</span>
-                        </li>
-                        <li className={styles.featureItem}>
-                          <Headphones size={16} />
-                          <span>Suport în procesul de înregistrare</span>
-                        </li>
-                      </ul>
-                    </div>
-
-                    <div className={styles.cardFooter}>
-                      <button className={styles.actionButton}>
-                        Deschide WhatsApp
-                        <MessageCircle
-                          size={16}
-                          className={styles.buttonIcon}
-                        />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <ContactOptionsGrid
+              options={contactOptions}
+              title="Alege modalitatea de contact"
+              description="Începe procesul de înregistrare prin modalitatea care ți se potrivește cel mai bine"
+            />
 
             {/* Benefits Section */}
             <div className={styles.benefitsSection}>
