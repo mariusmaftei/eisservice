@@ -78,14 +78,43 @@ export const generateServiceRequestStructuredData = (category) => {
 /**
  * Generate default SEO data for a category if not provided
  * @param {Object} category - Category data from database
+ * @param {String} pageType - Type of page ('contact-option' or 'requested-service')
  * @returns {Object} SEO data object
  */
-export const generateDefaultSeoData = (category) => {
+export const generateDefaultSeoData = (
+  category,
+  pageType = "contact-option"
+) => {
   if (!category) return {};
 
   const baseUrl = "https://eisservice.ro";
   const categoryName = category.displayName || category.name;
 
+  if (pageType === "requested-service") {
+    return {
+      title: `Solicită ${categoryName} - Servicii Profesionale | eisservice.ro`,
+      description: `Completează formularul pentru a solicita un specialist în ${categoryName}. Servicii profesionale verificate în România.`,
+      keywords: [
+        `solicită ${categoryName.toLowerCase()}`,
+        "servicii profesionale",
+        "romania",
+        "specialisti",
+        "verificati",
+        "calificati",
+        "formular solicitare",
+      ],
+      ogTitle: `Solicită ${categoryName} - Servicii Profesionale | eisservice.ro`,
+      ogDescription: `Completează formularul pentru a solicita un specialist în ${categoryName}. Servicii profesionale verificate în România.`,
+      ogImage: category.imageUrl || `${baseUrl}/og-image.jpg`,
+      twitterTitle: `Solicită ${categoryName} - Servicii Profesionale | eisservice.ro`,
+      twitterDescription: `Completează formularul pentru a solicita un specialist în ${categoryName}. Servicii profesionale verificate în România.`,
+      twitterImage: category.imageUrl || `${baseUrl}/og-image.jpg`,
+      canonicalUrl: `${baseUrl}/requested-service/${category.slug}`,
+      structuredData: generateServiceRequestStructuredData(category),
+    };
+  }
+
+  // Default contact-option page
   return {
     title: `${categoryName} - Servicii Profesionale | eisservice.ro`,
     description:

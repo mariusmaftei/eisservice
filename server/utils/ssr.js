@@ -6,14 +6,25 @@ import { generateDefaultSeoData, mergeSeoData } from "./seoHelpers.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const renderApp = (url, categoryData = null) => {
+const renderApp = (
+  url,
+  categoryData = null,
+  pageType = "contact-option",
+  staticPageData = null
+) => {
   // Read the built index.html file
   const indexPath = path.join(__dirname, "../../client/build/index.html");
   let indexHtml = fs.readFileSync(indexPath, "utf8");
 
   // Generate SEO data using helper functions
-  const defaultSeo = generateDefaultSeoData(categoryData);
-  const mergedSeo = mergeSeoData(categoryData?.seo, defaultSeo);
+  let mergedSeo;
+  if (staticPageData) {
+    // Use static page data directly
+    mergedSeo = staticPageData;
+  } else {
+    const defaultSeo = generateDefaultSeoData(categoryData, pageType);
+    mergedSeo = mergeSeoData(categoryData?.seo, defaultSeo);
+  }
 
   const baseUrl = "https://eisservice.ro";
   const fullUrl = `${baseUrl}${url}`;
