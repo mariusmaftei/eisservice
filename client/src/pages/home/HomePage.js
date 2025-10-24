@@ -22,7 +22,7 @@ const HomePage = () => {
   };
 
   const handleNavigateToServices = () => {
-    navigate("/servicii");
+    navigate("/solicita-serviciu");
   };
 
   // Animation variants

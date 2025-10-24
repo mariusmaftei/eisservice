@@ -79,61 +79,55 @@ const Header = () => {
           </a>
         </div>
 
-        {/* Mobile Menu and Overlay */}
+        {/* Mobile Menu */}
         {isMenuOpen && (
-          <>
-            <div
-              className={styles.mobileMenuOverlay}
-              onClick={() => setIsMenuOpen(false)}
-            ></div>
-            <div className={styles.mobileMenu}>
-              <div className={styles.mobileMenuContent}>
-                <Link
-                  to="/"
-                  className={styles.mobileNavLink}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Acasă
-                </Link>
-                <Link
-                  to="/solicita-serviciu"
-                  className={styles.mobileNavLink}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Servicii
-                </Link>
-                <Link
-                  to="/devino-prestator"
-                  className={styles.mobileNavLink}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Oferă un serviciu
-                </Link>
-                <Link
-                  to="/despre"
-                  className={styles.mobileNavLink}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Despre noi
-                </Link>
-                <Link
-                  to="/contact"
-                  className={styles.mobileNavLink}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Contact
-                </Link>
-                <a
-                  href={`tel:${contactInfo.phoneFormatted}`}
-                  className={styles.mobilePhoneLink}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <FaPhoneAlt className={styles.phoneIcon} aria-hidden="true" />
-                  <span className={styles.phoneText}>{contactInfo.phone}</span>
-                </a>
-              </div>
+          <div className={styles.mobileMenu}>
+            <div className={styles.mobileMenuContent}>
+              <Link
+                to="/"
+                className={styles.mobileNavLink}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Acasă
+              </Link>
+              <Link
+                to="/solicita-serviciu"
+                className={styles.mobileNavLink}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Servicii
+              </Link>
+              <Link
+                to="/devino-prestator"
+                className={styles.mobileNavLink}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Oferă un serviciu
+              </Link>
+              <Link
+                to="/despre"
+                className={styles.mobileNavLink}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Despre noi
+              </Link>
+              <Link
+                to="/contact"
+                className={styles.mobileNavLink}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Contact
+              </Link>
+              <a
+                href={`tel:${contactInfo.phoneFormatted}`}
+                className={styles.mobilePhoneLink}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <FaPhoneAlt className={styles.phoneIcon} aria-hidden="true" />
+                <span className={styles.phoneText}>{contactInfo.phone}</span>
+              </a>
             </div>
-          </>
+          </div>
         )}
       </div>
     </nav>

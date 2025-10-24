@@ -162,14 +162,120 @@
   text-align: center;
   padding: 3rem 1rem;
   color: #6b7280;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.loadingSpinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e5e7eb;
+  border-top: 4px solid #00a0e9;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .errorContainer {
   text-align: center;
   padding: 3rem 1rem;
-  background-color: #fef2f2;
-  border-radius: 0.5rem;
+  background: linear-gradient(135deg, #fef2f2 0%, #fce7e7 100%);
+  border-radius: 1rem;
+  border: 1px solid #fecaca;
   color: #dc2626;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.errorIcon {
+  margin-bottom: 1rem;
+  color: #dc2626;
+  opacity: 0.8;
+}
+
+.errorTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #991b1b;
+}
+
+.errorMessage {
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  color: #dc2626;
+  line-height: 1.5;
+}
+
+.errorActions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.retryButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3);
+}
+
+.retryButton:hover:not(:disabled) {
+  background: linear-gradient(135deg, #b91c1c 0%, #7f1d1d 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+}
+
+.retryButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+.retryCount {
+  font-size: 0.875rem;
+  color: #991b1b;
+  margin: 0;
+  font-weight: 500;
+}
+
+.fallbackInfo {
+  padding: 1rem;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 0.5rem;
+  border-left: 4px solid #00a0e9;
+}
+
+.fallbackInfo p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #374151;
+  font-style: italic;
 }
 
 /* Responsive adjustments for .section padding */
@@ -181,6 +287,20 @@
   .loadMoreButton {
     padding: 0.875rem 1.5rem;
     font-size: 0.9375rem;
+  }
+
+  .errorContainer {
+    padding: 2rem 1rem;
+    margin: 0 0.5rem;
+  }
+
+  .errorTitle {
+    font-size: 1.125rem;
+  }
+
+  .retryButton {
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
   }
 }
 
@@ -196,5 +316,23 @@
   .loadMoreButton {
     padding: 0.75rem 1.25rem;
     font-size: 0.875rem;
+  }
+
+  .errorContainer {
+    padding: 1.5rem 0.75rem;
+    margin: 0 0.25rem;
+  }
+
+  .errorTitle {
+    font-size: 1rem;
+  }
+
+  .errorMessage {
+    font-size: 0.875rem;
+  }
+
+  .retryButton {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
   }
 }

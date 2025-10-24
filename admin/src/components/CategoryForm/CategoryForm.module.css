@@ -304,7 +304,7 @@
 /* Form Grid */
 .formGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 1.5rem;
   margin-bottom: 1.5rem;
 }
@@ -679,11 +679,13 @@
   font-weight: 600;
   color: #374151;
   cursor: pointer;
-  padding: 1rem;
+  padding: 1rem 1.25rem;
   border-radius: 12px;
   background: #f8fafc;
   border: 1px solid #e5e7eb;
   transition: all 0.3s ease;
+  height: 3.5rem;
+  box-sizing: border-box;
 }
 
 .checkboxLabel:hover {

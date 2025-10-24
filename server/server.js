@@ -296,6 +296,48 @@ app.get("/contact", async (req, res) => {
   }
 });
 
+// SSR Route for providers page
+app.get("/devino-prestator", async (req, res) => {
+  try {
+    console.log("SSR Route called for providers page");
+
+    const renderApp = (await import("./utils/ssr.js")).default;
+    const html = renderApp(req.url, null, "providers");
+
+    console.log("Providers page HTML rendered successfully");
+
+    // Add ETag for caching
+    res.set("ETag", '"providers-static"');
+    res.set("Cache-Control", "public, max-age=7200"); // 2 hours cache
+    res.send(html);
+  } catch (error) {
+    console.error("Error in SSR route:", error);
+    console.error("Error stack:", error.stack);
+    res.status(500).send("Internal server error: " + error.message);
+  }
+});
+
+// SSR Route for privacy policy page
+app.get("/politica-confidentialitate", async (req, res) => {
+  try {
+    console.log("SSR Route called for privacy policy page");
+
+    const renderApp = (await import("./utils/ssr.js")).default;
+    const html = renderApp(req.url, null, "privacy-policy");
+
+    console.log("Privacy policy page HTML rendered successfully");
+
+    // Add ETag for caching
+    res.set("ETag", '"privacy-static"');
+    res.set("Cache-Control", "public, max-age=7200"); // 2 hours cache
+    res.send(html);
+  } catch (error) {
+    console.error("Error in SSR route:", error);
+    console.error("Error stack:", error.stack);
+    res.status(500).send("Internal server error: " + error.message);
+  }
+});
+
 // Catch-all handler: send back React's index.html file for client-side routing
 // This should only catch routes that don't start with /api
 app.get("*", (req, res, next) => {

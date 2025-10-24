@@ -1,10 +1,21 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { generateDefaultSeoData, mergeSeoData } from "./seoHelpers.js";
+import {
+  generateDefaultSeoData,
+  mergeSeoData,
+  generateRequestedServiceSeoData,
+  generateProvidersSeoData,
+  generatePrivacyPolicySeoData,
+} from "./seoHelpers.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Cache for static HTML content
+let cachedIndexHtml = null;
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+let cacheTimestamp = 0;
 
 const renderApp = (
   url,
@@ -12,18 +23,38 @@ const renderApp = (
   pageType = "contact-option",
   staticPageData = null
 ) => {
-  // Read the built index.html file
-  const indexPath = path.join(__dirname, "../../client/build/index.html");
-  let indexHtml = fs.readFileSync(indexPath, "utf8");
+  // Use cached HTML if available and not expired
+  const now = Date.now();
+  if (cachedIndexHtml && now - cacheTimestamp < CACHE_DURATION) {
+    var indexHtml = cachedIndexHtml;
+  } else {
+    // Read the built index.html file
+    const indexPath = path.join(__dirname, "../../client/build/index.html");
+    indexHtml = fs.readFileSync(indexPath, "utf8");
+    cachedIndexHtml = indexHtml;
+    cacheTimestamp = now;
+  }
 
-  // Generate SEO data using helper functions
+  // Generate SEO data based on page type
   let mergedSeo;
   if (staticPageData) {
     // Use static page data directly
     mergedSeo = staticPageData;
   } else {
-    const defaultSeo = generateDefaultSeoData(categoryData, pageType);
-    mergedSeo = mergeSeoData(categoryData?.seo, defaultSeo);
+    switch (pageType) {
+      case "requested-service":
+        mergedSeo = generateRequestedServiceSeoData(categoryData);
+        break;
+      case "providers":
+        mergedSeo = generateProvidersSeoData();
+        break;
+      case "privacy-policy":
+        mergedSeo = generatePrivacyPolicySeoData();
+        break;
+      default:
+        const defaultSeo = generateDefaultSeoData(categoryData, pageType);
+        mergedSeo = mergeSeoData(categoryData?.seo, defaultSeo);
+    }
   }
 
   const baseUrl = "https://eisservice.ro";
@@ -112,14 +143,28 @@ const renderApp = (
 
   // Add structured data if available
   if (mergedSeo.structuredData) {
-    const structuredDataScript = `
+    let structuredDataScripts = "";
+
+    // Handle both single object and array of structured data
+    const structuredDataArray = Array.isArray(mergedSeo.structuredData)
+      ? mergedSeo.structuredData
+      : [mergedSeo.structuredData];
+
+    structuredDataArray.forEach((data) => {
+      if (data) {
+        structuredDataScripts += `
     <script type="application/ld+json">
-      ${JSON.stringify(mergedSeo.structuredData)}
+      ${JSON.stringify(data)}
     </script>`;
-    indexHtml = indexHtml.replace(
-      "</head>",
-      `${structuredDataScript}\n  </head>`
-    );
+      }
+    });
+
+    if (structuredDataScripts) {
+      indexHtml = indexHtml.replace(
+        "</head>",
+        `${structuredDataScripts}\n  </head>`
+      );
+    }
   }
 
   // Inject initial data

@@ -15,11 +15,11 @@
 }
 
 .navbarContent {
-  display: grid;
-  grid-template-columns: auto 1fr auto auto; /* logo | nav (centered) | mobile menu | phone */
+  display: flex;
   align-items: center;
-  column-gap: 1rem;
+  justify-content: space-between;
   height: 5rem; /* Mărit de la 4rem la 5rem */
+  gap: 1rem;
 }
 
 /* Logo styles */
@@ -63,8 +63,9 @@
   .desktopNav {
     display: flex;
     align-items: center;
-    justify-content: center; /* center nav within middle grid column */
     gap: 2rem; /* Reduced from 2.5rem to accommodate phone link */
+    flex: 1;
+    justify-content: center;
   }
 }
 
@@ -100,7 +101,7 @@
 .mobileMenuButton {
   display: flex;
   align-items: center;
-  justify-self: end; /* Position the button to the right side of its grid cell */
+  justify-content: center;
 }
 
 @media (min-width: 1050px) {
@@ -138,9 +139,10 @@
 
 /* Mobile menu */
 .mobileMenu {
-  position: absolute; /* Position out of document flow */
+  position: fixed; /* Changed from absolute to fixed for better positioning */
   top: 5rem; /* Position below the navbar (navbar height is 5rem) */
   left: 0;
+  right: 0; /* Ensure it spans full width */
   width: 100%;
   background-color: white; /* Ensure it covers content below */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
@@ -164,6 +166,8 @@
   text-decoration: none;
   transition: all 0.2s ease;
   animation: slideInFromLeft 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+  font-size: 1.2rem; /* Increased by 20% from default 1rem */
+  font-weight: 500;
 }
 
 .mobileNavLink:nth-child(1) {
@@ -185,24 +189,6 @@
 .mobileNavLink:hover {
   color: #0056b3;
   background-color: #f9fafb;
-}
-
-/* New overlay style */
-.mobileMenuOverlay {
-  position: fixed;
-  inset: 0; /* Covers the entire viewport */
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
-  z-index: 39; /* Below the mobile menu (z-index: 40) but above other content */
-  animation: fadeInOverlay 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth fade-in */
-}
-
-@keyframes fadeInOverlay {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
 }
 
 @keyframes slideDown {
@@ -276,7 +262,6 @@
 .phoneLink {
   display: none;
   align-items: center;
-  justify-self: end; /* Position the phone link to the right side of its grid cell */
   gap: 0.5rem;
   padding: 0.8rem 2.925rem; /* Increased horizontal padding by 50% for wider button */
   background: linear-gradient(
@@ -345,6 +330,7 @@
   border-radius: 6px; /* Changed from fully rounded to match Fusion button */
   text-decoration: none;
   font-weight: 600;
+  font-size: 1.2rem; /* Increased by 20% from default 1rem */
   text-align: center;
   margin: 0.5rem 1rem;
   transition: all 0.8s ease; /* Slower transition for smooth left movement */

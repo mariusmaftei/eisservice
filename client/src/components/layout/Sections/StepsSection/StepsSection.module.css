@@ -95,6 +95,22 @@
   }
 }
 
+@keyframes bounceDown {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: rotate(90deg) translateY(0);
+  }
+  40% {
+    transform: rotate(90deg) translateY(8px);
+  }
+  60% {
+    transform: rotate(90deg) translateY(4px);
+  }
+}
+
 .step {
   display: flex;
   flex-direction: column;
@@ -201,6 +217,24 @@
   }
 }
 
+/* Arrow direction change at 767px and below */
+@media (max-width: 767px) {
+  .stepsGrid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .stepIndicator {
+    padding: 0.5rem 0;
+  }
+
+  .arrowIcon {
+    font-size: 1.25rem;
+    transform: rotate(90deg);
+    animation: bounceDown 2s infinite;
+  }
+}
+
 @media (max-width: 640px) {
   .stepsSectionWrapper {
     padding: 4rem 2rem;
@@ -224,7 +258,6 @@
 
   .stepIndicator {
     padding: 0.5rem 0;
-    transform: rotate(90deg);
   }
 
   .arrowIcon {
@@ -274,7 +307,6 @@
 
   .stepIndicator {
     padding: 0.25rem 0;
-    transform: rotate(90deg);
   }
 
   .arrowIcon {
