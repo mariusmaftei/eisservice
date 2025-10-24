@@ -25,6 +25,7 @@ const CategoryForm = ({ category, onSave, onCancel, isEditing = false }) => {
     shortDescription: "",
     image: "",
     whyChooseUsImage: "",
+    providerCount: 0,
     services: [{ title: "", description: "" }],
     whyChooseUs: {
       title: "",
@@ -341,6 +342,22 @@ const CategoryForm = ({ category, onSave, onCancel, isEditing = false }) => {
                   className={styles.input}
                   required
                   placeholder="ex: Electrician Brașov"
+                />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label htmlFor="providerCount" className={styles.label}>
+                  Numărul de Furnizori
+                </label>
+                <input
+                  type="number"
+                  id="providerCount"
+                  name="providerCount"
+                  value={formData.providerCount}
+                  onChange={handleInputChange}
+                  className={styles.input}
+                  min="0"
+                  placeholder="ex: 48"
                 />
               </div>
 

@@ -116,6 +116,52 @@ const categorySchema = new mongoose.Schema({
         type: String,
       },
     ],
+    ogTitle: {
+      type: String,
+      required: false,
+      default: "",
+    },
+    ogDescription: {
+      type: String,
+      required: false,
+      default: "",
+    },
+    ogImage: {
+      type: String,
+      required: false,
+      default: "https://eisservice.ro/og-image.jpg",
+    },
+    twitterTitle: {
+      type: String,
+      required: false,
+      default: "",
+    },
+    twitterDescription: {
+      type: String,
+      required: false,
+      default: "",
+    },
+    twitterImage: {
+      type: String,
+      required: false,
+      default: "https://eisservice.ro/og-image.jpg",
+    },
+    canonicalUrl: {
+      type: String,
+      required: false,
+      default: "",
+    },
+    structuredData: {
+      type: mongoose.Schema.Types.Mixed,
+      required: false,
+      default: null,
+    },
+  },
+  providerCount: {
+    type: Number,
+    required: false,
+    default: 0,
+    min: 0,
   },
   isActive: {
     type: Boolean,

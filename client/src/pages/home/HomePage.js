@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import styles from "./HomePage.module.css";
+import Meta from "../../components/SEO/Meta";
 import HeroSection from "../../components/layout/Sections/HeroSection/HeroSection";
 import StepsSection from "../../components/layout/Sections/StepsSection/StepsSection";
 import ServicesOverviewSection from "../../components/layout/Sections/ServicesOverviewSection/ServicesOverviewSection";
@@ -53,6 +54,42 @@ const HomePage = () => {
 
   return (
     <div className={styles.homePage}>
+      <Meta
+        title="EIS Service - Găsește Specialiștii Potriviți pentru Orice Serviciu | Prestări Servicii în Toată Țara"
+        description="Conectăm clienții cu profesioniști verificați din toată România. Simplu, rapid și sigur. Găsește electricieni, instalatori, mecanicii auto, zugravi și alți specialiști pentru servicii casnice și reparații. Ești profesionist? Alătură-te platformei noastre!"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "EIS Service",
+          description:
+            "Platforma de încredere pentru conectarea clienților cu profesioniști verificați din toată România",
+          url: "https://eisservice.ro",
+          logo: "https://eisservice.ro/og-image.jpg",
+          areaServed: {
+            "@type": "Country",
+            name: "România",
+          },
+          serviceType: [
+            "Servicii Casnice",
+            "Reparații",
+            "Electricieni",
+            "Instalatori",
+            "Mecanici Auto",
+            "Zugravi",
+            "Servicii Profesionale",
+          ],
+          mission:
+            "Construim punți între cerere și ofertă, bazate pe încredere, transparență și excelență",
+          offers: {
+            "@type": "Offer",
+            description:
+              "Acces la o rețea extinsă de prestatori de top pentru servicii profesionale",
+            category: "Servicii Profesionale și Reparații",
+            areaServed: "România",
+          },
+          sameAs: ["https://eisservice.ro"],
+        }}
+      />
       {/* Hero Section */}
       <motion.div initial="initial" animate="animate" variants={fadeInUp}>
         <HeroSection

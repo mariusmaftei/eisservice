@@ -38,7 +38,7 @@ const CategoryCard = ({ category }) => {
           <div className={styles.topSection}>
             <div className={styles.providerCount}>
               <span className={styles.countNumber}>
-                {category.count || "N/A"}
+                {category.providerCount || category.count || "N/A"}
               </span>
               <span className={styles.countLabel}>furnizori</span>
             </div>
