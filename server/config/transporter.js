@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
-dotenv.config();
+dotenv.config({ debug: false });
 
 function createTransporter(user, pass) {
   const transporter = nodemailer.createTransport({

@@ -11,7 +11,7 @@ const CategoryCard = ({ category }) => {
 
   return (
     <Link
-      to={`/contact-option/${categorySlug}`}
+      to={`/solicita-serviciu/${categorySlug}`}
       state={{
         categoryName: categoryName,
         categoryImage: categoryImage,

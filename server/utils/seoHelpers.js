@@ -17,7 +17,7 @@ export const generateCategoryStructuredData = (category) => {
     "@type": "Service",
     name: category.displayName || category.name,
     description: category.description || category.shortDescription,
-    url: `${baseUrl}/contact-option/${category.slug}`,
+    url: `${baseUrl}/solicita-serviciu/${category.slug}`,
     provider: {
       "@type": "Organization",
       name: "E.I.S. SERVICE COMPLETE S.R.L.",
@@ -127,7 +127,7 @@ export const generateServiceRequestStructuredData = (category) => {
     description: `Completează formularul pentru a solicita un specialist în ${
       category.displayName || category.name
     }. Servicii profesionale verificate în România.`,
-    url: `${baseUrl}/requested-service/${category.slug}`,
+    url: `${baseUrl}/solicita-serviciu/${category.slug}/formular`,
     provider: {
       "@type": "Organization",
       name: "E.I.S. SERVICE COMPLETE S.R.L.",
@@ -174,7 +174,7 @@ export const generateDefaultSeoData = (
       twitterTitle: `Solicită ${categoryName} - Servicii Profesionale | eisservice.ro`,
       twitterDescription: `Completează formularul pentru a solicita un specialist în ${categoryName}. Servicii profesionale verificate în România.`,
       twitterImage: category.imageUrl || `${baseUrl}/og-image.jpg`,
-      canonicalUrl: `${baseUrl}/requested-service/${category.slug}`,
+      canonicalUrl: `${baseUrl}/${category.slug}/formular`,
       structuredData: generateServiceRequestStructuredData(category),
     };
   }
@@ -203,7 +203,7 @@ export const generateDefaultSeoData = (
       category.shortDescription ||
       `Servicii profesionale de ${categoryName} în România.`,
     twitterImage: category.imageUrl || `${baseUrl}/og-image.jpg`,
-    canonicalUrl: `${baseUrl}/contact-option/${category.slug}`,
+    canonicalUrl: `${baseUrl}/solicita-serviciu/${category.slug}`,
     structuredData: generateCategoryStructuredData(category),
   };
 };
@@ -225,7 +225,7 @@ export const generateRequestedServiceSeoData = (category) => {
     { name: "Solicită Serviciu", url: `${baseUrl}/requested-service` },
     {
       name: categoryName,
-      url: `${baseUrl}/requested-service/${category.slug}`,
+      url: `${baseUrl}/${category.slug}/formular`,
     },
   ];
 
@@ -271,7 +271,7 @@ export const generateRequestedServiceSeoData = (category) => {
     twitterTitle: `Solicită ${categoryName} - Servicii Profesionale | eisservice.ro`,
     twitterDescription: `Completează formularul pentru a solicita un specialist în ${categoryName}. Servicii profesionale verificate în România.`,
     twitterImage: category.imageUrl || `${baseUrl}/og-image.jpg`,
-    canonicalUrl: `${baseUrl}/requested-service/${category.slug}`,
+    canonicalUrl: `${baseUrl}/solicita-serviciu/${category.slug}/formular`,
     structuredData: [
       generateServiceRequestStructuredData(category),
       generateBreadcrumbStructuredData(breadcrumbs),

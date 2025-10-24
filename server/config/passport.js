@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-dotenv.config();
+dotenv.config({ debug: false });
 
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
@@ -92,9 +92,9 @@ if (
     )
   );
 
-  console.log("Google OAuth strategy configured successfully");
+  // Google OAuth strategy configured successfully
 } else {
-  console.log("Google OAuth credentials not provided - Google login disabled");
+  // Google OAuth credentials not provided - Google login disabled
 }
 
 // Serialize user for session

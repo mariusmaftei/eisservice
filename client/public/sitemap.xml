@@ -9,7 +9,7 @@
   </url>
   
   <url>
-    <loc>https://eisservice.ro/requested-service</loc>
+    <loc>https://eisservice.ro/solicita-serviciu</loc>
     <lastmod>2024-01-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
@@ -43,130 +43,128 @@
     <priority>0.5</priority>
   </url>
 
- 
-
-  <!-- Service Request Pages -->
+  <!-- Service Category Pages -->
   <url>
-    <loc>https://eisservice.ro/requested-service/electrician</loc>
+    <loc>https://eisservice.ro/electrician</loc>
     <lastmod>2024-01-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://eisservice.ro/requested-service/mecanic-auto</loc>
+    <loc>https://eisservice.ro/mecanic-auto</loc>
     <lastmod>2024-01-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://eisservice.ro/requested-service/instalator</loc>
+    <loc>https://eisservice.ro/instalator</loc>
     <lastmod>2024-01-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://eisservice.ro/requested-service/personal-necalificat</loc>
+    <loc>https://eisservice.ro/personal-necalificat</loc>
     <lastmod>2024-01-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://eisservice.ro/requested-service/curatenie</loc>
+    <loc>https://eisservice.ro/curatenie</loc>
     <lastmod>2024-01-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://eisservice.ro/requested-service/zugrav</loc>
+    <loc>https://eisservice.ro/zugrav</loc>
     <lastmod>2024-01-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://eisservice.ro/requested-service/gradinar</loc>
+    <loc>https://eisservice.ro/gradinar</loc>
     <lastmod>2024-01-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://eisservice.ro/requested-service/montaj-mobila</loc>
+    <loc>https://eisservice.ro/montaj-mobila</loc>
     <lastmod>2024-01-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://eisservice.ro/requested-service/reparatii-electrocasnice</loc>
+    <loc>https://eisservice.ro/reparatii-electrocasnice</loc>
     <lastmod>2024-01-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://eisservice.ro/requested-service/transport</loc>
+    <loc>https://eisservice.ro/transport</loc>
     <lastmod>2024-01-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://eisservice.ro/requested-service/reparatii-hardware</loc>
+    <loc>https://eisservice.ro/reparatii-hardware</loc>
     <lastmod>2024-01-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://eisservice.ro/requested-service/frizer</loc>
+    <loc>https://eisservice.ro/frizer</loc>
     <lastmod>2024-01-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://eisservice.ro/requested-service/manichiura</loc>
+    <loc>https://eisservice.ro/manichiura</loc>
     <lastmod>2024-01-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://eisservice.ro/requested-service/aer-conditionat</loc>
+    <loc>https://eisservice.ro/aer-conditionat</loc>
     <lastmod>2024-01-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://eisservice.ro/requested-service/montaj-gresie-si-faianta</loc>
+    <loc>https://eisservice.ro/montaj-gresie-si-faianta</loc>
     <lastmod>2024-01-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://eisservice.ro/requested-service/montaj-panouri-solare</loc>
+    <loc>https://eisservice.ro/montaj-panouri-solare</loc>
     <lastmod>2024-01-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://eisservice.ro/requested-service/zidar</loc>
+    <loc>https://eisservice.ro/zidar</loc>
     <lastmod>2024-01-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://eisservice.ro/requested-service/alte-servicii</loc>
+    <loc>https://eisservice.ro/alte-servicii</loc>
     <lastmod>2024-01-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>

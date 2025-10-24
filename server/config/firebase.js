@@ -1,7 +1,7 @@
 import admin from "firebase-admin";
 import dotenv from "dotenv";
 
-dotenv.config();
+dotenv.config({ debug: false });
 
 // Initialize Firebase Admin SDK only if credentials are provided
 let app;
@@ -51,16 +51,16 @@ if (hasValidFirebaseCredentials()) {
 
     storage = admin.storage();
     bucket = storage.bucket();
-    console.log("Firebase Admin SDK initialized successfully");
+    // Firebase Admin SDK initialized successfully
   } catch (error) {
     console.error("Error initializing Firebase Admin SDK:", error);
-    console.log("Firebase features will be disabled");
+    // Firebase features will be disabled
     app = null;
     storage = null;
     bucket = null;
   }
 } else {
-  console.log("Firebase credentials not provided - Firebase features disabled");
+  // Firebase credentials not provided - Firebase features disabled
   app = null;
   storage = null;
   bucket = null;

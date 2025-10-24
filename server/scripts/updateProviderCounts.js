@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import Category from "../models/Category.js";
 import dotenv from "dotenv";
 
-dotenv.config();
+dotenv.config({ debug: false });
 
 // Static provider counts from allCategories.js
 const providerCounts = {

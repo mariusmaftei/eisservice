@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import Category from "../models/Category.js";
 
-dotenv.config();
+dotenv.config({ debug: false });
 
 const MONGODB_URI =
   process.env.MONGODB_URI || "mongodb://localhost:27017/eisservice";

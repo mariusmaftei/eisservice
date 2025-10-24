@@ -25,19 +25,6 @@ const route = createBrowserRouter([
         path: "/solicita-serviciu",
         element: <ServicePage />,
       },
-
-      {
-        path: "/contact-option/:categorySlug",
-        element: <ContactOptionsPage />,
-      },
-      {
-        path: "/solicita-serviciu/:categorySlug",
-        element: <ContactOptionsPage />,
-      },
-      {
-        path: "/solicita-serviciu/:categorySlug/formular",
-        element: <RequestServicePage />,
-      },
       {
         path: "/devino-prestator",
         element: <ProvidersPage />,
@@ -53,6 +40,14 @@ const route = createBrowserRouter([
       {
         path: "/politica-confidentialitate",
         element: <PrivacyPolicyPage />,
+      },
+      {
+        path: "/solicita-serviciu/:categorySlug",
+        element: <ContactOptionsPage />,
+      },
+      {
+        path: "/solicita-serviciu/:categorySlug/formular",
+        element: <RequestServicePage />,
       },
     ],
   },

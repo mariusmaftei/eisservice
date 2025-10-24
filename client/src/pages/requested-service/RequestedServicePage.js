@@ -24,7 +24,7 @@ const RequestServicePage = () => {
   const seoDescription = `Completează formularul pentru a solicita un specialist în ${
     categoryName || defaultCategoryName
   }. Servicii profesionale verificate în România.`;
-  const seoUrl = `https://eisservice.ro/requested-service/${categorySlug}`;
+  const seoUrl = `https://eisservice.ro/solicita-serviciu/${categorySlug}/formular`;
 
   return (
     <>

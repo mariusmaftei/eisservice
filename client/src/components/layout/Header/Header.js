@@ -26,10 +26,10 @@ const Header = () => {
               Acasă
             </Link>
             <Link to="/solicita-serviciu" className={styles.navLink}>
-              Cere un serviciu
+              Solicită Serviciu
             </Link>
             <Link to="/devino-prestator" className={styles.navLink}>
-              Oferă un serviciu
+              Devino Prestator
             </Link>
             <Link to="/despre" className={styles.navLink}>
               Despre noi
@@ -95,14 +95,14 @@ const Header = () => {
                 className={styles.mobileNavLink}
                 onClick={() => setIsMenuOpen(false)}
               >
-                Servicii
+                Solicită Serviciu
               </Link>
               <Link
                 to="/devino-prestator"
                 className={styles.mobileNavLink}
                 onClick={() => setIsMenuOpen(false)}
               >
-                Oferă un serviciu
+                Devino Prestator
               </Link>
               <Link
                 to="/despre"

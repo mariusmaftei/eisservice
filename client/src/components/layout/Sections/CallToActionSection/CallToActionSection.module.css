@@ -702,7 +702,7 @@
 }
 
 /* Additional responsive breakpoints */
-@media (max-width: 360px) {
+@media (max-width: 375px) {
   .container {
     padding: 0 12px;
   }
@@ -739,7 +739,7 @@
     padding: 10px 12px;
     min-width: 140px;
     top: 40%;
-    left: 28%;
+    left: 25%;
     transform: translate(-50%, -50%);
     position: absolute;
   }
