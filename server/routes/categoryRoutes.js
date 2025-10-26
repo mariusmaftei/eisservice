@@ -7,8 +7,10 @@ const categoryRoute = express.Router();
 // Get all active categories
 categoryRoute.get("/", async (req, res) => {
   try {
-    const categories = await Category.find({ isActive: true })
-      .select("slug name displayName description image imageUrl providerCount")
+    const categories = await Category.find({
+      "categoryInformation.isActive": true,
+    })
+      .select("categoryInformation")
       .sort({ createdAt: -1 });
 
     // Process images for each category
@@ -36,8 +38,8 @@ categoryRoute.get("/:slug", async (req, res) => {
     const { slug } = req.params;
 
     const category = await Category.findOne({
-      slug: slug,
-      isActive: true,
+      "categoryInformation.slug": slug,
+      "categoryInformation.isActive": true,
     });
 
     if (!category) {
@@ -69,9 +71,11 @@ categoryRoute.post("/", async (req, res) => {
   try {
     const categoryData = req.body;
 
-    // Check if category with same slug already exists
+    // Check if category with same slug already exists (handle both nested and flat structure)
+    const slugToCheck =
+      categoryData.categoryInformation?.slug || categoryData.slug;
     const existingCategory = await Category.findOne({
-      slug: categoryData.slug,
+      "categoryInformation.slug": slugToCheck,
     });
     if (existingCategory) {
       return res.status(400).json({
@@ -105,7 +109,7 @@ categoryRoute.put("/:slug", async (req, res) => {
     const updateData = req.body;
 
     const category = await Category.findOneAndUpdate(
-      { slug: slug },
+      { "categoryInformation.slug": slug },
       updateData,
       { new: true, runValidators: true }
     );
@@ -137,7 +141,9 @@ categoryRoute.delete("/:slug", async (req, res) => {
   try {
     const { slug } = req.params;
 
-    const category = await Category.findOneAndDelete({ slug: slug });
+    const category = await Category.findOneAndDelete({
+      "categoryInformation.slug": slug,
+    });
 
     if (!category) {
       return res.status(404).json({

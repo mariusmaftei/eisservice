@@ -27,9 +27,15 @@ const CategoryForm = ({ category, onSave, onCancel, isEditing = false }) => {
     whyChooseUsImage: "",
     providerCount: 0,
     services: [{ title: "", description: "" }],
+    pageTitle: "",
+    pageSubtitle: "",
     whyChooseUs: {
       title: "",
       paragraphs: [""],
+    },
+    aboutUs: {
+      title: "",
+      description: "",
     },
     professionalContent: {
       title: "",
@@ -51,29 +57,91 @@ const CategoryForm = ({ category, onSave, onCancel, isEditing = false }) => {
   useEffect(() => {
     if (category && isEditing) {
       setFormData({
-        ...category,
+        // Extract categoryInformation fields
+        name: category.categoryInformation?.name || category.name || "",
+        displayName:
+          category.categoryInformation?.displayName ||
+          category.displayName ||
+          "",
+        slug: category.categoryInformation?.slug || category.slug || "",
+        shortDescription:
+          category.categoryInformation?.shortDescription ||
+          category.shortDescription ||
+          "",
+        description:
+          category.categoryInformation?.description ||
+          category.description ||
+          "",
+        providerCount:
+          category.categoryInformation?.providerCount ||
+          category.providerCount ||
+          0,
+        isActive:
+          category.categoryInformation?.isActive ?? category.isActive ?? true,
+
+        // Services
         services: category.services || [{ title: "", description: "" }],
+
+        // Page Title Section - nested in pageMainTitle
+        pageTitle:
+          category.pageMainTitle?.pageTitle || category.pageTitle || "",
+        pageSubtitle:
+          category.pageMainTitle?.pageSubtitle || category.pageSubtitle || "",
+
+        // Why Choose Us Section
         whyChooseUs: {
           title: category.whyChooseUs?.title || "",
           paragraphs: category.whyChooseUs?.paragraphs || [""],
         },
+
+        // About Us Section
+        aboutUs: {
+          title: category.aboutUs?.title || "",
+          description: category.aboutUs?.description || "",
+        },
+
+        // Professional Content Section
         professionalContent: {
           title: category.professionalContent?.title || "",
           paragraphs: category.professionalContent?.paragraphs || [""],
         },
+
+        // SEO Metadata - nested in seoMetadata
         seo: {
-          title: category.seo?.title || "",
-          description: category.seo?.description || "",
-          keywords: category.seo?.keywords || [],
+          title: category.seoMetadata?.title || category.seo?.title || "",
+          description:
+            category.seoMetadata?.description ||
+            category.seo?.description ||
+            "",
+          keywords:
+            category.seoMetadata?.keywords || category.seo?.keywords || [],
         },
+
         // Keep existing image URLs for display
-        image: category.imageUrl || category.image || "",
+        // Main image is stored in categoryInformation.imageUrl
+        image:
+          category.categoryInformation?.imageUrl ||
+          category.imageUrl ||
+          category.image ||
+          "",
+        // Why choose us image is stored in whyChooseUs.whyChooseUsImageUrl
         whyChooseUsImage:
-          category.whyChooseUsImageUrl || category.whyChooseUsImage || "",
+          category.whyChooseUs?.whyChooseUsImageUrl ||
+          category.whyChooseUsImageUrl ||
+          category.whyChooseUsImage ||
+          "",
       });
-      setImagePreview(category.imageUrl || category.image || "");
+      setImagePreview(
+        category.categoryInformation?.imageUrl ||
+          category.imageUrl ||
+          category.image ||
+          ""
+      );
       setWhyChooseUsImagePreview(
-        category.whyChooseUsImageUrl || category.whyChooseUsImage || ""
+        category.whyChooseUs?.whyChooseUsImageUrl ||
+          category.whyChooseUsImageUrl ||
+          category.whyChooseUsImage ||
+          ""
       );
     }
   }, [category, isEditing]);
@@ -213,8 +281,20 @@ const CategoryForm = ({ category, onSave, onCancel, isEditing = false }) => {
       // Create FormData for file uploads
       const submitData = new FormData();
 
+      // Set displayName to match name if it's empty (for new categories)
+      // Keep existing displayName when editing
+      const updatedFormData = {
+        ...formData,
+        displayName: formData.displayName || formData.name,
+      };
+
+      // Also ensure description is set
+      if (!updatedFormData.description) {
+        updatedFormData.description = updatedFormData.shortDescription;
+      }
+
       // Add all form fields except files
-      Object.keys(formData).forEach((key) => {
+      Object.keys(updatedFormData).forEach((key) => {
         if (
           key === "image" ||
           key === "whyChooseUsImage" ||
@@ -224,23 +304,23 @@ const CategoryForm = ({ category, onSave, onCancel, isEditing = false }) => {
           return; // Skip file fields, they'll be added separately
         }
 
-        if (typeof formData[key] === "object") {
-          submitData.append(key, JSON.stringify(formData[key]));
+        if (typeof updatedFormData[key] === "object") {
+          submitData.append(key, JSON.stringify(updatedFormData[key]));
         } else {
-          submitData.append(key, formData[key]);
+          submitData.append(key, updatedFormData[key]);
         }
       });
 
       // Add image files if they exist
-      if (formData.image && formData.image instanceof File) {
-        submitData.append("image", formData.image);
+      if (updatedFormData.image && updatedFormData.image instanceof File) {
+        submitData.append("image", updatedFormData.image);
       }
 
       if (
-        formData.whyChooseUsImage &&
-        formData.whyChooseUsImage instanceof File
+        updatedFormData.whyChooseUsImage &&
+        updatedFormData.whyChooseUsImage instanceof File
       ) {
-        submitData.append("whyChooseUsImage", formData.whyChooseUsImage);
+        submitData.append("whyChooseUsImage", updatedFormData.whyChooseUsImage);
       }
 
       if (isEditing) {
@@ -293,10 +373,61 @@ const CategoryForm = ({ category, onSave, onCancel, isEditing = false }) => {
               <div className={styles.sectionIcon}>
                 <Settings size={24} />
               </div>
-              <h3 className={styles.sectionTitle}>Informații de Bază</h3>
+              <h3 className={styles.sectionTitle}>
+                Informații pentru Categorie
+              </h3>
             </div>
 
             <div className={styles.formGrid}>
+              <div className={styles.formGroup}>
+                <label htmlFor="name" className={styles.label}>
+                  Nume Categorie *
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  className={styles.input}
+                  required
+                  placeholder="ex: Electrician"
+                />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label htmlFor="providerCount" className={styles.label}>
+                  Numărul de Furnizori *
+                </label>
+                <input
+                  type="number"
+                  id="providerCount"
+                  name="providerCount"
+                  value={formData.providerCount}
+                  onChange={handleInputChange}
+                  className={styles.input}
+                  required
+                  min="0"
+                  placeholder="ex: 5"
+                />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label htmlFor="shortDescription" className={styles.label}>
+                  Descriere Categorie *
+                </label>
+                <input
+                  type="text"
+                  id="shortDescription"
+                  name="shortDescription"
+                  value={formData.shortDescription}
+                  onChange={handleInputChange}
+                  className={styles.input}
+                  required
+                  placeholder="ex: Servicii Electrice Autorizate"
+                />
+              </div>
+
               <div className={styles.formGroup}>
                 <label htmlFor="slug" className={styles.label}>
                   Slug *
@@ -312,104 +443,24 @@ const CategoryForm = ({ category, onSave, onCancel, isEditing = false }) => {
                   placeholder="ex: electrician-brasov"
                 />
               </div>
-
-              <div className={styles.formGroup}>
-                <label htmlFor="name" className={styles.label}>
-                  Nume *
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  className={styles.input}
-                  required
-                  placeholder="ex: Electrician"
-                />
-              </div>
-
-              <div className={styles.formGroup}>
-                <label htmlFor="displayName" className={styles.label}>
-                  Nume de Afișare *
-                </label>
-                <input
-                  type="text"
-                  id="displayName"
-                  name="displayName"
-                  value={formData.displayName}
-                  onChange={handleInputChange}
-                  className={styles.input}
-                  required
-                  placeholder="ex: Electrician Brașov"
-                />
-              </div>
-
-              <div className={styles.formGroup}>
-                <label htmlFor="providerCount" className={styles.label}>
-                  Numărul de Furnizori
-                </label>
-                <input
-                  type="number"
-                  id="providerCount"
-                  name="providerCount"
-                  value={formData.providerCount}
-                  onChange={handleInputChange}
-                  className={styles.input}
-                  min="0"
-                  placeholder="ex: 48"
-                />
-              </div>
-
-              <div className={styles.formGroup}>
-                <label className={styles.checkboxLabel}>
-                  <input
-                    type="checkbox"
-                    checked={formData.isActive}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        isActive: e.target.checked,
-                      }))
-                    }
-                    className={styles.checkbox}
-                  />
-                  <Eye size={16} />
-                  Categoria Activă
-                </label>
-              </div>
             </div>
 
             <div className={styles.formGroup}>
-              <label htmlFor="description" className={styles.label}>
-                Descriere *
+              <label className={styles.checkboxLabel}>
+                <input
+                  type="checkbox"
+                  checked={formData.isActive}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      isActive: e.target.checked,
+                    }))
+                  }
+                  className={styles.checkbox}
+                />
+                <Eye size={16} />
+                Categoria Activă
               </label>
-              <textarea
-                id="description"
-                name="description"
-                value={formData.description}
-                onChange={handleInputChange}
-                className={styles.textarea}
-                required
-                rows={4}
-                placeholder="Descriere detaliată a categoriei..."
-              />
-            </div>
-
-            <div className={styles.formGroup}>
-              <label htmlFor="shortDescription" className={styles.label}>
-                Descriere Scurtă *
-              </label>
-              <textarea
-                id="shortDescription"
-                name="shortDescription"
-                value={formData.shortDescription}
-                onChange={handleInputChange}
-                className={styles.textarea}
-                required
-                rows={2}
-                placeholder="Descriere scurtă..."
-              />
             </div>
           </div>
 
@@ -489,6 +540,42 @@ const CategoryForm = ({ category, onSave, onCancel, isEditing = false }) => {
                 <Plus size={16} />
                 Adaugă Cuvânt Cheie
               </button>
+            </div>
+          </div>
+
+          {/* Page Title Section */}
+          <div className={styles.section}>
+            <div className={styles.sectionHeader}>
+              <div className={styles.sectionIcon}>
+                <FileText size={24} />
+              </div>
+              <h3 className={styles.sectionTitle}>Titlul continului</h3>
+            </div>
+
+            <div className={styles.formGrid}>
+              <div className={styles.formGroup}>
+                <label className={styles.label}>Titlul Principal</label>
+                <input
+                  type="text"
+                  name="pageTitle"
+                  value={formData.pageTitle}
+                  onChange={handleInputChange}
+                  className={styles.input}
+                  placeholder="Titlul principal al paginii"
+                />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label className={styles.label}>Subtitlu</label>
+                <input
+                  type="text"
+                  name="pageSubtitle"
+                  value={formData.pageSubtitle}
+                  onChange={handleInputChange}
+                  className={styles.input}
+                  placeholder="Subtitlul paginii"
+                />
+              </div>
             </div>
           </div>
 
@@ -776,6 +863,48 @@ const CategoryForm = ({ category, onSave, onCancel, isEditing = false }) => {
                     )}
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+
+          {/* About Us Section */}
+          <div className={styles.section}>
+            <div className={styles.sectionHeader}>
+              <div className={styles.sectionIcon}>
+                <FileText size={24} />
+              </div>
+              <h3 className={styles.sectionTitle}>Despre noi</h3>
+            </div>
+
+            <div className={styles.formGrid}>
+              <div className={styles.formGroup}>
+                <label className={styles.label}>Titlu</label>
+                <input
+                  type="text"
+                  value={formData.aboutUs.title}
+                  onChange={(e) =>
+                    handleNestedInputChange("aboutUs", "title", e.target.value)
+                  }
+                  className={styles.input}
+                  placeholder="Titlu despre noi"
+                />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label className={styles.label}>Descriere</label>
+                <textarea
+                  value={formData.aboutUs.description}
+                  onChange={(e) =>
+                    handleNestedInputChange(
+                      "aboutUs",
+                      "description",
+                      e.target.value
+                    )
+                  }
+                  className={styles.textarea}
+                  rows={6}
+                  placeholder="Descrierea completă despre voi"
+                />
               </div>
             </div>
           </div>

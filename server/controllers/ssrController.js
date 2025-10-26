@@ -16,8 +16,8 @@ export const handleContactOptionSSR = async (req, res) => {
 
     console.log("Looking for category with slug:", categorySlug);
     const category = await Category.findOne({
-      slug: categorySlug,
-      isActive: true,
+      "categoryInformation.slug": categorySlug,
+      "categoryInformation.isActive": true,
     });
 
     console.log("Found category:", category ? "Yes" : "No");
@@ -59,8 +59,8 @@ export const handleRequestedServiceSSR = async (req, res) => {
 
     console.log("Looking for category with slug:", categorySlug);
     const category = await Category.findOne({
-      slug: categorySlug,
-      isActive: true,
+      "categoryInformation.slug": categorySlug,
+      "categoryInformation.isActive": true,
     });
 
     console.log("Found category:", category ? "Yes" : "No");

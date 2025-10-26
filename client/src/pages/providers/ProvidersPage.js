@@ -1,13 +1,4 @@
-import ProviderServiceOfferForm from "../../components/UI/ProviderServiceOfferForm/ProviderServiceOfferForm";
-import styles from "./ProvidersPage.module.css";
-import HeroSection from "../../components/layout/Sections/HeroSection/HeroSection";
-import ContactOptionsGrid from "../../components/UI/ContactOptionsGrid/ContactOptionsGrid";
-import Meta from "../../components/SEO/Meta";
-
-import ServiceProviderOfficeImage from "../../assets/images/eis-team-images/service-provider-office-image.webp";
-import ElectricianIcon from "../../assets/images/illustration/electrician-image.webp";
-import PlumberIcon from "../../assets/images/illustration/plumber-image.webp";
-import WelderIcon from "../../assets/images/illustration/welder-image.webp";
+import { useState } from "react";
 import {
   Mail,
   MessageCircle,
@@ -20,9 +11,17 @@ import {
   Briefcase,
   TrendingUp,
 } from "lucide-react";
-import { useState } from "react";
+
+import ProviderServiceOfferForm from "../../components/UI/ProviderServiceOfferForm/ProviderServiceOfferForm";
+import HeroSection from "../../components/layout/Sections/HeroSection/HeroSection";
+import ContactOptionsGrid from "../../components/UI/ContactOptionsGrid/ContactOptionsGrid";
+import Meta from "../../components/SEO/Meta";
+import TrustBadge from "../../components/UI/TrustBadge/TrustBadge";
+
+import ServiceProviderOfficeImage from "../../assets/images/eis-team-images/service-provider-office-image.webp";
 
 import { contactInfo } from "../../config/contactInfo";
+import styles from "./ProvidersPage.module.css";
 
 const ProvidersPage = () => {
   const [showForm, setShowForm] = useState(false);
@@ -30,33 +29,24 @@ const ProvidersPage = () => {
   const popularServiceIcons = [
     {
       icon: (
-        <img
-          src={ElectricianIcon || "/placeholder.svg"}
-          alt="Electrician"
-          className={styles.serviceIconImage}
-        />
+        <TrustBadge text="Contactează-ne" className={styles.trustBadgeWhite} />
       ),
-      text: "Electrician",
     },
     {
       icon: (
-        <img
-          src={PlumberIcon || "/placeholder.svg"}
-          alt="Instalator"
-          className={styles.serviceIconImage}
+        <TrustBadge
+          text="Stabilim o întâlnire"
+          className={styles.trustBadgeWhite}
         />
       ),
-      text: "Instalator",
     },
     {
       icon: (
-        <img
-          src={WelderIcon}
-          alt="Sanitare"
-          className={styles.serviceIconImage}
+        <TrustBadge
+          text="Îți găsim Clientul"
+          className={styles.trustBadgeWhite}
         />
       ),
-      text: "Sanitare",
     },
   ];
 

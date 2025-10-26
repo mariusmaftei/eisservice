@@ -2,6 +2,88 @@ import Category from "../models/Category.js";
 import { uploadImage, deleteImage } from "../config/firebase.js";
 import { processImage } from "../utils/imageProcessor.js";
 
+// Helper function to transform flat form data to nested structure
+const transformToNestedStructure = (flatData) => {
+  return {
+    categoryInformation: {
+      slug: flatData.slug || "",
+      name: flatData.name || "",
+      displayName: flatData.displayName || flatData.name || "",
+      description: flatData.description || flatData.shortDescription || "",
+      shortDescription: flatData.shortDescription || "",
+      providerCount: flatData.providerCount || 0,
+      isActive: flatData.isActive !== undefined ? flatData.isActive : true,
+      imageUrl: flatData.imageUrl || "",
+      imageFileName: flatData.imageFileName || "",
+    },
+    pageMainTitle: {
+      pageTitle: flatData.pageTitle || "",
+      pageSubtitle: flatData.pageSubtitle || "",
+    },
+    professionalContent: {
+      title: flatData.professionalContent?.title || "",
+      paragraphs: Array.isArray(flatData.professionalContent?.paragraphs)
+        ? flatData.professionalContent.paragraphs
+        : [""],
+      // Main category image is used for professional content
+      imageUrl:
+        flatData.imageUrl || flatData.professionalContent?.imageUrl || "",
+      imageFileName:
+        flatData.imageFileName ||
+        flatData.professionalContent?.imageFileName ||
+        "",
+    },
+    whyChooseUs: {
+      title: flatData.whyChooseUs?.title || "",
+      paragraphs: Array.isArray(flatData.whyChooseUs?.paragraphs)
+        ? flatData.whyChooseUs.paragraphs
+        : [""],
+      whyChooseUsImageUrl: flatData.whyChooseUsImageUrl || "",
+      whyChooseUsImageFileName: flatData.whyChooseUsImageFileName || "",
+    },
+    aboutUs: {
+      title: flatData.aboutUs?.title || "",
+      description: flatData.aboutUs?.description || "",
+    },
+    services: Array.isArray(flatData.services) ? flatData.services : [],
+    seoMetadata: {
+      title: flatData.seo?.title || flatData.seoMetadata?.title || "",
+      description:
+        flatData.seo?.description || flatData.seoMetadata?.description || "",
+      keywords: Array.isArray(flatData.seo?.keywords)
+        ? flatData.seo.keywords
+        : Array.isArray(flatData.seoMetadata?.keywords)
+        ? flatData.seoMetadata.keywords
+        : [],
+      ogTitle: flatData.seo?.ogTitle || flatData.seoMetadata?.ogTitle || "",
+      ogDescription:
+        flatData.seo?.ogDescription ||
+        flatData.seoMetadata?.ogDescription ||
+        "",
+      ogImage:
+        flatData.seo?.ogImage ||
+        flatData.seoMetadata?.ogImage ||
+        "https://eisservice.ro/og-image.jpg",
+      twitterTitle:
+        flatData.seo?.twitterTitle || flatData.seoMetadata?.twitterTitle || "",
+      twitterDescription:
+        flatData.seo?.twitterDescription ||
+        flatData.seoMetadata?.twitterDescription ||
+        "",
+      twitterImage:
+        flatData.seo?.twitterImage ||
+        flatData.seoMetadata?.twitterImage ||
+        "https://eisservice.ro/og-image.jpg",
+      canonicalUrl:
+        flatData.seo?.canonicalUrl || flatData.seoMetadata?.canonicalUrl || "",
+      structuredData:
+        flatData.seo?.structuredData ||
+        flatData.seoMetadata?.structuredData ||
+        null,
+    },
+  };
+};
+
 // Get all categories
 export const getAllCategories = async (req, res) => {
   try {
@@ -59,6 +141,9 @@ export const createCategory = async (req, res) => {
     if (typeof categoryData.whyChooseUs === "string") {
       categoryData.whyChooseUs = JSON.parse(categoryData.whyChooseUs);
     }
+    if (typeof categoryData.aboutUs === "string") {
+      categoryData.aboutUs = JSON.parse(categoryData.aboutUs);
+    }
     if (typeof categoryData.professionalContent === "string") {
       categoryData.professionalContent = JSON.parse(
         categoryData.professionalContent
@@ -70,7 +155,7 @@ export const createCategory = async (req, res) => {
 
     // Check if category with same slug already exists
     const existingCategory = await Category.findOne({
-      slug: categoryData.slug,
+      "categoryInformation.slug": categoryData.slug,
     });
     if (existingCategory) {
       return res.status(400).json({
@@ -164,7 +249,10 @@ export const createCategory = async (req, res) => {
       }
     }
 
-    const category = new Category(categoryData);
+    // Transform flat data to nested structure
+    const nestedData = transformToNestedStructure(categoryData);
+
+    const category = new Category(nestedData);
     await category.save();
 
     res.status(201).json({
@@ -195,6 +283,9 @@ export const updateCategory = async (req, res) => {
     if (typeof updateData.whyChooseUs === "string") {
       updateData.whyChooseUs = JSON.parse(updateData.whyChooseUs);
     }
+    if (typeof updateData.aboutUs === "string") {
+      updateData.aboutUs = JSON.parse(updateData.aboutUs);
+    }
     if (typeof updateData.professionalContent === "string") {
       updateData.professionalContent = JSON.parse(
         updateData.professionalContent
@@ -207,7 +298,7 @@ export const updateCategory = async (req, res) => {
     // Check if slug is being updated and if it conflicts with existing category
     if (updateData.slug) {
       const existingCategory = await Category.findOne({
-        slug: updateData.slug,
+        "categoryInformation.slug": updateData.slug,
         _id: { $ne: id },
       });
       if (existingCategory) {
@@ -227,17 +318,60 @@ export const updateCategory = async (req, res) => {
       });
     }
 
+    // Preserve existing image URLs if not uploading new ones
+    if (!req.files?.image?.[0]) {
+      updateData.imageUrl = currentCategory.categoryInformation?.imageUrl || "";
+      updateData.imageFileName =
+        currentCategory.categoryInformation?.imageFileName || "";
+    }
+    // Preserve professionalContent image (uses the same image as categoryInformation)
+    if (!updateData.professionalContent) {
+      updateData.professionalContent = {};
+    }
+    if (!updateData.professionalContent.imageUrl) {
+      updateData.professionalContent.imageUrl =
+        currentCategory.professionalContent?.imageUrl ||
+        updateData.imageUrl ||
+        "";
+    }
+    if (!req.files?.whyChooseUsImage?.[0]) {
+      updateData.whyChooseUsImageUrl =
+        currentCategory.whyChooseUs?.whyChooseUsImageUrl || "";
+      updateData.whyChooseUsImageFileName =
+        currentCategory.whyChooseUs?.whyChooseUsImageFileName || "";
+    }
+
     // Handle new image uploads if provided
     if (req.files) {
       // Handle main image
       if (req.files.image && req.files.image[0]) {
         try {
           // Delete old image if it exists
-          if (currentCategory.imageFileName) {
+          if (currentCategory.categoryInformation?.imageFileName) {
             try {
-              await deleteImage(currentCategory.imageFileName);
+              await deleteImage(
+                currentCategory.categoryInformation.imageFileName
+              );
             } catch (deleteError) {
               console.warn("Error deleting old image:", deleteError);
+              // Continue with upload even if deletion fails
+            }
+          }
+          // Also delete old professionalContent image if it exists and is different
+          if (
+            currentCategory.professionalContent?.imageFileName &&
+            currentCategory.professionalContent.imageFileName !==
+              currentCategory.categoryInformation?.imageFileName
+          ) {
+            try {
+              await deleteImage(
+                currentCategory.professionalContent.imageFileName
+              );
+            } catch (deleteError) {
+              console.warn(
+                "Error deleting old professionalContent image:",
+                deleteError
+              );
               // Continue with upload even if deletion fails
             }
           }
@@ -263,7 +397,8 @@ export const updateCategory = async (req, res) => {
               categoryName:
                 updateData.name ||
                 updateData.displayName ||
-                currentCategory.name,
+                currentCategory.categoryInformation?.name ||
+                currentCategory.categoryInformation?.displayName,
               uploadedBy: "admin",
               type: "category-image",
               processedWithSharp: true,
@@ -273,6 +408,13 @@ export const updateCategory = async (req, res) => {
 
           updateData.imageUrl = uploadResult.downloadURL;
           updateData.imageFileName = uploadResult.fileName;
+
+          // Also update professionalContent image (uses the same image)
+          if (!updateData.professionalContent) {
+            updateData.professionalContent = {};
+          }
+          updateData.professionalContent.imageUrl = uploadResult.downloadURL;
+          updateData.professionalContent.imageFileName = uploadResult.fileName;
         } catch (uploadError) {
           console.error("Error uploading category image:", uploadError);
           return res.status(500).json({
@@ -287,9 +429,11 @@ export const updateCategory = async (req, res) => {
       if (req.files.whyChooseUsImage && req.files.whyChooseUsImage[0]) {
         try {
           // Delete old image if it exists
-          if (currentCategory.whyChooseUsImageFileName) {
+          if (currentCategory.whyChooseUs?.whyChooseUsImageFileName) {
             try {
-              await deleteImage(currentCategory.whyChooseUsImageFileName);
+              await deleteImage(
+                currentCategory.whyChooseUs.whyChooseUsImageFileName
+              );
             } catch (deleteError) {
               console.warn(
                 "Error deleting old whyChooseUs image:",
@@ -320,7 +464,8 @@ export const updateCategory = async (req, res) => {
               categoryName:
                 updateData.name ||
                 updateData.displayName ||
-                currentCategory.name,
+                currentCategory.categoryInformation?.name ||
+                currentCategory.categoryInformation?.displayName,
               uploadedBy: "admin",
               type: "why-choose-us-image",
               processedWithSharp: true,
@@ -341,7 +486,10 @@ export const updateCategory = async (req, res) => {
       }
     }
 
-    const category = await Category.findByIdAndUpdate(id, updateData, {
+    // Transform flat data to nested structure
+    const nestedData = transformToNestedStructure(updateData);
+
+    const category = await Category.findByIdAndUpdate(id, nestedData, {
       new: true,
       runValidators: true,
     });
@@ -375,18 +523,18 @@ export const deleteCategory = async (req, res) => {
     }
 
     // Delete associated images if they exist
-    if (category.imageFileName) {
+    if (category.categoryInformation?.imageFileName) {
       try {
-        await deleteImage(category.imageFileName);
+        await deleteImage(category.categoryInformation.imageFileName);
       } catch (deleteError) {
         console.warn("Error deleting category image:", deleteError);
         // Continue with category deletion even if image deletion fails
       }
     }
 
-    if (category.whyChooseUsImageFileName) {
+    if (category.whyChooseUs?.whyChooseUsImageFileName) {
       try {
-        await deleteImage(category.whyChooseUsImageFileName);
+        await deleteImage(category.whyChooseUs.whyChooseUsImageFileName);
       } catch (deleteError) {
         console.warn("Error deleting whyChooseUs image:", deleteError);
         // Continue with category deletion even if image deletion fails
@@ -423,13 +571,15 @@ export const toggleCategoryStatus = async (req, res) => {
       });
     }
 
-    category.isActive = !category.isActive;
+    // Toggle isActive in the nested structure
+    category.categoryInformation.isActive =
+      !category.categoryInformation.isActive;
     await category.save();
 
     res.status(200).json({
       success: true,
       message: `Category ${
-        category.isActive ? "activated" : "deactivated"
+        category.categoryInformation.isActive ? "activated" : "deactivated"
       } successfully`,
       data: category,
     });
@@ -464,9 +614,9 @@ export const uploadCategoryImage = async (req, res) => {
     }
 
     // Delete old image if it exists
-    if (category.imageFileName) {
+    if (category.categoryInformation?.imageFileName) {
       try {
-        await deleteImage(category.imageFileName);
+        await deleteImage(category.categoryInformation.imageFileName);
       } catch (deleteError) {
         console.warn("Error deleting old image:", deleteError);
       }
@@ -490,7 +640,9 @@ export const uploadCategoryImage = async (req, res) => {
       processedImage.fileName,
       "categories",
       {
-        categoryName: category.name || category.displayName,
+        categoryName:
+          category.categoryInformation?.name ||
+          category.categoryInformation?.displayName,
         uploadedBy: "admin",
         type: "category-image",
         processedWithSharp: true,
@@ -499,8 +651,8 @@ export const uploadCategoryImage = async (req, res) => {
     );
 
     // Update category with new image info
-    category.imageUrl = uploadResult.downloadURL;
-    category.imageFileName = uploadResult.fileName;
+    category.categoryInformation.imageUrl = uploadResult.downloadURL;
+    category.categoryInformation.imageFileName = uploadResult.fileName;
     await category.save();
 
     res.status(200).json({

@@ -1,92 +1,72 @@
 import mongoose from "mongoose";
 
 const categorySchema = new mongoose.Schema({
-  slug: {
-    type: String,
-    required: true,
-    unique: true,
-    lowercase: true,
-    trim: true,
-  },
-  name: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  displayName: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  description: {
-    type: String,
-    required: true,
-  },
-  shortDescription: {
-    type: String,
-    required: true,
-  },
-  image: {
-    type: String,
-    required: false,
-  },
-  imageUrl: {
-    type: String,
-    required: false,
-  },
-  imageFileName: {
-    type: String,
-    required: false,
-  },
-  whyChooseUsImage: {
-    type: String,
-    required: false,
-  },
-  whyChooseUsImageUrl: {
-    type: String,
-    required: false,
-  },
-  whyChooseUsImageFileName: {
-    type: String,
-    required: false,
-  },
-  workingImage: {
-    type: String,
-    required: false,
-  },
-  workingImageUrl: {
-    type: String,
-    required: false,
-  },
-  workingImageFileName: {
-    type: String,
-    required: false,
-  },
-  services: [
-    {
-      title: {
-        type: String,
-        required: true,
-      },
-      description: {
-        type: String,
-        required: true,
-      },
+  // Category Information Section (Informații pentru Categorie)
+  categoryInformation: {
+    slug: {
+      type: String,
+      required: true,
+      lowercase: true,
+      trim: true,
     },
-  ],
-  whyChooseUs: {
-    title: {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    displayName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    description: {
       type: String,
       required: false,
       default: "",
     },
-    paragraphs: [
-      {
-        type: String,
-        required: false,
-      },
-    ],
+    shortDescription: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    providerCount: {
+      type: Number,
+      required: false,
+      default: 0,
+      min: 0,
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
+    // Main category image
+    imageUrl: {
+      type: String,
+      required: false,
+    },
+    imageFileName: {
+      type: String,
+      required: false,
+    },
   },
+
+  // Page Title Section (Titlul continului)
+  pageMainTitle: {
+    pageTitle: {
+      type: String,
+      required: false,
+      trim: true,
+      default: "",
+    },
+    pageSubtitle: {
+      type: String,
+      required: false,
+      trim: true,
+      default: "",
+    },
+  },
+
+  // Professional Content Section (Conținut Profesional)
   professionalContent: {
     title: {
       type: String,
@@ -99,8 +79,71 @@ const categorySchema = new mongoose.Schema({
         required: false,
       },
     ],
+    // Image for professional content
+    imageUrl: {
+      type: String,
+      required: false,
+    },
+    imageFileName: {
+      type: String,
+      required: false,
+    },
   },
-  seo: {
+
+  // Why Choose Us Section (De ce să ne Alegi)
+  whyChooseUs: {
+    title: {
+      type: String,
+      required: false,
+      default: "",
+    },
+    paragraphs: [
+      {
+        type: String,
+        required: false,
+      },
+    ],
+    // Why choose us specific image
+    whyChooseUsImageUrl: {
+      type: String,
+      required: false,
+    },
+    whyChooseUsImageFileName: {
+      type: String,
+      required: false,
+    },
+  },
+
+  // About Us Section (Despre noi)
+  aboutUs: {
+    title: {
+      type: String,
+      required: false,
+      default: "",
+    },
+    description: {
+      type: String,
+      required: false,
+      default: "",
+    },
+  },
+
+  // Services
+  services: [
+    {
+      title: {
+        type: String,
+        required: true,
+      },
+      description: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
+
+  // SEO Metadata Section (Informații SEO)
+  seoMetadata: {
     title: {
       type: String,
       required: false,
@@ -157,16 +200,8 @@ const categorySchema = new mongoose.Schema({
       default: null,
     },
   },
-  providerCount: {
-    type: Number,
-    required: false,
-    default: 0,
-    min: 0,
-  },
-  isActive: {
-    type: Boolean,
-    default: true,
-  },
+
+  // Timestamps
   createdAt: {
     type: Date,
     default: Date.now,
@@ -184,8 +219,9 @@ categorySchema.pre("save", function (next) {
 });
 
 // Create indexes for better performance
-// Note: slug already has unique: true which creates an index
-categorySchema.index({ isActive: 1 });
+categorySchema.index({ "categoryInformation.isActive": 1 });
+// Add unique index for slug (slug is nested in categoryInformation)
+categorySchema.index({ "categoryInformation.slug": 1 }, { unique: true });
 
 const Category = mongoose.model("Category", categorySchema);
 

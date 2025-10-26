@@ -1,51 +1,37 @@
 import HeroSection from "../../components/layout/Sections/HeroSection/HeroSection";
 import Categories from "../../components/layout/Sections/Categories/Categories";
-import styles from "./ServicesPage.module.css";
 import { ServiceProvider } from "../../context/ServiceContext";
 import BecomeProviderCard from "../../components/layout/Sections/BecomeProviderCard/BecomeProviderCard";
+import {
+  ElectricianIcon,
+  PlumberIcon,
+  MechanicIcon,
+} from "../../components/UI/Icons";
 
 import EISTeamImage from "../../assets/images/eis-team-images/eis_team.webp";
-import ElectricianIcon from "../../assets/images/illustration/electrician-image.webp";
-import PlumberIcon from "../../assets/images/illustration/plumber-image.webp";
-import WelderIcon from "../../assets/images/illustration/welder-image.webp";
 
 const ServicePage = () => {
   const popularServiceIcons = [
     {
-      icon: (
-        <img
-          src={ElectricianIcon || "/placeholder.svg"}
-          alt="Electrician"
-          className={styles.serviceIconImage}
-        />
-      ),
+      icon: <ElectricianIcon size={32} color="#ffffff" />,
       text: "Electrician",
+      isCard: true,
     },
     {
-      icon: (
-        <img
-          src={PlumberIcon || "/placeholder.svg"}
-          alt="Plumber"
-          className={styles.serviceIconImage}
-        />
-      ),
+      icon: <PlumberIcon size={32} color="#ffffff" />,
       text: "Instalator",
+      isCard: true,
     },
     {
-      icon: (
-        <img
-          src={WelderIcon || "/placeholder.svg"}
-          alt="Welder"
-          className={styles.serviceIconImage}
-        />
-      ),
-      text: "Sudor",
+      icon: <MechanicIcon size={32} color="#ffffff" />,
+      text: "Mecanic",
+      isCard: true,
     },
   ];
 
   return (
     <ServiceProvider>
-      <div className={styles.homePage}>
+      <div>
         <HeroSection
           badgeText="Servicii profesionale în toată România"
           title="Tu ceri. Noi găsim."

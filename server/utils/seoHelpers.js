@@ -34,9 +34,13 @@ export const generateCategoryStructuredData = (category) => {
   return {
     "@context": "https://schema.org",
     "@type": "Service",
-    name: category.displayName || category.name,
-    description: category.description || category.shortDescription,
-    url: `${baseUrl}/solicita-serviciu/${category.slug}`,
+    name:
+      category.categoryInformation?.displayName ||
+      category.categoryInformation?.name,
+    description:
+      category.categoryInformation?.description ||
+      category.categoryInformation?.shortDescription,
+    url: `${baseUrl}/solicita-serviciu/${category.categoryInformation?.slug}`,
     provider: {
       "@type": "Organization",
       name: "E.I.S. SERVICE COMPLETE S.R.L.",
@@ -62,10 +66,10 @@ export const generateCategoryStructuredData = (category) => {
       "@type": "Country",
       name: "Romania",
     },
-    serviceType: category.name,
-    category: category.name,
-    ...(category.imageUrl && {
-      image: category.imageUrl,
+    serviceType: category.categoryInformation?.name,
+    category: category.categoryInformation?.name,
+    ...(category.categoryInformation?.imageUrl && {
+      image: category.categoryInformation.imageUrl,
     }),
   };
 };
@@ -149,12 +153,14 @@ export const generateServiceRequestStructuredData = (category) => {
     "@context": "https://schema.org",
     "@type": "Service",
     name: `Solicită ${
-      category.displayName || category.name
+      category.categoryInformation?.displayName ||
+      category.categoryInformation?.name
     } - Servicii Profesionale`,
     description: `Completează formularul pentru a solicita un specialist în ${
-      category.displayName || category.name
+      category.categoryInformation?.displayName ||
+      category.categoryInformation?.name
     }. Servicii profesionale verificate în România.`,
-    url: `${baseUrl}/solicita-serviciu/${category.slug}/formular`,
+    url: `${baseUrl}/solicita-serviciu/${category.categoryInformation?.slug}/formular`,
     provider: {
       "@type": "Organization",
       name: "E.I.S. SERVICE COMPLETE S.R.L.",
@@ -189,7 +195,9 @@ export const generateDefaultSeoData = (
   if (!category) return {};
 
   const baseUrl = "https://eisservice.ro";
-  const categoryName = category.displayName || category.name;
+  const categoryName =
+    category.categoryInformation?.displayName ||
+    category.categoryInformation?.name;
 
   if (pageType === "requested-service") {
     return {
@@ -206,11 +214,13 @@ export const generateDefaultSeoData = (
       ],
       ogTitle: `Solicită ${categoryName} - Servicii Profesionale | eisservice.ro`,
       ogDescription: `Completează formularul pentru a solicita un specialist în ${categoryName}. Servicii profesionale verificate în România.`,
-      ogImage: category.imageUrl || `${baseUrl}/og-image.jpg`,
+      ogImage:
+        category.categoryInformation?.imageUrl || `${baseUrl}/og-image.jpg`,
       twitterTitle: `Solicită ${categoryName} - Servicii Profesionale | eisservice.ro`,
       twitterDescription: `Completează formularul pentru a solicita un specialist în ${categoryName}. Servicii profesionale verificate în România.`,
-      twitterImage: category.imageUrl || `${baseUrl}/og-image.jpg`,
-      canonicalUrl: `${baseUrl}/${category.slug}/formular`,
+      twitterImage:
+        category.categoryInformation?.imageUrl || `${baseUrl}/og-image.jpg`,
+      canonicalUrl: `${baseUrl}/${category.categoryInformation?.slug}/formular`,
       structuredData: generateServiceRequestStructuredData(category),
     };
   }
@@ -219,7 +229,7 @@ export const generateDefaultSeoData = (
   return {
     title: `${categoryName} - Servicii Profesionale | eisservice.ro`,
     description:
-      category.shortDescription ||
+      category.categoryInformation?.shortDescription ||
       `Servicii profesionale de ${categoryName} în România. Găsește specialisti verificați și calificați.`,
     keywords: [
       categoryName.toLowerCase(),
@@ -231,15 +241,17 @@ export const generateDefaultSeoData = (
     ],
     ogTitle: `${categoryName} - Servicii Profesionale | eisservice.ro`,
     ogDescription:
-      category.shortDescription ||
+      category.categoryInformation?.shortDescription ||
       `Servicii profesionale de ${categoryName} în România.`,
-    ogImage: category.imageUrl || `${baseUrl}/og-image.jpg`,
+    ogImage:
+      category.categoryInformation?.imageUrl || `${baseUrl}/og-image.jpg`,
     twitterTitle: `${categoryName} - Servicii Profesionale | eisservice.ro`,
     twitterDescription:
-      category.shortDescription ||
+      category.categoryInformation?.shortDescription ||
       `Servicii profesionale de ${categoryName} în România.`,
-    twitterImage: category.imageUrl || `${baseUrl}/og-image.jpg`,
-    canonicalUrl: `${baseUrl}/solicita-serviciu/${category.slug}`,
+    twitterImage:
+      category.categoryInformation?.imageUrl || `${baseUrl}/og-image.jpg`,
+    canonicalUrl: `${baseUrl}/solicita-serviciu/${category.categoryInformation?.slug}`,
     structuredData: generateCategoryStructuredData(category),
   };
 };
@@ -253,7 +265,16 @@ export const generateRequestedServiceSeoData = (category) => {
   if (!category) return {};
 
   const baseUrl = "https://eisservice.ro";
-  const categoryName = category.displayName || category.name;
+  const categoryName =
+    category.categoryInformation?.displayName ||
+    category.categoryInformation?.name;
+
+  // Use seoMetadata from database if available
+  const seoMetadata = category.seoMetadata || {};
+
+  // Prioritize pageMainTitle data over seoMetadata
+  const pageTitle = category.pageMainTitle?.pageTitle;
+  const pageSubtitle = category.pageMainTitle?.pageSubtitle;
 
   // Generate breadcrumbs
   const breadcrumbs = [
@@ -261,7 +282,7 @@ export const generateRequestedServiceSeoData = (category) => {
     { name: "Solicită Serviciu", url: `${baseUrl}/requested-service` },
     {
       name: categoryName,
-      url: `${baseUrl}/${category.slug}/formular`,
+      url: `${baseUrl}/${category.categoryInformation?.slug}/formular`,
     },
   ];
 
@@ -289,31 +310,54 @@ export const generateRequestedServiceSeoData = (category) => {
     reviewCount: 120,
   };
 
+  // Default SEO values
+  const defaultTitle = `Solicită ${categoryName} - Servicii Profesionale | eisservice.ro`;
+  const defaultDescription = `Completează formularul pentru a solicita un specialist în ${categoryName}. Servicii profesionale verificate în România. Răspuns rapid și prestatori calificați.`;
+  const defaultKeywords = [
+    `solicită ${categoryName.toLowerCase()}`,
+    "formular servicii",
+    "specialisti verificati",
+    "romania",
+    "servicii profesionale",
+    "rapid",
+    "calificati",
+  ];
+
+  // Priority: pageMainTitle > seoMetadata > defaults
+  const finalTitle = pageTitle || seoMetadata.title || defaultTitle;
+  const finalDescription =
+    pageSubtitle || seoMetadata.description || defaultDescription;
+
   return {
-    title: `Solicită ${categoryName} - Servicii Profesionale | eisservice.ro`,
-    description: `Completează formularul pentru a solicita un specialist în ${categoryName}. Servicii profesionale verificate în România. Răspuns rapid și prestatori calificați.`,
-    keywords: [
-      `solicită ${categoryName.toLowerCase()}`,
-      "formular servicii",
-      "specialisti verificati",
-      "romania",
-      "servicii profesionale",
-      "rapid",
-      "calificati",
-    ],
-    ogTitle: `Solicită ${categoryName} - Servicii Profesionale | eisservice.ro`,
-    ogDescription: `Completează formularul pentru a solicita un specialist în ${categoryName}. Servicii profesionale verificate în România.`,
-    ogImage: category.imageUrl || `${baseUrl}/og-image.jpg`,
-    twitterTitle: `Solicită ${categoryName} - Servicii Profesionale | eisservice.ro`,
-    twitterDescription: `Completează formularul pentru a solicita un specialist în ${categoryName}. Servicii profesionale verificate în România.`,
-    twitterImage: category.imageUrl || `${baseUrl}/og-image.jpg`,
-    canonicalUrl: `${baseUrl}/solicita-serviciu/${category.slug}/formular`,
-    structuredData: [
-      generateServiceRequestStructuredData(category),
-      generateBreadcrumbStructuredData(breadcrumbs),
-      generateFAQStructuredData(faqs),
-      generateReviewStructuredData(reviewData),
-    ].filter(Boolean),
+    title: finalTitle,
+    description: finalDescription,
+    keywords: seoMetadata.keywords?.length
+      ? seoMetadata.keywords
+      : defaultKeywords,
+    ogTitle: seoMetadata.ogTitle || finalTitle,
+    ogDescription: seoMetadata.ogDescription || finalDescription,
+    ogImage:
+      seoMetadata.ogImage ||
+      category.categoryInformation?.imageUrl ||
+      `${baseUrl}/og-image.jpg`,
+    twitterTitle: seoMetadata.twitterTitle || finalTitle,
+    twitterDescription: seoMetadata.twitterDescription || finalDescription,
+    twitterImage:
+      seoMetadata.twitterImage ||
+      seoMetadata.ogImage ||
+      category.categoryInformation?.imageUrl ||
+      `${baseUrl}/og-image.jpg`,
+    canonicalUrl:
+      seoMetadata.canonicalUrl ||
+      `${baseUrl}/solicita-serviciu/${category.categoryInformation?.slug}/formular`,
+    structuredData:
+      seoMetadata.structuredData ||
+      [
+        generateServiceRequestStructuredData(category),
+        generateBreadcrumbStructuredData(breadcrumbs),
+        generateFAQStructuredData(faqs),
+        generateReviewStructuredData(reviewData),
+      ].filter(Boolean),
   };
 };
 

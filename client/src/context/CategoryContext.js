@@ -37,8 +37,14 @@ export const CategoryProvider = ({ children, initialData = null }) => {
   const fetchCategory = async (slug) => {
     if (!slug) return;
 
+    // Helper to get slug from category data (handles both old and new structure)
+    const getCategorySlug = (data) => {
+      return data?.categoryInformation?.slug || data?.slug;
+    };
+
     // Don't fetch if we already have data for this slug
-    if (categoryData && categoryData.slug === slug) {
+    const currentSlug = getCategorySlug(categoryData);
+    if (categoryData && currentSlug === slug) {
       return;
     }
 

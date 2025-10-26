@@ -1,0 +1,44 @@
+.trustBadge {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: var(--color-white);
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.875rem 1.25rem;
+  background: var(--color-bg-overlay);
+  border-radius: 50px;
+  backdrop-filter: blur(15px);
+  border: 1px solid var(--color-border-primary);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px var(--shadow-dark);
+  cursor: pointer;
+  outline: none;
+}
+
+.trustBadge:hover {
+  background: var(--color-bg-overlay-hover);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 25px var(--shadow-dark);
+  border-color: var(--color-border-secondary);
+}
+
+.trustBadge:active {
+  transform: translateY(-1px) scale(1.02);
+}
+
+.trustBadge svg {
+  color: var(--color-gray-200);
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 4px var(--shadow-dark));
+}
+
+/* Mobile responsive styles */
+@media (max-width: 640px) {
+  .trustBadge {
+    font-size: 0.8125rem;
+    padding: 0.625rem 0.375rem;
+  }
+}

@@ -2,12 +2,60 @@ import styles from "./CategoryCard.module.css";
 import { Link } from "react-router-dom";
 
 const CategoryCard = ({ category }) => {
-  // Handle both database categories (with slug) and static categories (with id)
-  const categorySlug =
-    category.slug || category.name?.toLowerCase().replace(/\s+/g, "-");
-  const categoryName = category.displayName || category.name;
-  const categoryImage = category.image || category.backgroundImage;
-  const categoryDescription = category.description || category.shortDescription;
+  // Helper to get slug from nested or flat structure
+  const getCategorySlug = () => {
+    if (category.categoryInformation?.slug) {
+      return category.categoryInformation.slug;
+    }
+    if (category.slug) {
+      return category.slug;
+    }
+    return category.name?.toLowerCase().replace(/\s+/g, "-");
+  };
+
+  // Helper to get display name from nested or flat structure
+  const getCategoryName = () => {
+    return (
+      category.categoryInformation?.displayName ||
+      category.categoryInformation?.name ||
+      category.displayName ||
+      category.name
+    );
+  };
+
+  // Helper to get image from nested or flat structure
+  const getCategoryImage = () => {
+    return (
+      category.categoryInformation?.imageUrl ||
+      category.image ||
+      category.backgroundImage
+    );
+  };
+
+  // Helper to get description from nested or flat structure
+  const getCategoryDescription = () => {
+    return (
+      category.categoryInformation?.description ||
+      category.categoryInformation?.shortDescription ||
+      category.description ||
+      category.shortDescription
+    );
+  };
+
+  // Helper to get provider count from nested or flat structure
+  const getProviderCount = () => {
+    return (
+      category.categoryInformation?.providerCount ||
+      category.providerCount ||
+      category.count ||
+      "N/A"
+    );
+  };
+
+  const categorySlug = getCategorySlug();
+  const categoryName = getCategoryName();
+  const categoryImage = getCategoryImage();
+  const categoryDescription = getCategoryDescription();
 
   return (
     <Link
@@ -37,9 +85,7 @@ const CategoryCard = ({ category }) => {
         <div className={styles.content}>
           <div className={styles.topSection}>
             <div className={styles.providerCount}>
-              <span className={styles.countNumber}>
-                {category.providerCount || category.count || "N/A"}
-              </span>
+              <span className={styles.countNumber}>{getProviderCount()}</span>
               <span className={styles.countLabel}>furnizori</span>
             </div>
           </div>

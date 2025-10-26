@@ -1,11 +1,10 @@
 /* Testimonials Section */
 .testimonialsSection {
   padding: 0;
-  background: rgb(242, 242, 243);
+  background: var(--color-gray-100);
   margin: 0;
   border-radius: 0;
-  box-shadow: 0 20px 40px rgba(23, 75, 221, 0.1),
-    0 8px 20px rgba(0, 19, 75, 0.05);
+  box-shadow: 0 20px 40px var(--shadow-primary), 0 8px 20px var(--shadow-dark);
   max-width: none;
   width: 100%;
   position: relative;
@@ -19,7 +18,7 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #174bdd, #00134b, #174bdd);
+  background: var(--gradient-primary);
   opacity: 0.8;
 }
 
@@ -34,7 +33,7 @@
 .testimonialsTitle {
   font-size: 2rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #174bdd, #00134b);
+  background: var(--gradient-primary);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -64,8 +63,8 @@
 
 .testimonial:hover {
   transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 12px 30px rgba(23, 75, 221, 0.15);
-  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 12px 30px var(--shadow-primary);
+  background: var(--color-bg-white);
 }
 
 .testimonialContent {
@@ -76,7 +75,7 @@
 }
 
 .testimonialText {
-  color: #374151;
+  color: var(--color-gray-700);
   line-height: 1.6;
   font-size: 1rem;
   margin-bottom: 1.5rem;
@@ -98,20 +97,20 @@
 
 .authorName {
   font-weight: 600;
-  color: #00134b;
+  color: var(--color-primary-dark);
   font-size: 0.875rem;
   margin-bottom: 0.25rem;
 }
 
 .authorLocation {
-  color: #64748b;
+  color: var(--color-gray-500);
   font-size: 0.75rem;
 }
 
 .testimonialRating {
   display: flex;
   gap: 0.125rem;
-  color: #fbbf24;
+  color: var(--color-rating-star);
   flex-shrink: 0;
   margin-top: 0.25rem;
 }

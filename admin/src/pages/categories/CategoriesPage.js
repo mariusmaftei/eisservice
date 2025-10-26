@@ -107,14 +107,20 @@ const CategoriesPage = () => {
 
   const filteredCategories = categories.filter((category) => {
     const matchesSearch =
-      category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      category.displayName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      category.slug.toLowerCase().includes(searchTerm.toLowerCase());
+      (category.categoryInformation?.name || "")
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      (category.categoryInformation?.displayName || "")
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      (category.categoryInformation?.slug || "")
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
 
     const matchesFilter =
       filterActive === "all" ||
-      (filterActive === "active" && category.isActive) ||
-      (filterActive === "inactive" && !category.isActive);
+      (filterActive === "active" && category.categoryInformation?.isActive) ||
+      (filterActive === "inactive" && !category.categoryInformation?.isActive);
 
     return matchesSearch && matchesFilter;
   });
@@ -231,28 +237,36 @@ const CategoriesPage = () => {
                       <div className={styles.cardHeader}>
                         <div className={styles.categoryInfo}>
                           <h3 className={styles.categoryName}>
-                            {category.displayName}
+                            {category.categoryInformation?.displayName ||
+                              category.displayName}
                           </h3>
                           <p className={styles.categorySlug}>
-                            /{category.slug}
+                            /
+                            {category.categoryInformation?.slug ||
+                              category.slug}
                           </p>
                         </div>
                         <div className={styles.statusBadge}>
                           <span
                             className={`${styles.status} ${
+                              category.categoryInformation?.isActive ??
                               category.isActive
                                 ? styles.active
                                 : styles.inactive
                             }`}
                           >
-                            {category.isActive ? "Activă" : "Inactivă"}
+                            {category.categoryInformation?.isActive ??
+                            category.isActive
+                              ? "Activă"
+                              : "Inactivă"}
                           </span>
                         </div>
                       </div>
 
                       <div className={styles.cardContent}>
                         <p className={styles.categoryDescription}>
-                          {category.shortDescription}
+                          {category.categoryInformation?.shortDescription ||
+                            category.shortDescription}
                         </p>
 
                         <div className={styles.categoryStats}>
@@ -284,17 +298,22 @@ const CategoriesPage = () => {
                         <button
                           onClick={() => handleToggleStatus(category._id)}
                           className={`${styles.toggleButton} ${
+                            category.categoryInformation?.isActive ??
                             category.isActive
                               ? styles.deactivate
                               : styles.activate
                           }`}
                         >
-                          {category.isActive ? (
+                          {category.categoryInformation?.isActive ??
+                          category.isActive ? (
                             <EyeOff size={16} />
                           ) : (
                             <Eye size={16} />
                           )}
-                          {category.isActive ? "Dezactivează" : "Activează"}
+                          {category.categoryInformation?.isActive ??
+                          category.isActive
+                            ? "Dezactivează"
+                            : "Activează"}
                         </button>
                         <button
                           onClick={() => handleDeleteCategory(category)}
@@ -331,7 +350,11 @@ const CategoriesPage = () => {
                   <div className={styles.statContent}>
                     <h4>Categorii Active</h4>
                     <p className={styles.statNumber}>
-                      {categories.filter((c) => c.isActive).length}
+                      {
+                        categories.filter(
+                          (c) => c.categoryInformation?.isActive ?? c.isActive
+                        ).length
+                      }
                     </p>
                   </div>
                 </div>
@@ -342,7 +365,12 @@ const CategoriesPage = () => {
                   <div className={styles.statContent}>
                     <h4>Categorii Inactive</h4>
                     <p className={styles.statNumber}>
-                      {categories.filter((c) => !c.isActive).length}
+                      {
+                        categories.filter(
+                          (c) =>
+                            !(c.categoryInformation?.isActive ?? c.isActive)
+                        ).length
+                      }
                     </p>
                   </div>
                 </div>
@@ -358,7 +386,10 @@ const CategoriesPage = () => {
         onClose={cancelDeleteCategory}
         onConfirm={confirmDeleteCategory}
         title="Ștergere Categorie"
-        message={`Ești sigur că vrei să ștergi categoria "${categoryToDelete?.displayName}"? Această acțiune nu poate fi anulată.`}
+        message={`Ești sigur că vrei să ștergi categoria "${
+          categoryToDelete?.categoryInformation?.displayName ||
+          categoryToDelete?.displayName
+        }"? Această acțiune nu poate fi anulată.`}
         confirmText="Șterge"
         cancelText="Anulează"
         type="danger"

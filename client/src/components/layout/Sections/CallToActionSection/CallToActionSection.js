@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Phone, Mail, MessageCircle, ArrowRight } from "lucide-react";
 import styles from "./CallToActionSection.module.css";
 import RomaniaMapImage from "../../../../assets/images/background-images/romania-map.png";
+import { contactInfo } from "../../../../config/contactInfo";
 
 export default function CallToActionSection() {
   // Animation variants
@@ -24,17 +25,6 @@ export default function CallToActionSection() {
       y: 0,
       transition: {
         duration: 0.8,
-        ease: [0.25, 0.46, 0.45, 0.94],
-      },
-    },
-  };
-
-  const floatingVariants = {
-    animate: {
-      y: [-5, 5, -5],
-      transition: {
-        duration: 6,
-        repeat: Infinity,
         ease: [0.25, 0.46, 0.45, 0.94],
       },
     },
@@ -82,7 +72,9 @@ export default function CallToActionSection() {
                 <div className={styles.contactInfo}>
                   <h3>Sună-ne</h3>
                   <p>Discută direct cu un specialist</p>
-                  <span className={styles.contactValue}>+40 123 456 789</span>
+                  <span className={styles.contactValue}>
+                    {contactInfo.phone}
+                  </span>
                 </div>
               </motion.div>
 
@@ -98,7 +90,7 @@ export default function CallToActionSection() {
                   <h3>Trimite email</h3>
                   <p>Scrie-ne pentru detalii</p>
                   <span className={styles.contactValue}>
-                    contact@eis-service.ro
+                    {contactInfo.contactEmail}
                   </span>
                 </div>
               </motion.div>
@@ -159,13 +151,6 @@ export default function CallToActionSection() {
                 </div>
               </motion.div>
             </motion.div>
-            <div className={styles.floatingElements}>
-              <div className={styles.element1}></div>
-              <div className={styles.element2}></div>
-              <div className={styles.element3}></div>
-              <div className={styles.element4}></div>
-              <div className={styles.element5}></div>
-            </div>
           </motion.div>
         </motion.div>
       </div>

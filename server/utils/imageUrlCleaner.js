@@ -89,35 +89,52 @@ export const processCategoryImages = (categoryData) => {
     return categoryData;
   }
 
-  const processed = { ...categoryData };
+  const processed = JSON.parse(JSON.stringify(categoryData)); // Deep clone to avoid mutation
 
-  // Resolve main image - check both image and imageUrl fields
-  if (processed.imageUrl) {
-    // Use imageUrl from database (Firebase URL)
+  // Main category image - check nested structure first (categoryInformation.imageUrl)
+  // then fallback to root-level fields for backwards compatibility
+  if (processed.categoryInformation?.imageUrl) {
+    processed.image = processed.categoryInformation.imageUrl;
+    processed.imageUrl = processed.categoryInformation.imageUrl;
+    console.log("[processCategoryImages] Main image:", processed.image);
+  } else if (processed.imageUrl) {
     processed.image = processed.imageUrl;
   } else if (processed.image) {
-    // Fallback to image field if imageUrl doesn't exist
     processed.image = resolveImageUrl(processed.image);
   }
 
-  // Resolve working image - use whyChooseUsImageUrl as the source
-  if (processed.whyChooseUsImageUrl) {
-    // Use whyChooseUsImageUrl from database (Firebase URL)
+  // Professional content image
+  if (processed.professionalContent?.imageUrl) {
+    processed.professionalImage = processed.professionalContent.imageUrl;
+    console.log(
+      "[processCategoryImages] Professional image:",
+      processed.professionalImage
+    );
+  }
+
+  // Why choose us image - check nested structure (whyChooseUs.whyChooseUsImageUrl)
+  if (processed.whyChooseUs?.whyChooseUsImageUrl) {
+    processed.workingImage = processed.whyChooseUs.whyChooseUsImageUrl;
+    processed.whyChooseUsImage = processed.whyChooseUs.whyChooseUsImageUrl;
+    processed.whyChooseUsImageUrl = processed.whyChooseUs.whyChooseUsImageUrl;
+    console.log(
+      "[processCategoryImages] Why choose image:",
+      processed.workingImage
+    );
+  } else if (processed.whyChooseUsImageUrl) {
     processed.workingImage = processed.whyChooseUsImageUrl;
+    processed.whyChooseUsImage = processed.whyChooseUsImageUrl;
   } else if (processed.workingImageUrl) {
-    // Fallback to workingImageUrl if whyChooseUsImageUrl doesn't exist
     processed.workingImage = processed.workingImageUrl;
   } else if (processed.workingImage) {
-    // Fallback to workingImage field if neither URL exists
     processed.workingImage = resolveImageUrl(processed.workingImage);
   }
 
-  // Resolve whyChooseUsImage if it exists
-  if (processed.whyChooseUsImageUrl) {
-    // Use whyChooseUsImageUrl from database (Firebase URL)
-    processed.whyChooseUsImage = processed.whyChooseUsImageUrl;
-  } else if (processed.whyChooseUsImage) {
-    // Fallback to whyChooseUsImage field if whyChooseUsImageUrl doesn't exist
+  // Resolve whyChooseUsImage if it exists and is not already set
+  if (
+    processed.whyChooseUsImage &&
+    !processed.whyChooseUs?.whyChooseUsImageUrl
+  ) {
     processed.whyChooseUsImage = resolveImageUrl(processed.whyChooseUsImage);
   }
 

@@ -37,161 +37,6 @@
   object-fit: contain;
 }
 
-/* Contact Options Section */
-.optionsSection {
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  padding: 4rem 1rem;
-  margin-top: -2rem;
-  position: relative;
-  z-index: 10;
-}
-
-.optionsContainer {
-  max-width: 1280px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.optionsTitle {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #1f2937;
-  margin-bottom: 1rem;
-}
-
-.optionsDescription {
-  font-size: 1.25rem;
-  color: #6b7280;
-  margin-bottom: 3rem;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.optionsGrid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2rem;
-}
-
-@media (min-width: 768px) {
-  .optionsGrid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 3rem;
-  }
-}
-
-.optionCard {
-  background: white;
-  border-radius: 1rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  padding: 2rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: 2px solid transparent;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-.optionCard:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-  border-color: #0056b3;
-}
-
-.cardHeader {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.iconWrapper {
-  width: 80px;
-  height: 80px;
-  background: linear-gradient(135deg, #0056b3, #00a0e9);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 1.5rem;
-  box-shadow: 0 8px 20px rgba(0, 86, 179, 0.3);
-}
-
-.cardIcon {
-  color: white;
-}
-
-.cardTitle {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #1f2937;
-  margin-bottom: 0.5rem;
-}
-
-.cardSubtitle {
-  color: #6b7280;
-  font-size: 1rem;
-}
-
-.cardContent {
-  flex: 1;
-  margin-bottom: 2rem;
-}
-
-.featureList {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.featureItem {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem 0;
-  color: #4b5563;
-  font-size: 0.9375rem;
-}
-
-.featureItem svg {
-  color: #0056b3;
-  flex-shrink: 0;
-}
-
-.cardFooter {
-  margin-top: auto;
-}
-
-.actionButton {
-  width: 100%;
-  background: linear-gradient(135deg, #0056b3, #004494);
-  color: white;
-  border: none;
-  padding: 1rem 1.5rem;
-  border-radius: 0.5rem;
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-}
-
-.actionButton:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 20px rgba(0, 86, 179, 0.4);
-}
-
-.buttonIcon {
-  transition: transform 0.2s ease;
-}
-
-.actionButton:hover .buttonIcon {
-  transform: translateX(2px);
-}
-
 /* Benefits Section */
 .benefitsSection {
   background: white;
@@ -277,6 +122,17 @@
 
 .backToOptionsButton:hover {
   background: #004494;
+}
+
+/* Trust Badge White Variant */
+.trustBadgeWhite {
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: white !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+.trustBadgeWhite:hover {
+  background: rgba(255, 255, 255, 0.3) !important;
   transform: translateY(-1px);
 }
 
@@ -285,27 +141,6 @@
   .serviceProviderPage > div:first-child {
     min-height: 50vh;
     padding-bottom: 2rem;
-  }
-
-  .optionsSection {
-    padding: 3rem 0.5rem;
-    margin-top: -1.5rem;
-  }
-
-  .optionsTitle {
-    font-size: 2rem;
-  }
-
-  .optionsDescription {
-    font-size: 1.125rem;
-  }
-
-  .optionCard {
-    padding: 1.5rem;
-  }
-
-  .cardTitle {
-    font-size: 1.25rem;
   }
 
   .benefitsSection {

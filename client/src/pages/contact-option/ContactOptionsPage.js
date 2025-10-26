@@ -33,11 +33,17 @@ const ContactOptionsPage = () => {
 
     if (!currentSlug) return;
 
+    // Helper to get slug from category data (handles both old and new structure)
+    const getCategorySlug = (data) => {
+      return data?.categoryInformation?.slug || data?.slug;
+    };
+
     // Check if we have initial data from SSR first
     if (
       typeof window !== "undefined" &&
       window.__INITIAL_DATA__ &&
-      window.__INITIAL_DATA__.slug === currentSlug
+      (window.__INITIAL_DATA__.categoryInformation?.slug ||
+        window.__INITIAL_DATA__.slug) === currentSlug
     ) {
       // Data is already available from SSR, no need to fetch
       console.log("Using SSR data for category:", currentSlug);
@@ -47,8 +53,8 @@ const ContactOptionsPage = () => {
     // Check if we need to fetch data
     const needsFetch =
       !categoryData || // No data at all
-      categoryData.slug !== currentSlug || // Data is for different category
-      (!loading && !categoryData.slug); // Loading finished but no data
+      getCategorySlug(categoryData) !== currentSlug || // Data is for different category
+      (!loading && !getCategorySlug(categoryData)); // Loading finished but no data
 
     if (needsFetch && !loading) {
       console.log("Fetching category data for:", currentSlug);
@@ -89,39 +95,90 @@ const ContactOptionsPage = () => {
         .join(" ")
     : "Serviciu";
 
+  // Helper functions to get category data from nested or flat structure
+  const getCategoryDisplayName = () => {
+    if (categoryData) {
+      return (
+        categoryData.categoryInformation?.displayName ||
+        categoryData.categoryInformation?.name ||
+        categoryData.displayName ||
+        categoryData.name
+      );
+    }
+    return defaultCategoryName;
+  };
+
+  const getCategoryImage = () => {
+    if (categoryData) {
+      return (
+        categoryData.categoryInformation?.imageUrl ||
+        categoryData.imageUrl ||
+        categoryData.image
+      );
+    }
+    return null;
+  };
+
+  const getCategoryServices = () => {
+    return categoryData?.services || [];
+  };
+
+  const categoryDisplayName = getCategoryDisplayName();
+  const categoryImage = getCategoryImage();
+
   const handleEmailOption = () => {
     navigate(`/solicita-serviciu/${currentSlug}/formular`, {
       state: {
-        categoryName: categoryData?.displayName || defaultCategoryName,
-        categoryImage: categoryData?.image,
+        categoryName: categoryDisplayName,
+        categoryImage: categoryImage,
       },
     });
   };
 
   const handleWhatsAppOption = () => {
-    const message = `Salut! Sunt interesat de servicii de ${
-      categoryData?.displayName || defaultCategoryName
-    }. Poți să mă ajuți cu mai multe informații?`;
+    const message = `Salut! Sunt interesat de servicii de ${categoryDisplayName}. Poți să mă ajuți cu mai multe informații?`;
     const whatsappUrl = `https://wa.me/${
       contactInfo.phoneFormatted
     }?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, "_blank");
   };
 
+  // Helper to get SEO data from nested or flat structure
+  const getCategorySEO = (field) => {
+    if (categoryData) {
+      return (
+        categoryData.seoMetadata?.[field] ||
+        categoryData.seo?.[field] ||
+        categoryData.categoryInformation?.seoMetadata?.[field]
+      );
+    }
+    return null;
+  };
+
   // Dynamic page data based on category
+  // Use pageMainTitle for displayed title, SEO metadata only for meta tags
   const pageData = {
     title:
-      categoryData?.seo?.title ||
+      categoryData?.pageMainTitle?.pageTitle ||
+      getCategorySEO("title") ||
       `${defaultCategoryName} Brașov – Servicii Profesionale`,
     description:
-      categoryData?.seo?.description ||
+      categoryData?.pageMainTitle?.pageSubtitle ||
+      getCategorySEO("description") ||
       `Acasa / Solicita-Serviciu / ${defaultCategoryName} Brașov - Servicii Profesionale`,
-    services: categoryData?.services || [
-      "Servicii profesionale",
-      "Calitate garantată",
-      "Prețuri competitive",
-      "Echipa specializată",
-    ],
+    services:
+      getCategoryServices().length > 0
+        ? getCategoryServices().map((service) =>
+            typeof service === "string"
+              ? service
+              : service.title || service.name
+          )
+        : [
+            "Servicii profesionale",
+            "Calitate garantată",
+            "Prețuri competitive",
+            "Echipa specializată",
+          ],
     contactOptions: [
       {
         id: "form",
@@ -237,7 +294,9 @@ const ContactOptionsPage = () => {
               </span>
               <span className={styles.breadcrumbSeparator}> / </span>
               <span className={styles.breadcrumbCurrent}>
-                {defaultCategoryName} Brașov - Servicii Profesionale
+                {categoryData?.pageMainTitle?.pageSubtitle ||
+                  categoryData?.seo?.description ||
+                  `${defaultCategoryName} Brașov - Servicii Profesionale`}
               </span>
             </div>
           </div>
@@ -386,7 +445,7 @@ const ContactOptionsPage = () => {
         </div>
 
         {/* Statistics Section */}
-        <StatisticsSection />
+        <StatisticsSection introText="Suntem opțiunea perfectă pentru alegerea unui electrician Brașov, cu mii de intervenții reușite și clienți mulțumiți." />
 
         {/* Call to Action Section */}
         <div className={styles.callToActionSection}>
@@ -394,7 +453,7 @@ const ContactOptionsPage = () => {
             Solicită acum un{" "}
             {categoryData?.displayName?.toLowerCase() ||
               defaultCategoryName.toLowerCase()}{" "}
-            Brașov <br />
+            din Brașov <br />
             Echipa noastră răspunde rapid solicitărilor, iar specialiștii
             disponibili te pot contacta în cel mai scurt timp.
           </h6>

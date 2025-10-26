@@ -104,7 +104,7 @@ const Categories = () => {
   return (
     <section
       id="servicii-populare"
-      className={`${styles.section} container mx-auto`}
+      className={styles.section}
       style={{ position: "relative", zIndex: 10 }}
     >
       <div className={styles.header}>

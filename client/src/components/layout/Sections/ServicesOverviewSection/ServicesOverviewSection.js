@@ -38,6 +38,7 @@ const ServicesOverviewSection = ({ onNavigateToServices }) => {
             <button
               onClick={onNavigateToServices}
               className={styles.servicesOverviewButton}
+              title="Vezi toate serviciile disponibile"
             >
               Vezi toate serviciile
               <ArrowRight size={20} />
@@ -46,27 +47,32 @@ const ServicesOverviewSection = ({ onNavigateToServices }) => {
           <div className={styles.servicesOverviewImage}>
             <img
               src={ElectricianImage || "/placeholder.svg"}
-              alt="Electrician"
+              alt="Electrician - Servicii de electricitate"
+              title="Electrician - Servicii de electricitate"
               className={styles.obliqueImg1}
             />
             <img
               src={PlumberImage || "/placeholder.svg"}
-              alt="Plumber"
+              alt="Instalator - Servicii de instalații"
+              title="Instalator - Servicii de instalații"
               className={styles.obliqueImg2}
             />
             <img
               src={ConstructorImage || "/placeholder.svg"}
-              alt="Constructor"
+              alt="Constructor - Servicii de construcții"
+              title="Constructor - Servicii de construcții"
               className={styles.obliqueImg3}
             />
             <img
               src={PainterImage || "/placeholder.svg"}
-              alt="Painter"
+              alt="Zugrav - Servicii de zugrăvit"
+              title="Zugrav - Servicii de zugrăvit"
               className={styles.obliqueImg4}
             />
             <img
               src={CarMechanicImage || "/placeholder.svg"}
-              alt="Car Mechanic"
+              alt="Mecanic auto - Servicii auto"
+              title="Mecanic auto - Servicii auto"
               className={styles.obliqueImg5}
             />
           </div>

@@ -1,9 +1,22 @@
 import { motion } from "framer-motion";
-import { ArrowRight, CheckCircle } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import WorkersImage from "../../../../assets/images/eis-team-images/workers-home-image.webp";
+import Button from "../../../UI/Button/Button";
+import TrustBadge from "../../../UI/TrustBadge/TrustBadge";
 import styles from "./HeroSection.module.css";
 
-const HeroSection = ({ onRequestService, onBecomeProvider }) => {
+const HeroSection = ({
+  onRequestService,
+  onBecomeProvider,
+  // New props for different page content
+  badgeText,
+  title,
+  highlightText,
+  description,
+  imageSrc,
+  popularServicesSection,
+  className,
+}) => {
   // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -40,8 +53,31 @@ const HeroSection = ({ onRequestService, onBecomeProvider }) => {
     },
   };
 
+  // Default content for home page
+  const defaultContent = {
+    badgeText: "Prestări servicii în toată țara",
+    title: "Găsește specialiștii potriviți pentru orice serviciu",
+    highlightText: "specialiștii potriviți",
+    description:
+      "Conectăm clienții cu profesioniști verificați din toată România. Simplu, rapid și sigur.",
+    imageSrc: WorkersImage,
+    showButtons: true,
+    showTrustSignals: true,
+  };
+
+  // Use provided props or fallback to defaults
+  const content = {
+    badgeText: badgeText || defaultContent.badgeText,
+    title: title || defaultContent.title,
+    highlightText: highlightText || defaultContent.highlightText,
+    description: description || defaultContent.description,
+    imageSrc: imageSrc || defaultContent.imageSrc,
+    showButtons: onRequestService && onBecomeProvider,
+    showTrustSignals: !popularServicesSection,
+  };
+
   return (
-    <section className={styles.heroSection}>
+    <section className={`${styles.heroSection} ${className || ""}`}>
       <div className={styles.heroContainer}>
         <motion.h1
           className={styles.heroMainTitle}
@@ -49,7 +85,7 @@ const HeroSection = ({ onRequestService, onBecomeProvider }) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
-          Prestări servicii în toată țara
+          {content.badgeText}
         </motion.h1>
         <motion.div
           className={styles.heroContent}
@@ -59,78 +95,116 @@ const HeroSection = ({ onRequestService, onBecomeProvider }) => {
         >
           <motion.div className={styles.heroText}>
             <motion.h1 className={styles.heroTitle} variants={itemVariants}>
-              Găsește{" "}
-              <span className={styles.highlight}>specialiștii potriviți</span>{" "}
-              pentru orice serviciu
+              {content.title.includes(content.highlightText)
+                ? content.title
+                    .split(content.highlightText)
+                    .map((part, index, array) => (
+                      <span key={index}>
+                        {part}
+                        {index < array.length - 1 && (
+                          <span className={styles.highlight}>
+                            {content.highlightText}
+                          </span>
+                        )}
+                      </span>
+                    ))
+                : content.title}
             </motion.h1>
             <motion.p
               className={styles.heroDescription}
               variants={itemVariants}
             >
-              Conectăm clienții cu profesioniști verificați din toată România.
-              Simplu, rapid și sigur.
+              {content.description}
             </motion.p>
-            <motion.div className={styles.heroButtons} variants={itemVariants}>
-              <motion.button
-                onClick={onRequestService}
-                className={styles.primaryButton}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ duration: 0.2 }}
-              >
-                Caut un specialist
-                <ArrowRight size={20} />
-              </motion.button>
-              <motion.button
-                onClick={onBecomeProvider}
-                className={styles.secondaryButton}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ duration: 0.2 }}
-              >
-                Sunt specialist
-              </motion.button>
-            </motion.div>
 
-            {/* Trust Signals as clickable badges */}
-            <motion.div className={styles.trustSignals} variants={itemVariants}>
-              <motion.button
-                className={styles.trustBadge}
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.2 }}
+            {content.showButtons && (
+              <motion.div
+                className={styles.heroButtons}
+                variants={itemVariants}
               >
-                <CheckCircle size={16} />
-                <span>Profesioniști verificați</span>
-              </motion.button>
-              <motion.button
-                className={styles.trustBadge}
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.2 }}
+                <Button
+                  variant="primary"
+                  size="medium"
+                  onClick={onRequestService}
+                  icon={<ArrowRight size={20} />}
+                  iconPosition="right"
+                >
+                  Caut un specialist
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="medium"
+                  onClick={onBecomeProvider}
+                >
+                  Sunt specialist
+                </Button>
+              </motion.div>
+            )}
+
+            {/* Trust Signals as clickable badges - only show on home page */}
+            {content.showTrustSignals && (
+              <motion.div
+                className={styles.trustSignals}
+                variants={itemVariants}
               >
-                <CheckCircle size={16} />
-                <span>Răspuns în 24h</span>
-              </motion.button>
-              <motion.button
-                className={styles.trustBadge}
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.2 }}
+                <TrustBadge text="Profesioniști verificați" />
+                <TrustBadge text="Răspuns în 24h" />
+                <TrustBadge text="În toată țara" />
+                <TrustBadge text="Suport complet" />
+              </motion.div>
+            )}
+
+            {/* Popular Services Section - for other pages */}
+            {popularServicesSection && (
+              <motion.div
+                className={styles.popularServicesSection}
+                variants={itemVariants}
               >
-                <CheckCircle size={16} />
-                <span>În toată țara</span>
-              </motion.button>
-              <motion.button
-                className={styles.trustBadge}
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.2 }}
-              >
-                <CheckCircle size={16} />
-                <span>Suport complet</span>
-              </motion.button>
-            </motion.div>
+                <h3 className={styles.popularServicesTitle}>
+                  {popularServicesSection.title}
+                </h3>
+                <div className={styles.popularServicesIcons}>
+                  {popularServicesSection.icons.map((service, index) => (
+                    <div
+                      key={index}
+                      className={`${styles.popularServiceItem} ${
+                        typeof service.icon === "string"
+                          ? ""
+                          : service.isCard
+                          ? styles.outlinedCardItem
+                          : styles.trustBadgeItem
+                      }`}
+                    >
+                      {typeof service.icon === "string" ? (
+                        <>
+                          <img
+                            src={service.icon}
+                            alt={service.text}
+                            className={styles.popularServiceIcon}
+                          />
+                          <span className={styles.popularServiceText}>
+                            {service.text}
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          {service.icon}
+                          {service.text && (
+                            <span className={styles.popularServiceText}>
+                              {service.text}
+                            </span>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
           </motion.div>
           <motion.div className={styles.heroImage} variants={imageVariants}>
             <img
-              src={WorkersImage || "/placeholder.svg"}
+              src={content.imageSrc || "/placeholder.svg"}
               alt="Echipa de specialiști"
               className={styles.heroImg}
             />

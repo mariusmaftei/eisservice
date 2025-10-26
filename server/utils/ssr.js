@@ -53,7 +53,10 @@ const renderApp = (
         break;
       default:
         const defaultSeo = generateDefaultSeoData(categoryData, pageType);
-        mergedSeo = mergeSeoData(categoryData?.seo, defaultSeo);
+        mergedSeo = mergeSeoData(
+          categoryData?.seoMetadata || categoryData?.seo,
+          defaultSeo
+        );
     }
   }
 
@@ -132,11 +135,20 @@ const renderApp = (
       <meta name="twitter:image" content="${twitterImage}" />
       <meta name="twitter:image:alt" content="${twitterDescription}" />`;
 
-  // Remove existing OG and Twitter meta tags if they exist
-  indexHtml = indexHtml.replace(
-    /<!-- Open Graph \/ Facebook -->[\s\S]*?<meta name="twitter:image:alt"[^>]*\/>/,
-    ""
-  );
+  // Remove existing dynamic OG and Twitter meta tags (keep base tags)
+  // This removes og:title, og:description, og:url, og:image variants, twitter:* that change per page
+  // But keeps base tags like og:type, og:site_name, og:locale
+  indexHtml = indexHtml.replace(/<meta property="og:title"[^>]*\/>/, "");
+  indexHtml = indexHtml.replace(/<meta property="og:description"[^>]*\/>/, "");
+  indexHtml = indexHtml.replace(/<meta property="og:url"[^>]*\/>/, "");
+  indexHtml = indexHtml.replace(/<meta property="og:image"[^>]*\/>/, "");
+  indexHtml = indexHtml.replace(/<meta name="twitter:card"[^>]*\/>/, "");
+  indexHtml = indexHtml.replace(/<meta name="twitter:domain"[^>]*\/>/, "");
+  indexHtml = indexHtml.replace(/<meta name="twitter:url"[^>]*\/>/, "");
+  indexHtml = indexHtml.replace(/<meta name="twitter:title"[^>]*\/>/, "");
+  indexHtml = indexHtml.replace(/<meta name="twitter:description"[^>]*\/>/, "");
+  indexHtml = indexHtml.replace(/<meta name="twitter:image"[^>]*\/>/, "");
+  indexHtml = indexHtml.replace(/<meta name="twitter:image:alt"[^>]*\/>/, "");
 
   // Add new OG and Twitter meta tags before closing head tag
   indexHtml = indexHtml.replace("</head>", `${ogMetaTags}\n  </head>`);
@@ -171,7 +183,9 @@ const renderApp = (
   const initialDataScript = `
     <script>
       window.__INITIAL_DATA__ = ${JSON.stringify(categoryData || {})};
-      window.__CATEGORY_SLUG__ = ${JSON.stringify(categoryData?.slug || "")};
+      window.__CATEGORY_SLUG__ = ${JSON.stringify(
+        categoryData?.categoryInformation?.slug || categoryData?.slug || ""
+      )};
       console.log('SSR: Injected category data:', ${JSON.stringify(
         categoryData || {}
       )});

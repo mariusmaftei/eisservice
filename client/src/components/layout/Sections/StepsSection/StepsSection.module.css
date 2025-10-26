@@ -3,13 +3,14 @@
   padding: 0;
   width: 100%;
   position: relative;
+  contain: layout style paint;
 }
 
 .stepsSectionWrapper {
   padding: 6rem 4rem;
-  background: rgb(242, 242, 243);
+  background: var(--color-gray-100);
   border-radius: 0;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08), 0 8px 20px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 20px 40px var(--shadow-dark), 0 8px 20px rgba(0, 0, 0, 0.04);
   border: none;
   position: relative;
   overflow: hidden;
@@ -25,7 +26,12 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #174bdd, #00134b, #174bdd);
+  background: linear-gradient(
+    90deg,
+    var(--color-primary),
+    var(--color-primary-dark),
+    var(--color-primary)
+  );
   opacity: 0.8;
 }
 
@@ -40,7 +46,7 @@
 .stepsTitle {
   font-size: 2rem;
   font-weight: 700;
-  color: #00134b;
+  color: var(--color-primary-dark);
   text-align: center;
   margin-bottom: 0.75rem;
   line-height: 1.2;
@@ -48,7 +54,7 @@
 
 .stepsSubtitle {
   font-size: 1.125rem;
-  color: #64748b;
+  color: var(--color-gray-500);
   text-align: center;
   margin-bottom: 3rem;
   max-width: 600px;
@@ -62,6 +68,7 @@
   gap: 2rem;
   max-width: 1200px;
   margin: 0 auto;
+  contain: layout;
 }
 
 .stepIndicator {
@@ -73,10 +80,10 @@
 
 .arrowIcon {
   font-size: 1.5rem;
-  color: #174bdd;
+  color: var(--color-primary);
   opacity: 0.7;
-  transition: all 0.3s ease;
-  animation: bounce 2s infinite;
+  transition: opacity 0.3s ease;
+  animation: bounce 3s infinite;
 }
 
 @keyframes bounce {
@@ -88,10 +95,10 @@
     transform: translateX(0);
   }
   40% {
-    transform: translateX(8px);
+    transform: translateX(6px);
   }
   60% {
-    transform: translateX(4px);
+    transform: translateX(3px);
   }
 }
 
@@ -104,10 +111,10 @@
     transform: rotate(90deg) translateY(0);
   }
   40% {
-    transform: rotate(90deg) translateY(8px);
+    transform: rotate(90deg) translateY(6px);
   }
   60% {
-    transform: rotate(90deg) translateY(4px);
+    transform: rotate(90deg) translateY(3px);
   }
 }
 
@@ -121,12 +128,14 @@
   background: rgba(255, 255, 255, 0.8);
   border-radius: 1rem;
   border: 1px solid rgba(23, 75, 221, 0.1);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease,
+    border-color 0.3s ease;
+  will-change: transform;
 }
 
 .step:hover {
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 12px 30px rgba(23, 75, 221, 0.15);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px var(--shadow-primary);
   background: rgba(255, 255, 255, 0.95);
   border-color: rgba(23, 75, 221, 0.2);
 }
@@ -134,15 +143,15 @@
 .stepIcon {
   width: 60px;
   height: 60px;
-  background: linear-gradient(135deg, #174bdd 0%, #00134b 100%);
-  color: white;
+  background: var(--gradient-primary);
+  color: var(--color-white);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.5rem;
   margin-bottom: 1rem;
-  box-shadow: 0 8px 25px rgba(23, 75, 221, 0.3);
+  box-shadow: 0 8px 25px var(--shadow-primary);
   position: relative;
   z-index: 2;
 }
@@ -154,25 +163,25 @@
   left: -4px;
   right: -4px;
   bottom: -4px;
-  background: linear-gradient(135deg, #174bdd, #00134b);
+  background: var(--gradient-primary);
   border-radius: 50%;
   z-index: -1;
-  opacity: 0.3;
-  animation: pulse 2s infinite;
+  opacity: 0.2;
+  animation: pulse 3s infinite;
 }
 
 @keyframes pulse {
   0% {
     transform: scale(1);
-    opacity: 0.3;
+    opacity: 0.2;
   }
   50% {
-    transform: scale(1.1);
+    transform: scale(1.05);
     opacity: 0.1;
   }
   100% {
     transform: scale(1);
-    opacity: 0.3;
+    opacity: 0.2;
   }
 }
 
@@ -183,14 +192,14 @@
 .stepTitle {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #00134b;
+  color: var(--color-primary-dark);
   margin-bottom: 0.75rem;
   line-height: 1.3;
 }
 
 .stepDescription {
   font-size: 1rem;
-  color: #64748b;
+  color: var(--color-gray-500);
   line-height: 1.5;
   margin: 0;
 }
@@ -217,7 +226,6 @@
   }
 }
 
-/* Arrow direction change at 767px and below */
 @media (max-width: 767px) {
   .stepsGrid {
     grid-template-columns: 1fr;
@@ -231,7 +239,7 @@
   .arrowIcon {
     font-size: 1.25rem;
     transform: rotate(90deg);
-    animation: bounceDown 2s infinite;
+    animation: bounceDown 3s infinite;
   }
 }
 
@@ -249,19 +257,6 @@
   .stepsSubtitle {
     font-size: 1rem;
     margin-bottom: 2rem;
-  }
-
-  .stepsGrid {
-    gap: 1.5rem;
-    grid-template-columns: 1fr;
-  }
-
-  .stepIndicator {
-    padding: 0.5rem 0;
-  }
-
-  .arrowIcon {
-    font-size: 1.25rem;
   }
 
   .step {
@@ -302,7 +297,6 @@
 
   .stepsGrid {
     gap: 1rem;
-    grid-template-columns: 1fr;
   }
 
   .stepIndicator {

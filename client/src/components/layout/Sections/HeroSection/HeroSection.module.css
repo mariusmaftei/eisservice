@@ -1,7 +1,7 @@
 /* Hero Section */
 .heroSection {
-  background: linear-gradient(135deg, #174bdd 0%, #00134b 100%);
-  color: white;
+  background: var(--gradient-primary);
+  color: var(--color-white);
   padding: 2rem 0;
   position: relative;
   overflow: hidden;
@@ -74,18 +74,18 @@
 }
 
 .highlight {
-  background: linear-gradient(135deg, #e2e2e2, rgba(255, 255, 255, 0.8));
+  background: var(--gradient-text);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 2px 4px var(--shadow-dark);
 }
 
 .heroDescription {
   font-size: 1.25rem;
   line-height: 1.6;
   margin-bottom: 1.5rem;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--color-text-secondary);
   max-width: 500px;
 }
 
@@ -96,119 +96,13 @@
   margin-bottom: 1.5rem;
 }
 
-.primaryButton {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  padding: 1.375rem 2.75rem;
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-  color: #174bdd;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 1rem;
-  font-size: 1.125rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2), 0 4px 12px rgba(0, 0, 0, 0.1);
-  white-space: nowrap;
-  position: relative;
-  overflow: hidden;
-}
-
-.primaryButton::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.2),
-    transparent
-  );
-  transition: left 0.5s;
-}
-
-.primaryButton:hover::before {
-  left: 100%;
-}
-
-.primaryButton:hover {
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 15px 35px rgba(255, 255, 255, 0.3),
-    0 8px 20px rgba(0, 0, 0, 0.15);
-  background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
-  border-color: rgba(255, 255, 255, 0.5);
-}
-
-.secondaryButton {
-  padding: 1.375rem 2.75rem;
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 1rem;
-  font-size: 1.125rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  white-space: nowrap;
-  backdrop-filter: blur(10px);
-  position: relative;
-  overflow: hidden;
-}
-
-.secondaryButton:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.6);
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 12px 30px rgba(255, 255, 255, 0.2);
-}
+/* Button styles are now handled by the Button component */
 
 .trustSignals {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 0.75rem;
   margin-top: 1rem;
-}
-
-.trustBadge {
-  display: flex;
-  align-items: center;
-  text-align: center;
-  justify-content: center;
-  gap: 0.5rem;
-  color: white;
-  font-size: 0.875rem;
-  font-weight: 500;
-  padding: 0.875rem 1.25rem;
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 50px;
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  outline: none;
-}
-
-.trustBadge:hover {
-  background: rgba(255, 255, 255, 0.25);
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-  border-color: rgba(255, 255, 255, 0.4);
-}
-
-.trustBadge:active {
-  transform: translateY(-1px) scale(1.02);
-}
-
-.trustBadge svg {
-  color: #e2e2e2;
-  flex-shrink: 0;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 }
 
 .heroImage {
@@ -221,6 +115,93 @@
   max-width: 450px;
   height: auto;
   border-radius: 1rem;
+}
+
+/* Popular Services Section */
+.popularServicesSection {
+  margin-top: 2rem;
+}
+
+.popularServicesTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+
+.popularServicesIcons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  max-width: 450px;
+  margin: 0 auto;
+  align-items: stretch;
+}
+
+.popularServiceItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.25rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  min-height: 100px;
+  justify-content: center;
+}
+
+.popularServiceItem:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Special styling for TrustBadge components - remove container styling */
+.trustBadgeItem {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  gap: 0 !important;
+}
+
+.trustBadgeItem:hover {
+  background: transparent !important;
+  transform: none !important;
+}
+
+/* Special styling for outlined card items */
+.outlinedCardItem {
+  background: transparent !important;
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
+  padding: 1.25rem 1rem !important;
+  gap: 0.75rem !important;
+  backdrop-filter: blur(10px);
+}
+
+.outlinedCardItem:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  transform: translateY(-2px) !important;
+}
+
+.popularServiceIcon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+.popularServiceText {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  text-align: center;
+  margin-top: 0.25rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 /* Responsive Design */
@@ -259,6 +240,17 @@
 
   .heroImg {
     max-width: 500px;
+  }
+
+  .popularServicesTitle {
+    font-size: 1.75rem;
+    text-align: left;
+  }
+
+  .popularServicesIcons {
+    max-width: 550px;
+    margin: 0;
+    gap: 1.5rem;
   }
 }
 
@@ -304,11 +296,7 @@
     gap: 1rem;
   }
 
-  .primaryButton,
-  .secondaryButton {
-    padding: 1.25rem 2.25rem;
-    font-size: 1rem;
-  }
+  /* Button styles are now handled by the Button component */
 
   .trustSignals {
     grid-template-columns: repeat(2, 1fr);
@@ -316,13 +304,34 @@
     margin-top: 0.75rem;
   }
 
-  .trustBadge {
-    font-size: 0.8125rem;
-    padding: 0.625rem 0.375rem;
-  }
-
   .heroImg {
     max-width: 380px;
+  }
+
+  .popularServicesTitle {
+    font-size: 1.25rem;
+  }
+
+  .popularServicesIcons {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .popularServiceItem {
+    padding: 1rem 0.75rem;
+    min-height: 90px;
+  }
+
+  .popularServiceIcon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .popularServiceText {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   }
 }
 
@@ -349,11 +358,7 @@
     font-size: 1rem;
   }
 
-  .primaryButton,
-  .secondaryButton {
-    padding: 1.125rem 2rem;
-    font-size: 0.9375rem;
-  }
+  /* Button styles are now handled by the Button component */
 
   .trustSignals {
     grid-template-columns: 1fr;
@@ -362,5 +367,31 @@
 
   .heroImg {
     max-width: 340px;
+  }
+
+  .popularServicesTitle {
+    font-size: 1.125rem;
+  }
+
+  .popularServicesIcons {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+
+  .popularServiceItem {
+    padding: 0.75rem 0.5rem;
+    min-height: 80px;
+  }
+
+  .popularServiceIcon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .popularServiceText {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   }
 }

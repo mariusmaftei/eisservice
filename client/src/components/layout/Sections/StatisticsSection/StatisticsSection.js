@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Calendar, Wrench, Smile } from "lucide-react";
 import styles from "./StatisticsSection.module.css";
 
-const StatisticsSection = () => {
+const StatisticsSection = ({ introText }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [counts, setCounts] = useState({
     years: 0,
@@ -88,12 +88,12 @@ const StatisticsSection = () => {
       <div className={styles.statisticsContainer}>
         <div className={styles.statisticsIntro}>
           <p className={styles.introText}>
-            Suntem opțiunea perfectă pentru alegerea unui electrician Brașov, cu
-            mii de intervenții reușite și clienți mulțumiți.
+            {introText ||
+              "Suntem opțiunea perfectă pentru alegerea unui electrician Brașov, cu mii de intervenții reușite și clienți mulțumiți."}
           </p>
         </div>
         <div className={styles.statisticsContent}>
-          {statistics.map((stat, index) => {
+          {statistics.map((stat) => {
             return (
               <div key={stat.id} className={styles.statisticItem}>
                 <div className={styles.statisticIcon}>

@@ -50,10 +50,8 @@ export const categoryServices = {
         "slug",
         "name",
         "displayName",
-        "description",
         "shortDescription",
         "image",
-        "workingImage",
       ];
       const missingFields = requiredFields.filter(
         (field) => !categoryData[field]
@@ -139,10 +137,8 @@ export const categoryServices = {
         "slug",
         "name",
         "displayName",
-        "description",
         "shortDescription",
         "image",
-        "workingImage",
       ];
       const missingFields = requiredFields.filter(
         (field) => !categoryData[field]
@@ -286,12 +282,9 @@ export const categoryServices = {
     if (!categoryData.name) errors.push("Numele este obligatoriu");
     if (!categoryData.displayName)
       errors.push("Numele de afișare este obligatoriu");
-    if (!categoryData.description) errors.push("Descrierea este obligatorie");
     if (!categoryData.shortDescription)
       errors.push("Descrierea scurtă este obligatorie");
     if (!categoryData.image) errors.push("Imaginea este obligatorie");
-    if (!categoryData.workingImage)
-      errors.push("Imaginea de lucru este obligatorie");
 
     // Services validation
     if (!categoryData.services || categoryData.services.length === 0) {
