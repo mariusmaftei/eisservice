@@ -1,5 +1,6 @@
 export const contactInfo = {
   contactAddress: "Brasov,Romania",
+  defaultCity: "brasov", // Default city slug for category navigation
 
   phone: "0735 520 999",
   registeredOffice:

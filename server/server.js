@@ -24,6 +24,7 @@ import {
   handleContactSSR,
   handleProvidersSSR,
   handlePrivacyPolicySSR,
+  handleServicesWithCitySSR,
 } from "./controllers/ssrController.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -123,8 +124,20 @@ app.get("/despre", handleAboutSSR);
 app.get("/contact", handleContactSSR);
 app.get("/devino-prestator", handleProvidersSSR);
 app.get("/politica-confidentialitate", handlePrivacyPolicySSR);
-app.get("/solicita-serviciu/:categorySlug", handleContactOptionSSR);
-app.get("/solicita-serviciu/:categorySlug/formular", handleRequestedServiceSSR);
+app.get("/solicita-serviciu", (req, res) => {
+  res.sendFile(path.join(__dirname, "../client/build/index.html"));
+});
+// Route for services page with city - must come before other city routes
+app.get("/:city/solicita-serviciu", handleServicesWithCitySSR);
+// Routes for formular pages (must have /formular at the end)
+app.get(
+  "/solicita-serviciu/:city/:categorySlug?/formular",
+  handleRequestedServiceSSR
+);
+// Routes for contact option pages (without /formular) - city first
+// These routes handle /:city/:categorySlug pattern
+// Note: This must come AFTER specific routes to avoid conflicts
+app.get("/:city/:categorySlug", handleContactOptionSSR);
 
 // Catch-all handler: send back React's index.html file for client-side routing
 // This should only catch routes that don't start with /api

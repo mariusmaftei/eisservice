@@ -26,6 +26,10 @@ const route = createBrowserRouter([
         element: <ServicePage />,
       },
       {
+        path: "/:city/solicita-serviciu",
+        element: <ServicePage />,
+      },
+      {
         path: "/devino-prestator",
         element: <ProvidersPage />,
       },
@@ -42,11 +46,11 @@ const route = createBrowserRouter([
         element: <PrivacyPolicyPage />,
       },
       {
-        path: "/solicita-serviciu/:categorySlug",
+        path: "/:city/:categorySlug",
         element: <ContactOptionsPage />,
       },
       {
-        path: "/solicita-serviciu/:categorySlug/formular",
+        path: "/solicita-serviciu/:city/:categorySlug?/formular",
         element: <RequestServicePage />,
       },
     ],

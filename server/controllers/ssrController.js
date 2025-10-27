@@ -11,14 +11,21 @@ import renderApp from "../utils/ssr.js";
  */
 export const handleContactOptionSSR = async (req, res) => {
   try {
-    const { categorySlug } = req.params;
-    console.log("SSR Route called for category:", categorySlug);
+    const { city, categorySlug } = req.params;
+    console.log("SSR Route called for city:", city, "category:", categorySlug);
 
-    console.log("Looking for category with slug:", categorySlug);
-    const category = await Category.findOne({
-      "categoryInformation.slug": categorySlug,
+    // Build query object
+    const query = {
+      city: city.toLowerCase(),
       "categoryInformation.isActive": true,
-    });
+    };
+
+    // If categorySlug is provided, add it to the query
+    if (categorySlug) {
+      query["categoryInformation.slug"] = categorySlug;
+    }
+
+    const category = await Category.findOne(query);
 
     console.log("Found category:", category ? "Yes" : "No");
 
@@ -51,17 +58,26 @@ export const handleContactOptionSSR = async (req, res) => {
  */
 export const handleRequestedServiceSSR = async (req, res) => {
   try {
-    const { categorySlug } = req.params;
+    const { city, categorySlug } = req.params;
     console.log(
-      "SSR Route called for requested service category:",
+      "SSR Route called for requested service city:",
+      city,
+      "category:",
       categorySlug
     );
 
-    console.log("Looking for category with slug:", categorySlug);
-    const category = await Category.findOne({
-      "categoryInformation.slug": categorySlug,
+    // Build query object
+    const query = {
+      city: city.toLowerCase(),
       "categoryInformation.isActive": true,
-    });
+    };
+
+    // If categorySlug is provided, add it to the query
+    if (categorySlug) {
+      query["categoryInformation.slug"] = categorySlug;
+    }
+
+    const category = await Category.findOne(query);
 
     console.log("Found category:", category ? "Yes" : "No");
 
@@ -250,6 +266,28 @@ export const handlePrivacyPolicySSR = async (req, res) => {
     // Add ETag for caching
     res.set("ETag", '"privacy-static"');
     res.set("Cache-Control", "public, max-age=7200"); // 2 hours cache
+    res.send(html);
+  } catch (error) {
+    console.error("Error in SSR route:", error);
+    console.error("Error stack:", error.stack);
+    res.status(500).send("Internal server error: " + error.message);
+  }
+};
+
+/**
+ * Handle SSR for service page with city
+ */
+export const handleServicesWithCitySSR = async (req, res) => {
+  try {
+    const { city } = req.params;
+    console.log("SSR Route called for services page with city:", city);
+
+    const html = renderApp(req.url, null, "services");
+
+    console.log("Services page HTML rendered successfully");
+
+    // Add ETag for caching
+    res.set("Cache-Control", "public, max-age=1800"); // 30 minutes cache
     res.send(html);
   } catch (error) {
     console.error("Error in SSR route:", error);

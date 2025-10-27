@@ -693,10 +693,83 @@
   border-color: #174bdd;
 }
 
+.checkboxLabel.checked {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  border-color: #174bdd;
+  box-shadow: 0 2px 8px rgba(23, 75, 221, 0.2);
+}
+
 .checkbox {
   width: 1.25rem;
   height: 1.25rem;
   accent-color: #174bdd;
+  cursor: pointer;
+}
+
+.radio {
+  width: 1.25rem;
+  height: 1.25rem;
+  accent-color: #174bdd;
+  cursor: pointer;
+}
+
+.countyName {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+/* Select All Container */
+.selectAllContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  background: #f0f9ff;
+  border: 2px solid #bfdbfe;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.selectAllContainer:hover {
+  background: #e0f2fe;
+  border-color: #174bdd;
+}
+
+.selectAllLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.selectAllText {
+  font-size: 1rem;
+  color: #174bdd;
+  font-weight: 700;
+}
+
+.countyCount {
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-weight: 600;
+}
+
+/* Counties Grid */
+.countiesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.sectionDescription {
+  font-size: 0.95rem;
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
 }
 
 /* Form Actions */
@@ -832,6 +905,25 @@
     gap: 1rem;
   }
 
+  .countiesGrid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .selectAllContainer {
+    padding: 0.875rem 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .selectAllText {
+    font-size: 0.95rem;
+  }
+
+  .countyCount {
+    font-size: 0.8rem;
+  }
+
   .cancelButton,
   .submitButton {
     min-width: auto;
@@ -862,5 +954,13 @@
   .removeButton {
     padding: 0.625rem 1.25rem;
     font-size: 0.9rem;
+  }
+
+  .countiesGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .checkboxLabel {
+    padding: 0.875rem 1rem;
   }
 }

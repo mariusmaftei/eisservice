@@ -2,11 +2,103 @@ import Category from "../models/Category.js";
 import { uploadImage, deleteImage } from "../config/firebase.js";
 import { processImage } from "../utils/imageProcessor.js";
 
+// Helper function to convert Romanian county name to URL-friendly city slug
+const countyToCitySlug = (county) => {
+  if (!county) return "";
+
+  // Map of Romanian counties to their city names for URLs
+  const countyToCityMap = {
+    Alba: "alba-iulia",
+    Arad: "arad",
+    Argeș: "pitetsti",
+    Bacău: "bacau",
+    Bihor: "oradea",
+    "Bistrița-Năsăud": "bistrita",
+    Botoșani: "botosani",
+    Brăila: "braila",
+    Brașov: "brasov",
+    București: "bucuresti",
+    Buzău: "buzau",
+    "Caraș-Severin": "resita",
+    Călărași: "calarasi",
+    Cluj: "cluj-napoca",
+    Constanța: "constanta",
+    Covasna: "sfantu-gheorghe",
+    Dâmbovița: "targoviste",
+    Dolj: "craiova",
+    Galați: "galati",
+    Giurgiu: "giurgiu",
+    Gorj: "targu-jiu",
+    Harghita: "miercurea-ciuc",
+    Hunedoara: "deva",
+    Ialomița: "slobozia",
+    Iași: "iasi",
+    Ilfov: "voluntari",
+    Maramureș: "baia-mare",
+    Mehedinți: "drobeta-turnu-severin",
+    Mureș: "targu-mures",
+    Neamț: "piatra-neamt",
+    Olt: "slatina",
+    Prahova: "ploiesti",
+    Sălaj: "zalau",
+    "Satu Mare": "satu-mare",
+    Sibiu: "sibiu",
+    Suceava: "suceava",
+    Teleorman: "alexandria",
+    Timiș: "timisoara",
+    Tulcea: "tulcea",
+    Vâlcea: "rmicu-valcea",
+    Vaslui: "vaslui",
+    Vrancea: "focsani",
+  };
+
+  return (
+    countyToCityMap[county] ||
+    county
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/ș/g, "s")
+      .replace(/ț/g, "t")
+      .replace(/ă/g, "a")
+      .replace(/â/g, "a")
+      .replace(/î/g, "i")
+  );
+};
+
+// Helper function to generate slug from text
+const generateSlug = (text) => {
+  if (!text) return "";
+
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, "") // Remove special characters
+    .replace(/\s+/g, "-") // Replace spaces with hyphens
+    .replace(/-+/g, "-") // Replace multiple hyphens with single hyphen
+    .replace(/^-+|-+$/g, ""); // Remove leading/trailing hyphens
+};
+
 // Helper function to transform flat form data to nested structure
 const transformToNestedStructure = (flatData) => {
+  // Generate slug if not provided
+  // Use generateSlug to ensure consistent slug format (removes special characters)
+  let slug = flatData.slug
+    ? generateSlug(flatData.slug)
+    : generateSlug(flatData.name || flatData.displayName);
+
+  // Ensure slug is never null or undefined - use a default if necessary
+  if (!slug) {
+    slug = generateSlug(flatData.name || flatData.displayName || "category");
+  }
+
+  // Validate slug is not empty
+  if (!slug || slug.trim() === "") {
+    throw new Error("Unable to generate a valid slug from the category data");
+  }
+
   return {
     categoryInformation: {
-      slug: flatData.slug || "",
+      slug: slug,
       name: flatData.name || "",
       displayName: flatData.displayName || flatData.name || "",
       description: flatData.description || flatData.shortDescription || "",
@@ -46,6 +138,11 @@ const transformToNestedStructure = (flatData) => {
       description: flatData.aboutUs?.description || "",
     },
     services: Array.isArray(flatData.services) ? flatData.services : [],
+    prestatoriValabili:
+      typeof flatData.prestatoriValabili === "string"
+        ? flatData.prestatoriValabili
+        : flatData.prestatoriValabili || "",
+    city: countyToCitySlug(flatData.prestatoriValabili),
     seoMetadata: {
       title: flatData.seo?.title || flatData.seoMetadata?.title || "",
       description:
@@ -134,33 +231,133 @@ export const createCategory = async (req, res) => {
   try {
     const categoryData = req.body;
 
-    // Parse JSON strings from FormData
-    if (typeof categoryData.services === "string") {
-      categoryData.services = JSON.parse(categoryData.services);
-    }
-    if (typeof categoryData.whyChooseUs === "string") {
-      categoryData.whyChooseUs = JSON.parse(categoryData.whyChooseUs);
-    }
-    if (typeof categoryData.aboutUs === "string") {
-      categoryData.aboutUs = JSON.parse(categoryData.aboutUs);
-    }
-    if (typeof categoryData.professionalContent === "string") {
-      categoryData.professionalContent = JSON.parse(
-        categoryData.professionalContent
-      );
-    }
-    if (typeof categoryData.seo === "string") {
-      categoryData.seo = JSON.parse(categoryData.seo);
-    }
-
-    // Check if category with same slug already exists
-    const existingCategory = await Category.findOne({
-      "categoryInformation.slug": categoryData.slug,
-    });
-    if (existingCategory) {
+    // Validate required fields
+    if (!categoryData.name) {
       return res.status(400).json({
         success: false,
-        message: "Category with this slug already exists",
+        message: "Category name is required",
+      });
+    }
+
+    // Generate or validate slug
+    // Use generateSlug to ensure consistent slug format (removes special characters)
+    const slug = categoryData.slug
+      ? generateSlug(categoryData.slug)
+      : generateSlug(categoryData.name || categoryData.displayName);
+
+    if (!slug) {
+      return res.status(400).json({
+        success: false,
+        message: "Unable to generate a valid slug from the category name",
+      });
+    }
+
+    // Set the slug in categoryData for further processing
+    categoryData.slug = slug;
+
+    // Parse JSON strings from FormData
+    if (
+      typeof categoryData.services === "string" &&
+      categoryData.services.trim().startsWith("[")
+    ) {
+      try {
+        categoryData.services = JSON.parse(categoryData.services);
+      } catch (e) {
+        console.error("Error parsing services:", e);
+        categoryData.services = [];
+      }
+    }
+    if (
+      typeof categoryData.whyChooseUs === "string" &&
+      categoryData.whyChooseUs.trim().startsWith("{")
+    ) {
+      try {
+        categoryData.whyChooseUs = JSON.parse(categoryData.whyChooseUs);
+      } catch (e) {
+        console.error("Error parsing whyChooseUs:", e);
+        categoryData.whyChooseUs = { title: "", paragraphs: [""] };
+      }
+    }
+    if (
+      typeof categoryData.aboutUs === "string" &&
+      categoryData.aboutUs.trim().startsWith("{")
+    ) {
+      try {
+        categoryData.aboutUs = JSON.parse(categoryData.aboutUs);
+      } catch (e) {
+        console.error("Error parsing aboutUs:", e);
+        categoryData.aboutUs = { title: "", description: "" };
+      }
+    }
+    if (
+      typeof categoryData.professionalContent === "string" &&
+      categoryData.professionalContent.trim().startsWith("{")
+    ) {
+      try {
+        categoryData.professionalContent = JSON.parse(
+          categoryData.professionalContent
+        );
+      } catch (e) {
+        console.error("Error parsing professionalContent:", e);
+        categoryData.professionalContent = { title: "", paragraphs: [""] };
+      }
+    }
+    if (
+      typeof categoryData.seo === "string" &&
+      categoryData.seo.trim().startsWith("{")
+    ) {
+      try {
+        categoryData.seo = JSON.parse(categoryData.seo);
+      } catch (e) {
+        console.error("Error parsing seo:", e);
+        categoryData.seo = { title: "", description: "", keywords: [] };
+      }
+    }
+    // prestatoriValabili is now a simple string, no parsing needed
+
+    // Validate that a county is selected
+    if (
+      !categoryData.prestatoriValabili ||
+      categoryData.prestatoriValabili.trim() === ""
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Please select a county where providers are available",
+      });
+    }
+
+    // Generate city from prestatoriValabili
+    const citySlug = countyToCitySlug(categoryData.prestatoriValabili);
+
+    console.log("Creating category with:", {
+      slug,
+      name: categoryData.name,
+      prestatoriValabili: categoryData.prestatoriValabili,
+      citySlug,
+      providedSlug: categoryData.slug,
+    });
+
+    // Check if category with same slug and city already exists
+    // This matches the compound unique index: { "categoryInformation.slug": 1, city: 1 }
+    const existingCategory = await Category.findOne({
+      "categoryInformation.slug": slug,
+      city: citySlug, // citySlug can be empty string, which will match categories with empty city field
+    });
+
+    if (existingCategory) {
+      console.log("Found existing category:", {
+        id: existingCategory._id,
+        name: existingCategory.categoryInformation?.name,
+        slug: existingCategory.categoryInformation?.slug,
+        city: existingCategory.city,
+        prestatoriValabili: existingCategory.prestatoriValabili,
+      });
+
+      return res.status(400).json({
+        success: false,
+        message: `A category with the slug "${slug}" already exists in ${
+          categoryData.prestatoriValabili || "this location"
+        }. Please use a different slug or select a different city.`,
       });
     }
 
@@ -252,6 +449,14 @@ export const createCategory = async (req, res) => {
     // Transform flat data to nested structure
     const nestedData = transformToNestedStructure(categoryData);
 
+    // Log the nested data to debug
+    console.log("Nested data to save:", {
+      slug: nestedData.categoryInformation?.slug,
+      name: nestedData.categoryInformation?.name,
+      city: nestedData.city,
+      citySlug: citySlug,
+    });
+
     const category = new Category(nestedData);
     await category.save();
 
@@ -262,6 +467,24 @@ export const createCategory = async (req, res) => {
     });
   } catch (error) {
     console.error("Error creating category:", error);
+
+    // Handle duplicate key error (MongoDB unique index violation)
+    if (error.code === 11000) {
+      let message =
+        "A category with this slug and city combination already exists";
+
+      // Check if it's a slug duplicate
+      if (error.keyPattern && error.keyPattern["categoryInformation.slug"]) {
+        message = `A category with the slug "${categoryData.slug}" already exists`;
+      }
+
+      return res.status(400).json({
+        success: false,
+        message: message,
+        error: "Duplicate entry detected. Please use a different slug or city.",
+      });
+    }
+
     res.status(500).json({
       success: false,
       message: "Error creating category",
@@ -276,38 +499,77 @@ export const updateCategory = async (req, res) => {
     const { id } = req.params;
     const updateData = req.body;
 
-    // Parse JSON strings from FormData
-    if (typeof updateData.services === "string") {
-      updateData.services = JSON.parse(updateData.services);
-    }
-    if (typeof updateData.whyChooseUs === "string") {
-      updateData.whyChooseUs = JSON.parse(updateData.whyChooseUs);
-    }
-    if (typeof updateData.aboutUs === "string") {
-      updateData.aboutUs = JSON.parse(updateData.aboutUs);
-    }
-    if (typeof updateData.professionalContent === "string") {
-      updateData.professionalContent = JSON.parse(
-        updateData.professionalContent
-      );
-    }
-    if (typeof updateData.seo === "string") {
-      updateData.seo = JSON.parse(updateData.seo);
-    }
-
-    // Check if slug is being updated and if it conflicts with existing category
+    // Validate and generate slug if provided
     if (updateData.slug) {
-      const existingCategory = await Category.findOne({
-        "categoryInformation.slug": updateData.slug,
-        _id: { $ne: id },
-      });
-      if (existingCategory) {
+      const slug = generateSlug(updateData.slug);
+      if (!slug) {
         return res.status(400).json({
           success: false,
-          message: "Category with this slug already exists",
+          message: "Slug cannot be empty",
         });
       }
+      updateData.slug = slug;
     }
+
+    // Parse JSON strings from FormData
+    if (
+      typeof updateData.services === "string" &&
+      updateData.services.trim().startsWith("[")
+    ) {
+      try {
+        updateData.services = JSON.parse(updateData.services);
+      } catch (e) {
+        console.error("Error parsing services:", e);
+        updateData.services = [];
+      }
+    }
+    if (
+      typeof updateData.whyChooseUs === "string" &&
+      updateData.whyChooseUs.trim().startsWith("{")
+    ) {
+      try {
+        updateData.whyChooseUs = JSON.parse(updateData.whyChooseUs);
+      } catch (e) {
+        console.error("Error parsing whyChooseUs:", e);
+        updateData.whyChooseUs = { title: "", paragraphs: [""] };
+      }
+    }
+    if (
+      typeof updateData.aboutUs === "string" &&
+      updateData.aboutUs.trim().startsWith("{")
+    ) {
+      try {
+        updateData.aboutUs = JSON.parse(updateData.aboutUs);
+      } catch (e) {
+        console.error("Error parsing aboutUs:", e);
+        updateData.aboutUs = { title: "", description: "" };
+      }
+    }
+    if (
+      typeof updateData.professionalContent === "string" &&
+      updateData.professionalContent.trim().startsWith("{")
+    ) {
+      try {
+        updateData.professionalContent = JSON.parse(
+          updateData.professionalContent
+        );
+      } catch (e) {
+        console.error("Error parsing professionalContent:", e);
+        updateData.professionalContent = { title: "", paragraphs: [""] };
+      }
+    }
+    if (
+      typeof updateData.seo === "string" &&
+      updateData.seo.trim().startsWith("{")
+    ) {
+      try {
+        updateData.seo = JSON.parse(updateData.seo);
+      } catch (e) {
+        console.error("Error parsing seo:", e);
+        updateData.seo = { title: "", description: "", keywords: [] };
+      }
+    }
+    // prestatoriValabili is now a simple string, no parsing needed
 
     // Get current category to check for existing image
     const currentCategory = await Category.findById(id);
@@ -316,6 +578,61 @@ export const updateCategory = async (req, res) => {
         success: false,
         message: "Category not found",
       });
+    }
+
+    // Preserve prestatoriValabili if not being updated
+    if (!updateData.prestatoriValabili) {
+      updateData.prestatoriValabili = currentCategory.prestatoriValabili;
+    }
+
+    // Validate that a county is set (either from update or preserved)
+    if (
+      !updateData.prestatoriValabili ||
+      updateData.prestatoriValabili.trim() === ""
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "A county must be selected for this category",
+      });
+    }
+
+    // Generate city from prestatoriValabili
+    const citySlug = countyToCitySlug(updateData.prestatoriValabili);
+
+    console.log("Updating category with:", {
+      id,
+      slug: updateData.slug || currentCategory.categoryInformation?.slug,
+      prestatoriValabili: updateData.prestatoriValabili,
+      citySlug,
+      oldPrestatoriValabili: currentCategory.prestatoriValabili,
+    });
+
+    // Check if slug or city is being updated and if it conflicts with existing category
+    if (
+      updateData.slug ||
+      updateData.prestatoriValabili !== currentCategory.prestatoriValabili
+    ) {
+      const existingCategory = await Category.findOne({
+        "categoryInformation.slug":
+          updateData.slug || currentCategory.categoryInformation?.slug,
+        city: citySlug,
+        _id: { $ne: id },
+      });
+      if (existingCategory) {
+        console.log("Found existing category during update:", {
+          id: existingCategory._id,
+          slug: existingCategory.categoryInformation?.slug,
+          city: existingCategory.city,
+        });
+        return res.status(400).json({
+          success: false,
+          message: `A category with slug "${
+            updateData.slug || currentCategory.categoryInformation?.slug
+          }" and city "${citySlug}" (${
+            updateData.prestatoriValabili
+          }) already exists`,
+        });
+      }
     }
 
     // Preserve existing image URLs if not uploading new ones
@@ -501,6 +818,24 @@ export const updateCategory = async (req, res) => {
     });
   } catch (error) {
     console.error("Error updating category:", error);
+
+    // Handle duplicate key error (MongoDB unique index violation)
+    if (error.code === 11000) {
+      let message =
+        "A category with this slug and city combination already exists";
+
+      // Check if it's a slug duplicate
+      if (error.keyPattern && error.keyPattern["categoryInformation.slug"]) {
+        message = `A category with the slug "${updateData.slug}" already exists`;
+      }
+
+      return res.status(400).json({
+        success: false,
+        message: message,
+        error: "Duplicate entry detected. Please use a different slug or city.",
+      });
+    }
+
     res.status(500).json({
       success: false,
       message: "Error updating category",

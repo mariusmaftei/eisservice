@@ -142,6 +142,21 @@ const categorySchema = new mongoose.Schema({
     },
   ],
 
+  // Available Providers by County (Prestatori Valabili) - single county
+  prestatoriValabili: {
+    type: String,
+    trim: true,
+    default: "",
+  },
+
+  // City field for SEO-friendly URLs (e.g., "brasov", "bucuresti")
+  city: {
+    type: String,
+    trim: true,
+    required: false,
+    lowercase: true,
+  },
+
   // SEO Metadata Section (Informații SEO)
   seoMetadata: {
     title: {
@@ -220,8 +235,15 @@ categorySchema.pre("save", function (next) {
 
 // Create indexes for better performance
 categorySchema.index({ "categoryInformation.isActive": 1 });
-// Add unique index for slug (slug is nested in categoryInformation)
-categorySchema.index({ "categoryInformation.slug": 1 }, { unique: true });
+// Add compound unique index for slug + city (allows multiple cities per category)
+categorySchema.index(
+  { "categoryInformation.slug": 1, city: 1 },
+  { unique: true }
+);
+// Add index for city field for faster queries
+categorySchema.index({ city: 1 });
+// Add index for slug only for faster queries when getting all cities
+categorySchema.index({ "categoryInformation.slug": 1 });
 
 const Category = mongoose.model("Category", categorySchema);
 

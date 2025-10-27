@@ -1,7 +1,9 @@
 import styles from "./CategoryCard.module.css";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { contactInfo } from "../../../config/contactInfo";
 
 const CategoryCard = ({ category }) => {
+  const params = useParams();
   // Helper to get slug from nested or flat structure
   const getCategorySlug = () => {
     if (category.categoryInformation?.slug) {
@@ -57,9 +59,14 @@ const CategoryCard = ({ category }) => {
   const categoryImage = getCategoryImage();
   const categoryDescription = getCategoryDescription();
 
+  // Get city from URL params first, then category data, then default city
+  // This ensures links work correctly when on a city-specific page
+  const urlCity = params.city;
+  const categoryCity = urlCity || category.city || contactInfo.defaultCity;
+
   return (
     <Link
-      to={`/solicita-serviciu/${categorySlug}`}
+      to={`/${categoryCity}/${categorySlug}`}
       state={{
         categoryName: categoryName,
         categoryImage: categoryImage,

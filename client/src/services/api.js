@@ -28,7 +28,15 @@ api.interceptors.response.use(
   },
   (error) => {
     if (error.response) {
-      console.error(`API Error ${error.response.status}:`, error.response.data);
+      const status = error.response.status;
+      const url = error.config?.url || "";
+
+      // Don't log 404 errors for category endpoints as they're expected when no categories exist
+      const isCategory404 = status === 404 && url.includes("/categories");
+
+      if (!isCategory404) {
+        console.error(`API Error ${status}:`, error.response.data);
+      }
     } else if (error.request) {
       console.error("API No Response:", error.request);
     } else {

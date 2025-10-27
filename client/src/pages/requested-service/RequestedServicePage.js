@@ -6,7 +6,7 @@ import Meta from "../../components/SEO/Meta";
 import styles from "./RequestServicePage.module.css";
 
 const RequestServicePage = () => {
-  const { categorySlug } = useParams();
+  const { city, categorySlug } = useParams();
   const { categoryData, loading, error, fetchCategory, clearSSRData } =
     useCategory();
 
@@ -36,17 +36,31 @@ const RequestServicePage = () => {
       return data?.categoryInformation?.slug || data?.slug;
     };
 
+    // Helper to get city from category data
+    const getCategoryCity = (data) => {
+      return data?.city || "";
+    };
+
     // Check if we need to fetch data
+    const currentDataSlug = getCategorySlug(categoryData);
+    const currentDataCity = getCategoryCity(categoryData);
+
     const needsFetch =
       !categoryData || // No data at all
-      getCategorySlug(categoryData) !== currentSlug || // Data is for different category
-      (!loading && !getCategorySlug(categoryData)); // Loading finished but no data
+      currentDataSlug !== currentSlug || // Data is for different category
+      currentDataCity !== (city || "") || // Data is for different city
+      (!loading && !currentDataSlug); // Loading finished but no data
 
     if (needsFetch && !loading) {
-      console.log("Fetching category data for:", currentSlug);
-      fetchCategory(currentSlug);
+      console.log(
+        "Fetching category data for city:",
+        city,
+        "slug:",
+        currentSlug
+      );
+      fetchCategory(city, currentSlug);
     }
-  }, [categorySlug, categoryData, fetchCategory, loading]);
+  }, [categorySlug, city, categoryData, fetchCategory, loading]);
 
   // Cleanup effect to clear SSR data when component unmounts
   useEffect(() => {
@@ -137,7 +151,7 @@ const RequestServicePage = () => {
     `Completează formularul pentru a solicita un specialist în ${categoryName}. Servicii profesionale verificate în România.`;
   const seoUrl =
     categoryData?.seoMetadata?.canonicalUrl ||
-    `https://eisservice.ro/solicita-serviciu/${categorySlug}/formular`;
+    `https://eisservice.ro/solicita-serviciu/${city}/${categorySlug}/formular`;
   const seoKeywords = categoryData?.seoMetadata?.keywords?.join(", ") || "";
   const seoImage =
     categoryData?.seoMetadata?.ogImage ||

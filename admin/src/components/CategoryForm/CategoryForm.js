@@ -16,6 +16,52 @@ import {
   Edit,
 } from "lucide-react";
 
+// List of all 41 Romanian counties
+const ROMANIAN_COUNTIES = [
+  "Alba",
+  "Arad",
+  "Argeș",
+  "Bacău",
+  "Bihor",
+  "Bistrița-Năsăud",
+  "Botoșani",
+  "Brăila",
+  "Brașov",
+  "București",
+  "Buzău",
+  "Caraș-Severin",
+  "Călărași",
+  "Cluj",
+  "Constanța",
+  "Covasna",
+  "Dâmbovița",
+  "Dolj",
+  "Galați",
+  "Giurgiu",
+  "Gorj",
+  "Harghita",
+  "Hunedoara",
+  "Ialomița",
+  "Iași",
+  "Ilfov",
+  "Maramureș",
+  "Mehedinți",
+  "Mureș",
+  "Neamț",
+  "Olt",
+  "Prahova",
+  "Sălaj",
+  "Satu Mare",
+  "Sibiu",
+  "Suceava",
+  "Teleorman",
+  "Timiș",
+  "Tulcea",
+  "Vâlcea",
+  "Vaslui",
+  "Vrancea",
+];
+
 const CategoryForm = ({ category, onSave, onCancel, isEditing = false }) => {
   const [formData, setFormData] = useState({
     slug: "",
@@ -47,6 +93,7 @@ const CategoryForm = ({ category, onSave, onCancel, isEditing = false }) => {
       keywords: [],
     },
     isActive: true,
+    prestatoriValabili: "", // Single county value instead of array
   });
 
   const [loading, setLoading] = useState(false);
@@ -130,6 +177,13 @@ const CategoryForm = ({ category, onSave, onCancel, isEditing = false }) => {
           category.whyChooseUsImageUrl ||
           category.whyChooseUsImage ||
           "",
+
+        // Available providers by county (single value)
+        prestatoriValabili:
+          Array.isArray(category.prestatoriValabili) &&
+          category.prestatoriValabili.length > 0
+            ? category.prestatoriValabili[0]
+            : category.prestatoriValabili || "",
       });
       setImagePreview(
         category.categoryInformation?.imageUrl ||
@@ -272,6 +326,14 @@ const CategoryForm = ({ category, onSave, onCancel, isEditing = false }) => {
     }));
   };
 
+  const handleCountyToggle = (county) => {
+    setFormData((prev) => ({
+      ...prev,
+      // If clicking the same county, deselect it; otherwise select the new one
+      prestatoriValabili: prev.prestatoriValabili === county ? "" : county,
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -304,10 +366,25 @@ const CategoryForm = ({ category, onSave, onCancel, isEditing = false }) => {
           return; // Skip file fields, they'll be added separately
         }
 
-        if (typeof updatedFormData[key] === "object") {
+        // Handle simple primitive values
+        if (
+          typeof updatedFormData[key] !== "object" ||
+          updatedFormData[key] === null ||
+          updatedFormData[key] instanceof Date
+        ) {
+          submitData.append(key, updatedFormData[key]);
+        } else if (
+          key === "services" ||
+          key === "whyChooseUs" ||
+          key === "aboutUs" ||
+          key === "professionalContent" ||
+          key === "seo"
+        ) {
+          // Only stringify specific nested objects
           submitData.append(key, JSON.stringify(updatedFormData[key]));
         } else {
-          submitData.append(key, updatedFormData[key]);
+          // For other values, append as string
+          submitData.append(key, String(updatedFormData[key]));
         }
       });
 
@@ -440,7 +517,7 @@ const CategoryForm = ({ category, onSave, onCancel, isEditing = false }) => {
                   onChange={handleInputChange}
                   className={styles.input}
                   required
-                  placeholder="ex: electrician-brasov"
+                  placeholder="ex: electrician"
                 />
               </div>
             </div>
@@ -1020,6 +1097,41 @@ const CategoryForm = ({ category, onSave, onCancel, isEditing = false }) => {
                 Adaugă Serviciu
               </button>
             )}
+          </div>
+
+          {/* Available Providers Section */}
+          <div className={styles.section}>
+            <div className={styles.sectionHeader}>
+              <div className={styles.sectionIcon}>
+                <Tag size={24} />
+              </div>
+              <h3 className={styles.sectionTitle}>Prestatori Valabili</h3>
+            </div>
+
+            <p className={styles.sectionDescription}>
+              Selectează județul unde sunt disponibili prestatori pentru această
+              categorie (doar un singur județ)
+            </p>
+
+            <div className={styles.countiesGrid}>
+              {ROMANIAN_COUNTIES.map((county) => (
+                <label
+                  key={county}
+                  className={`${styles.checkboxLabel} ${
+                    formData.prestatoriValabili === county ? styles.checked : ""
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="prestatoriValabili"
+                    checked={formData.prestatoriValabili === county}
+                    onChange={() => handleCountyToggle(county)}
+                    className={styles.radio}
+                  />
+                  <span className={styles.countyName}>{county}</span>
+                </label>
+              ))}
+            </div>
           </div>
 
           {/* Form Actions */}

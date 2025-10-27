@@ -34,17 +34,23 @@ export const CategoryProvider = ({ children, initialData = null }) => {
     }
   }, [initialData]);
 
-  const fetchCategory = async (slug) => {
-    if (!slug) return;
+  const fetchCategory = async (city = null, slug = null) => {
+    if (!city) return;
 
     // Helper to get slug from category data (handles both old and new structure)
     const getCategorySlug = (data) => {
       return data?.categoryInformation?.slug || data?.slug;
     };
 
-    // Don't fetch if we already have data for this slug
+    // Helper to get city from category data
+    const getCategoryCity = (data) => {
+      return data?.city || "";
+    };
+
+    // Don't fetch if we already have data for this city and slug
     const currentSlug = getCategorySlug(categoryData);
-    if (categoryData && currentSlug === slug) {
+    const currentCity = getCategoryCity(categoryData);
+    if (categoryData && currentCity === city && currentSlug === (slug || "")) {
       return;
     }
 
@@ -59,8 +65,13 @@ export const CategoryProvider = ({ children, initialData = null }) => {
     setError(null);
 
     try {
-      console.log(`Fetching category data for slug: ${slug}`);
-      const response = await api.get(`/api/categories/${slug}`);
+      console.log(
+        `Fetching category data for city: ${city}${
+          slug ? `, slug: ${slug}` : ""
+        }`
+      );
+      const url = `/api/categories/by-city/${city}${slug ? `/${slug}` : ""}`;
+      const response = await api.get(url);
 
       if (response.data.success) {
         console.log("Category data fetched successfully:", response.data.data);
@@ -69,7 +80,15 @@ export const CategoryProvider = ({ children, initialData = null }) => {
         setError(response.data.message || "Failed to fetch category data");
       }
     } catch (err) {
-      console.error("Error fetching category:", err);
+      // Only log unexpected errors, not expected 404s
+      if (err.response && err.response.status !== 404) {
+        console.error("Error fetching category:", err);
+        console.error("Error details:", {
+          message: err.message,
+          stack: err.stack,
+          slug: slug,
+        });
+      }
 
       if (err.response) {
         // Server responded with error status
@@ -85,12 +104,6 @@ export const CategoryProvider = ({ children, initialData = null }) => {
         // Something else happened
         setError("Failed to fetch category data");
       }
-
-      console.error("Error details:", {
-        message: err.message,
-        stack: err.stack,
-        slug: slug,
-      });
     } finally {
       setLoading(false);
     }
