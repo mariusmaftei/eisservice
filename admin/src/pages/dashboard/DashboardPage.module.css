@@ -166,177 +166,85 @@
   letter-spacing: 0.5px;
 }
 
-/* Quick Actions Section */
-.quickActions {
-  padding: 3rem 2rem;
-  background: #f8fafc;
-}
-
-.quickActionsContainer {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
+/* Section Title */
 .sectionTitle {
   font-size: 2rem;
   font-weight: 700;
   color: #1f2937;
-  margin-bottom: 2rem;
+  margin: 0 0 0.5rem 0;
   text-align: center;
 }
 
-.actionsGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 2rem;
-}
-
-.actionCard {
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  overflow: hidden;
-  transition: all 0.3s ease;
-  border: 1px solid #f1f5f9;
-  text-decoration: none;
-  color: inherit;
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  padding: 2rem;
-  position: relative;
-}
-
-.actionCard::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 4px;
-  height: 100%;
-  background: var(--action-color);
-}
-
-.actionCard:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-  text-decoration: none;
-  color: inherit;
-}
-
-.actionIcon {
-  background: linear-gradient(
-    135deg,
-    var(--action-color) 0%,
-    rgba(23, 75, 221, 0.8) 100%
-  );
-  color: white;
-  padding: 1rem;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  width: 50px;
-  height: 50px;
-  flex-shrink: 0;
-}
-
-.actionContent {
-  flex: 1;
-}
-
-.actionTitle {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #1f2937;
-  margin: 0 0 0.5rem 0;
-}
-
-.actionDescription {
-  font-size: 0.875rem;
-  color: #6b7280;
-  margin: 0;
-  line-height: 1.5;
-}
-
-.actionArrow {
-  font-size: 1.5rem;
-  color: var(--action-color);
-  font-weight: bold;
-  opacity: 0.7;
-  transition: all 0.3s ease;
-}
-
-.actionCard:hover .actionArrow {
-  opacity: 1;
-  transform: translateX(4px);
-}
-
-/* Recent Activity Section */
-.recentActivity {
+/* County Providers Section */
+.countyProvidersSection {
   padding: 3rem 2rem;
-  background: white;
+  background: #f8fafc;
 }
 
-.recentActivityContainer {
-  max-width: 1200px;
+.countyProvidersContainer {
+  max-width: 1400px;
   margin: 0 auto;
 }
 
-.activityCard {
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+.sectionSubtitle {
+  text-align: center;
+  color: #6b7280;
+  margin: 0 0 2.5rem 0;
+  font-size: 1.125rem;
+}
+
+.countiesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.countyCard {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
   overflow: hidden;
   border: 1px solid #f1f5f9;
-}
-
-.activityItem {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  padding: 2rem;
-  border-bottom: 1px solid #e5e7eb;
   transition: all 0.3s ease;
+  padding: 1.5rem;
 }
 
-.activityItem:last-child {
-  border-bottom: none;
+.countyCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  border-color: #174bdd;
 }
 
-.activityItem:hover {
-  background: rgba(255, 255, 255, 0.5);
-}
-
-.activityIcon {
-  background: linear-gradient(135deg, #174bdd 0%, #00134b 100%);
-  color: white;
-  padding: 0.75rem;
-  border-radius: 10px;
+.countyHeader {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  font-size: 1.25rem;
-  width: 45px;
-  height: 45px;
-  flex-shrink: 0;
+  margin-bottom: 0.5rem;
 }
 
-.activityContent {
+.countyName {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f2937;
   flex: 1;
 }
 
-.activityText {
-  font-size: 1rem;
-  color: #374151;
-  margin: 0 0 0.25rem 0;
-  font-weight: 600;
+.providerCount {
+  background: linear-gradient(135deg, #174bdd 0%, #00134b 100%);
+  color: white;
+  padding: 0.375rem 0.75rem;
+  border-radius: 20px;
+  font-size: 1.125rem;
+  font-weight: 700;
+  min-width: 40px;
+  text-align: center;
 }
 
-.activityTime {
-  font-size: 0.875rem;
+.providerLabel {
+  font-size: 0.75rem;
   color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   font-weight: 500;
 }
 
@@ -355,8 +263,7 @@
   }
 
   .statsSection,
-  .quickActions,
-  .recentActivity {
+  .countyProvidersSection {
     padding: 2rem 1rem;
   }
 
@@ -365,15 +272,9 @@
     gap: 1.5rem;
   }
 
-  .actionsGrid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-
-  .actionCard {
-    padding: 1.5rem;
-    flex-direction: column;
-    text-align: center;
+  .countiesGrid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1rem;
   }
 
   .statCard {
@@ -382,10 +283,17 @@
     gap: 1rem;
   }
 
-  .activityItem {
-    flex-direction: column;
-    text-align: center;
-    gap: 1rem;
+  .countyCard {
+    padding: 1.25rem;
+  }
+
+  .countyName {
+    font-size: 0.875rem;
+  }
+
+  .providerCount {
+    font-size: 1rem;
+    padding: 0.25rem 0.625rem;
   }
 }
 
@@ -403,13 +311,12 @@
   }
 
   .statsSection,
-  .quickActions,
-  .recentActivity {
+  .countyProvidersSection {
     padding: 1.5rem 1rem;
   }
 
   .statCard,
-  .actionCard {
+  .countyCard {
     padding: 1.5rem;
   }
 
@@ -417,7 +324,15 @@
     font-size: 2rem;
   }
 
-  .actionTitle {
-    font-size: 1.125rem;
+  .countiesGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .sectionTitle {
+    font-size: 1.5rem;
+  }
+
+  .sectionSubtitle {
+    font-size: 1rem;
   }
 }

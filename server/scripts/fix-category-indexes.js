@@ -48,3 +48,4 @@ const fixCategoryIndexes = async () => {
 
 fixCategoryIndexes();
 
+

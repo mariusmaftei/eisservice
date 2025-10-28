@@ -2,7 +2,6 @@ import CategoryCard from "../../../UI/CategoryCard/CategoryCard";
 import styles from "./Categories.module.css";
 import { Filter, X, RefreshCw, AlertCircle } from "lucide-react";
 import { useServiceContext } from "../../../../context/ServiceContext";
-import { allCategories } from "../../../../constants/allCategories";
 import { useState, useEffect, useCallback } from "react";
 import api from "../../../../services/api";
 
@@ -72,9 +71,6 @@ const Categories = ({ city }) => {
           type: errorType,
           originalError: err,
         });
-
-        // Fallback to static categories if API fails
-        setCategories(allCategories);
       } finally {
         setLoading(false);
         setIsRetrying(false);

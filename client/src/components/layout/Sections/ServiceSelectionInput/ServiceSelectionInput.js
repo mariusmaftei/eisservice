@@ -2,16 +2,14 @@ import { useState, useRef, useEffect } from "react";
 import { X, ChevronDown, ChevronUp } from "lucide-react";
 import { createPortal } from "react-dom";
 import styles from "./ServiceSelectionInput.module.css";
-import { allCategories } from "../../../../constants/allCategories";
-
-const ALL_POPULAR_SERVICES = allCategories.map((category) => category.name);
+import api from "../../../../services/api";
 
 const ServiceSelectionInput = ({
   label,
   placeholder,
   selectedServices, // Prop: array of currently selected services
   onServicesChange = () => {}, // Prop: callback to update selected services in parent, cu valoare implicită
-  availableServices = ALL_POPULAR_SERVICES, // Prop: list of services to choose from
+  availableServices = [], // Prop: list of services to choose from
   id,
   name,
   required = false,
@@ -26,6 +24,30 @@ const ServiceSelectionInput = ({
   const inputContainerRef = useRef(null);
   const dropdownRef = useRef(null);
   const [isMounted, setIsMounted] = useState(false);
+  const [services, setServices] = useState(availableServices);
+
+  // Fetch categories from API on mount if availableServices is empty or not provided
+  useEffect(() => {
+    if (availableServices.length === 0) {
+      const fetchCategories = async () => {
+        try {
+          const response = await api.get("/api/categories");
+          if (response.data.success) {
+            const categoryNames = response.data.data.map(
+              (category) => category.displayName || category.name
+            );
+            setServices(categoryNames);
+          }
+        } catch (error) {
+          console.error("Error fetching categories:", error);
+          // Keep empty services array if fetch fails
+        }
+      };
+      fetchCategories();
+    } else {
+      setServices(availableServices);
+    }
+  }, [availableServices]);
 
   useEffect(() => {
     setIsMounted(true);
@@ -79,7 +101,7 @@ const ServiceSelectionInput = ({
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const filteredServices = availableServices.filter(
+  const filteredServices = services.filter(
     (service) =>
       service.toLowerCase().includes(searchTerm.toLowerCase()) &&
       !selectedServices.includes(service)

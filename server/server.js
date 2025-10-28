@@ -33,6 +33,9 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const port = process.env.PORT || 8080;
 
+// Trust proxy - required for reverse proxy setups and proper IP detection
+app.set("trust proxy", 1);
+
 // Middleware
 app.use(compression());
 app.use(express.json());
@@ -40,7 +43,8 @@ app.use(express.urlencoded({ extended: true }));
 // CORS configuration - Allow multiple origins including production domain
 const allowedOrigins = [
   "https://eisservice.ro",
-  "https://eisservice.ro/",
+  "https://admin.eisservice.ro",
+  "https://www.admin.eisservice.ro", // Add www subdomain
   "http://localhost:3000",
   "http://localhost:3001",
   process.env.ADMIN_FRONTEND_URL,
@@ -64,24 +68,40 @@ app.use(
         return callback(null, true);
       }
 
+      // Allow any admin.eisservice.ro subdomain in production
+      if (
+        process.env.NODE_ENV === "production" &&
+        origin.includes("admin.eisservice.ro")
+      ) {
+        return callback(null, true);
+      }
+
       const msg =
         "The CORS policy for this site does not allow access from the specified Origin.";
       return callback(new Error(msg), false);
     },
     credentials: true,
+    // Explicitly set these headers for cookie handling
+    exposedHeaders: ["set-cookie"],
   })
 );
 
-// Session configuration
+// Session configuration with proper cookie settings for cross-domain
 app.use(
   session({
     secret: process.env.JWT_SECRET || "your-secret-key",
     resave: false,
     saveUninitialized: false,
+    name: "adminSession", // Custom session name to avoid conflicts
     cookie: {
-      secure: process.env.NODE_ENV === "production",
+      secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+      httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // 'none' for cross-site in production
+      // Don't set domain - let browser set it automatically
+      path: "/",
     },
+    proxy: true, // Trust the proxy (important for reverse proxy setups)
   })
 );
 
@@ -98,6 +118,28 @@ app.get("/api", (req, res) => {
     version: "1.0.0",
     timestamp: new Date().toISOString(),
   });
+});
+
+// Add middleware to ensure CORS headers are set for all API routes
+app.use("/api", (req, res, next) => {
+  // Ensure the origin is in the allowed origins
+  const origin = req.headers.origin;
+  if (
+    origin &&
+    (origin.includes("admin.eisservice.ro") || origin.includes("localhost"))
+  ) {
+    res.header("Access-Control-Allow-Origin", origin);
+    res.header("Access-Control-Allow-Credentials", "true");
+    res.header(
+      "Access-Control-Allow-Methods",
+      "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS"
+    );
+    res.header(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+    );
+  }
+  next();
 });
 
 // API Routes - These must come BEFORE SSR routes to avoid conflicts

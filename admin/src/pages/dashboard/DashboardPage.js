@@ -1,7 +1,52 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import styles from "./DashboardPage.module.css";
 import { categoryAPI } from "../../service/api";
+
+// List of all 41 Romanian counties
+const ROMANIAN_COUNTIES = [
+  "Alba",
+  "Arad",
+  "Argeș",
+  "Bacău",
+  "Bihor",
+  "Bistrița-Năsăud",
+  "Botoșani",
+  "Brăila",
+  "Brașov",
+  "București",
+  "Buzău",
+  "Caraș-Severin",
+  "Călărași",
+  "Cluj",
+  "Constanța",
+  "Covasna",
+  "Dâmbovița",
+  "Dolj",
+  "Galați",
+  "Giurgiu",
+  "Gorj",
+  "Harghita",
+  "Hunedoara",
+  "Ialomița",
+  "Iași",
+  "Ilfov",
+  "Maramureș",
+  "Mehedinți",
+  "Mureș",
+  "Neamț",
+  "Olt",
+  "Prahova",
+  "Sălaj",
+  "Satu Mare",
+  "Sibiu",
+  "Suceava",
+  "Teleorman",
+  "Timiș",
+  "Tulcea",
+  "Vâlcea",
+  "Vaslui",
+  "Vrancea",
+];
 
 const DashboardPage = () => {
   const [stats, setStats] = useState({
@@ -10,6 +55,7 @@ const DashboardPage = () => {
     inactiveCategories: 0,
   });
   const [loading, setLoading] = useState(true);
+  const [countyProviderCounts, setCountyProviderCounts] = useState({});
 
   useEffect(() => {
     fetchStats();
@@ -26,43 +72,22 @@ const DashboardPage = () => {
         activeCategories: categories.filter((c) => c.isActive).length,
         inactiveCategories: categories.filter((c) => !c.isActive).length,
       });
+
+      // Count providers per county
+      const countyCounts = {};
+      categories.forEach((category) => {
+        const county = category.prestatoriValabili;
+        if (county && county.trim() !== "") {
+          countyCounts[county] = (countyCounts[county] || 0) + 1;
+        }
+      });
+      setCountyProviderCounts(countyCounts);
     } catch (err) {
       console.error("Error fetching stats:", err);
     } finally {
       setLoading(false);
     }
   };
-
-  const quickActions = [
-    {
-      title: "Gestionează Categoriile",
-      description: "Creează, editează și gestionează categoriile de servicii",
-      link: "/categories",
-      icon: "📂",
-      color: "#174bdd",
-    },
-    {
-      title: "Vezi Furnizorii",
-      description: "Gestionează furnizorii de servicii și profilurile lor",
-      link: "/providers",
-      icon: "👥",
-      color: "#059669",
-    },
-    {
-      title: "Gestionarea Clienților",
-      description: "Vezi și gestionează cererile și datele clienților",
-      link: "/clients",
-      icon: "👤",
-      color: "#dc2626",
-    },
-    {
-      title: "Setări",
-      description: "Configurează setările platformei și preferințele",
-      link: "/settings",
-      icon: "⚙️",
-      color: "#7c3aed",
-    },
-  ];
 
   return (
     <div className={styles.dashboardPage}>
@@ -118,56 +143,28 @@ const DashboardPage = () => {
             </div>
           </div>
 
-          {/* Quick Actions */}
-          <div className={styles.quickActions}>
-            <div className={styles.quickActionsContainer}>
-              <h2 className={styles.sectionTitle}>Acțiuni Rapide</h2>
-              <div className={styles.actionsGrid}>
-                {quickActions.map((action, index) => (
-                  <Link
-                    key={index}
-                    to={action.link}
-                    className={styles.actionCard}
-                    style={{ "--action-color": action.color }}
-                  >
-                    <div className={styles.actionIcon}>{action.icon}</div>
-                    <div className={styles.actionContent}>
-                      <h3 className={styles.actionTitle}>{action.title}</h3>
-                      <p className={styles.actionDescription}>
-                        {action.description}
-                      </p>
+          {/* Providers by County */}
+          <div className={styles.countyProvidersSection}>
+            <div className={styles.countyProvidersContainer}>
+              <h2 className={styles.sectionTitle}>Furnizori pe Județe</h2>
+              <p className={styles.sectionSubtitle}>
+                Distribuția prestatorilor de servicii pe județele din România
+              </p>
+              <div className={styles.countiesGrid}>
+                {ROMANIAN_COUNTIES.map((county, index) => {
+                  const count = countyProviderCounts[county] || 0;
+                  return (
+                    <div key={index} className={styles.countyCard}>
+                      <div className={styles.countyHeader}>
+                        <span className={styles.countyName}>{county}</span>
+                        <span className={styles.providerCount}>{count}</span>
+                      </div>
+                      <div className={styles.providerLabel}>
+                        {count === 1 ? "prestator" : "prestatori"}
+                      </div>
                     </div>
-                    <div className={styles.actionArrow}>→</div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Recent Activity */}
-          <div className={styles.recentActivity}>
-            <div className={styles.recentActivityContainer}>
-              <h2 className={styles.sectionTitle}>Activitate Recentă</h2>
-              <div className={styles.activityCard}>
-                <div className={styles.activityItem}>
-                  <div className={styles.activityIcon}>📝</div>
-                  <div className={styles.activityContent}>
-                    <p className={styles.activityText}>
-                      Sistemul de gestionare a categoriilor este gata
-                    </p>
-                    <span className={styles.activityTime}>Chiar acum</span>
-                  </div>
-                </div>
-
-                <div className={styles.activityItem}>
-                  <div className={styles.activityIcon}>🚀</div>
-                  <div className={styles.activityContent}>
-                    <p className={styles.activityText}>
-                      Panoul de administrare a fost inițializat cu succes
-                    </p>
-                    <span className={styles.activityTime}>Chiar acum</span>
-                  </div>
-                </div>
+                  );
+                })}
               </div>
             </div>
           </div>

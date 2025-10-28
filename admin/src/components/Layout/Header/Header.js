@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import styles from "./Header.module.css";
 import EISLogo from "../../../assets/images/logo/eis-service-logo.webp";
@@ -9,6 +9,25 @@ const Header = () => {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const { user, logout, getUserDisplayName, getUserInitials, isAdmin } =
     useAuth();
+
+  const dropdownRef = useRef(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsUserMenuOpen(false);
+      }
+    };
+
+    if (isUserMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isUserMenuOpen]);
 
   const handleLogout = async () => {
     try {
@@ -73,7 +92,7 @@ const Header = () => {
           </div>
 
           <div className={styles.userSection}>
-            <div className={styles.userMenu}>
+            <div className={styles.userMenu} ref={dropdownRef}>
               <button
                 className={styles.userButton}
                 onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}

@@ -341,47 +341,67 @@ const ContactOptionsPage = () => {
 
   return (
     <>
-      <Meta
-        title={
-          categoryData?.seo?.title ||
-          `${defaultCategoryName} ${cityName} – Contactează-ne | Servicii Profesionale`
-        }
-        description={
-          categoryData?.seo?.description ||
-          `Contactează-ne pentru servicii de ${defaultCategoryName.toLowerCase()} în ${cityName}. Completează formularul sau trimite-ne un mesaj pe WhatsApp. Răspuns rapid și oferte personalizate.`
-        }
-        url={`https://eisservice.ro/${city}${
-          currentSlug ? `/${currentSlug}` : ""
-        }`}
-        structuredData={{
-          "@context": "https://schema.org",
-          "@type": "Service",
-          name: `${defaultCategoryName} ${cityName}`,
-          description: `Servicii profesionale de ${defaultCategoryName.toLowerCase()} în ${cityName}`,
-          provider: {
-            "@type": "Organization",
-            name: "E.I.S. SERVICE COMPLETE S.R.L.",
-            url: "https://eisservice.ro",
-          },
-          areaServed: {
-            "@type": "City",
-            name: cityName,
-            addressCountry: "RO",
-          },
-          availableChannel: [
-            {
-              "@type": "ServiceChannel",
-              serviceUrl: `https://eisservice.ro/solicita-serviciu/${city}/${currentSlug}/formular`,
-              serviceName: "Formular de contact",
-            },
-            {
-              "@type": "ServiceChannel",
-              serviceUrl: `https://wa.me/${contactInfo.phoneFormatted}`,
-              serviceName: "WhatsApp",
-            },
-          ],
-        }}
-      />
+      {(() => {
+        const seoTitle =
+          getCategorySEO("title") ||
+          `${defaultCategoryName} ${cityName} – Contactează-ne | Servicii Profesionale`;
+        const seoDescription =
+          getCategorySEO("description") ||
+          `Contactează-ne pentru servicii de ${defaultCategoryName.toLowerCase()} în ${cityName}. Completează formularul sau trimite-ne un mesaj pe WhatsApp. Răspuns rapid și oferte personalizate.`;
+        const seoCanonical =
+          getCategorySEO("canonicalUrl") ||
+          `https://eisservice.ro/${city}${
+            currentSlug ? `/${currentSlug}` : ""
+          }`;
+        const rawKeywords = getCategorySEO("keywords");
+        const seoKeywords = Array.isArray(rawKeywords)
+          ? rawKeywords.join(", ")
+          : typeof rawKeywords === "string"
+          ? rawKeywords
+          : "";
+        const seoImage =
+          getCategorySEO("ogImage") ||
+          categoryImage ||
+          "https://eisservice.ro/og-image.jpg";
+
+        return (
+          <Meta
+            title={seoTitle}
+            description={seoDescription}
+            url={seoCanonical}
+            image={seoImage}
+            keywords={seoKeywords}
+            structuredData={{
+              "@context": "https://schema.org",
+              "@type": "Service",
+              name: `${defaultCategoryName} ${cityName}`,
+              description: `Servicii profesionale de ${defaultCategoryName.toLowerCase()} în ${cityName}`,
+              provider: {
+                "@type": "Organization",
+                name: "E.I.S. SERVICE COMPLETE S.R.L.",
+                url: "https://eisservice.ro",
+              },
+              areaServed: {
+                "@type": "City",
+                name: cityName,
+                addressCountry: "RO",
+              },
+              availableChannel: [
+                {
+                  "@type": "ServiceChannel",
+                  serviceUrl: `https://eisservice.ro/solicita-serviciu/${city}/${currentSlug}/formular`,
+                  serviceName: "Formular de contact",
+                },
+                {
+                  "@type": "ServiceChannel",
+                  serviceUrl: `https://wa.me/${contactInfo.phoneFormatted}`,
+                  serviceName: "WhatsApp",
+                },
+              ],
+            }}
+          />
+        );
+      })()}
       <div className={styles.contactOptionsPage}>
         {/* Hero Section with Gradient Title */}
         <div className={styles.heroSection}>
